@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.siscacao.model.TblRol" table="tbl_rol" schema="public">
+        <id name="idRol" type="long">
+            <column name="id_rol" />
+            <generator class="identity" />
+        </id>
+        <property name="nombreRol" type="string">
+            <column name="nombre_rol" length="50" />
+        </property>
+        <property name="fechaModificacion" type="timestamp">
+            <column name="fecha_modificacion" length="15" />
+        </property>
+        <property name="descripcion" type="string">
+            <column name="descripcion" length="50" />
+        </property>
+        <set name="tblFuncionRols" inverse="true" cascade="all">
+            <key>
+                <column name="id_rol" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblFuncionRol" />
+        </set>
+        <set name="tblUsuarioRols" inverse="true">
+            <key>
+                <column name="id_rol" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblUsuarioRol" />
+        </set>
+    </class>
+</hibernate-mapping>

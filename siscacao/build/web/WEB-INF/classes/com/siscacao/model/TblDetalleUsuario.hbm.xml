@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.siscacao.model.TblDetalleUsuario" table="tbl_detalle_usuario" schema="public">
+        <id name="idDetalleUsuario" type="long">
+            <column name="id_detalle_usuario" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="tblTipoDocumento" class="com.siscacao.model.TblTipoDocumento" fetch="select">
+            <column name="id_tipo_documento" />
+        </many-to-one>
+        <many-to-one name="tblUsuario" class="com.siscacao.model.TblUsuario" fetch="select">
+            <column name="id_usuario" />
+        </many-to-one>
+        <many-to-one name="tblCiudad" class="com.siscacao.model.TblCiudad" fetch="select">
+            <column name="id_ciudad" />
+        </many-to-one>
+        <property name="nombreUsuario" type="string">
+            <column name="nombre_usuario" length="64" />
+        </property>
+        <property name="apellidoUsuario" type="string">
+            <column name="apellido_usuario" length="64" />
+        </property>
+        <property name="numeroDocumento" type="string">
+            <column name="numero_documento" length="64" />
+        </property>
+        <property name="direccion" type="string">
+            <column name="direccion" length="64" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="64" />
+        </property>
+        <property name="idContacto" type="java.lang.Integer">
+            <column name="id_contacto" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <f:view locale="#{localeBean.locale}"/>
+    <h:head>
+        <title>#{msg.main_title_backend}</title>
+        <link href="#{appBean.baseURL}resources/css/login.css" type="text/css" rel="stylesheet" />
+        <link rel="icon" type="image/ico" href="#{appBean.baseURL}resources/gfx/favicon.ico"/>
+    </h:head>
+    <h:body>       
+        <div class="container">
+            <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>  
+
+            <p:dialog modal="true" widgetVar="statusDialog" header="#{msg.loading_session}"   
+                      draggable="false" closable="false">  
+                <p:graphicImage value="#{appBean.baseURL}resources/gfx/ajax-loader.gif" />
+            </p:dialog> 
+            <h:form id="form_login">  
+                <p:growl id="growl"   life="3000"/>  
+                <p:panel id="ingreso" header="#{msg.hdlogin}" >  
+                    <h:panelGrid columns="2" cellpadding="5">  
+                        <h:outputLabel for="username" value="#{msg.user}" />
+                        <p:inputText value="#{loginBean.usuario.cuenta}"   
+                                     id="username" required="true" requiredMessage="#{msg.rquser}" label="username"  /> 
+                        <h:outputLabel for="password" value="#{msg.pass}" />  
+                        <p:password value="#{loginBean.usuario.contrasena}"   
+                                    id="password" required="true" requiredMessage="#{msg.rqpass}" label="password" />  
+                        <f:facet name="footer">  
+                            <p:commandButton id="loginButton" value="#{msg.login}" update="growl,ingreso" action="#{loginBean.login}"  />
+                        </f:facet>  
+                    </h:panelGrid>  
+                </p:panel>  
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

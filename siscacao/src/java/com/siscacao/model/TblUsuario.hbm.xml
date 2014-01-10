@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.siscacao.model.TblUsuario" table="tbl_usuario" schema="public">
+        <id name="idUsuario" type="long">
+            <column name="id_usuario" />
+            <generator class="identity" />
+        </id>
+        <property name="nombreUsuario" type="string">
+            <column name="nombre_usuario" length="256" />
+        </property>
+        <property name="fechaUltimaActividad" type="timestamp">
+            <column name="fecha_ultima_actividad" length="29" />
+        </property>
+        <property name="cuenta" type="string">
+            <column name="cuenta" length="256" />
+        </property>
+        <property name="contrasena" type="string">
+            <column name="contrasena" length="512" />
+        </property>
+        <property name="fechaRegistro" type="timestamp">
+            <column name="fecha_registro" length="21" />
+        </property>
+        <set name="tblAsignacionSolicituds" inverse="true">
+            <key>
+                <column name="id_usuario" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblAsignacionSolicitud" />
+        </set>
+        <set name="tblUsuarioRols" inverse="true" cascade="all" >
+            <key>
+                <column name="id_usuario" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblUsuarioRol" />
+        </set>
+        <set name="tblDetalleUsuarios" inverse="true">
+            <key>
+                <column name="id_usuario" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblDetalleUsuario" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.siscacao.model.TblDiagnostico" table="tbl_diagnostico" schema="public">
+        <id name="idDiagnostico" type="int">
+            <column name="id_diagnostico" />
+            <generator class="assigned" />
+        </id>
+        <property name="nombreDiagnostico" type="string">
+            <column name="nombre_diagnostico" length="6" />
+        </property>
+        <property name="descripcionDiagnostico" type="string">
+            <column name="descripcion_diagnostico" length="512" />
+        </property>
+        <set name="tblRespuestaSolicituds" inverse="true">
+            <key>
+                <column name="id_diagnostico" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblRespuestaSolicitud" />
+        </set>
+        <set name="tblDiagnosticoCaracteristicasForIdDiagnostico" inverse="true">
+            <key>
+                <column name="id_diagnostico" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblDiagnosticoCaracteristica" />
+        </set>
+        <set name="tblDiagnosticoCaracteristicasForIdDiagnosticoRelacionado" inverse="true">
+            <key>
+                <column name="id_diagnostico_relacionado" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblDiagnosticoCaracteristica" />
+        </set>
+        <set name="tblDiagnosticoImagensForIdDiagnosticoRelacionado" inverse="true">
+            <key>
+                <column name="id_diagnostico_relacionado" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblDiagnosticoImagen" />
+        </set>
+        <set name="tblDiagnosticoImagensForIdDiagnostico" inverse="true">
+            <key>
+                <column name="id_diagnostico" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblDiagnosticoImagen" />
+        </set>
+    </class>
+</hibernate-mapping>

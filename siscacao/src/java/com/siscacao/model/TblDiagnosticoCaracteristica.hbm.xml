@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.siscacao.model.TblDiagnosticoCaracteristica" table="tbl_diagnostico_caracteristica" schema="public">
+        <id name="idDiagnosticoCaracteristica" type="int">
+            <column name="id_diagnostico_caracteristica" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="tblDiagnosticoByIdDiagnostico" class="com.siscacao.model.TblDiagnostico" fetch="select">
+            <column name="id_diagnostico" />
+        </many-to-one>
+        <many-to-one name="tblDiagnosticoByIdDiagnosticoRelacionado" class="com.siscacao.model.TblDiagnostico" fetch="select">
+            <column name="id_diagnostico_relacionado" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

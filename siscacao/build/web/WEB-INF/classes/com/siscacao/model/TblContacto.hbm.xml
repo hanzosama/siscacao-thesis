@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.siscacao.model.TblContacto" table="tbl_contacto" schema="public">
+        <id name="idContacto" type="long">
+            <column name="id_contacto" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="tblTipoContacto" class="com.siscacao.model.TblTipoContacto" fetch="select">
+            <column name="id_tipo_contacto" />
+        </many-to-one>
+        <many-to-one name="tblSolicitante" class="com.siscacao.model.TblSolicitante" fetch="select">
+            <column name="id_solicitante" />
+        </many-to-one>
+        <property name="contacto" type="string">
+            <column name="contacto" length="40" />
+        </property>
+    </class>
+</hibernate-mapping>

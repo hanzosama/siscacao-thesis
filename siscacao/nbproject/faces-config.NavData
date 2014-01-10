@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scene Scope="Project" version="2">
+    <Scope Scope="Faces Configuration Only"/>
+    <Scope Scope="Project">
+        <Node id="portal/templatePortal.xhtml" x="900" y="150" zoom="true"/>
+        <Node id="portal/index.xhtml" x="400" y="150" zoom="true"/>
+        <Node id="view/inicio.xhtml" x="400" y="300" zoom="true"/>
+        <Node id="resources/js/jquery-ui-1.10.2.custom/index.html" x="650" y="150" zoom="true"/>
+        <Node id="view/template.xhtml" x="150" y="450" zoom="true"/>
+        <Node id="view/usuario/index.xhtml" x="139" y="164" zoom="true"/>
+    </Scope>
+    <Scope Scope="All Faces Configurations"/>
+</Scene>

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.siscacao.model.TblTipoDocumento" table="tbl_tipo_documento" schema="public">
+        <id name="idTipoDocumento" type="long">
+            <column name="id_tipo_documento" />
+            <generator class="identity" />
+        </id>
+        <property name="descripcionTipo" type="string">
+            <column name="descripcion_tipo" length="50" />
+        </property>
+        <property name="nombreTipo" type="string">
+            <column name="nombre_tipo" length="4" />
+        </property>
+        <set name="tblSolicitantes" inverse="true" cascade="all">
+            <key>
+                <column name="id_tipo_documento" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblSolicitante" />
+        </set>
+        <set name="tblDetalleUsuarios" inverse="true">
+            <key>
+                <column name="id_tipo_documento" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblDetalleUsuario" />
+        </set>
+    </class>
+</hibernate-mapping>

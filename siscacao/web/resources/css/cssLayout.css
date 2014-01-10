@@ -1,0 +1,115 @@
+
+#top {
+    position: relative;
+    background-color: #036fab;
+    color: white;
+    padding: 5px;
+    margin: 0px 0px 10px 0px;
+}
+
+#bottom {
+    text-align: center;
+    position: relative;
+    background-color: #c2dfef;
+    padding: 5px;
+    margin: 10px 0px 0px 0px;
+}
+
+#left {
+    float: left;
+    background-color: #ECF3FD;
+    padding: 5px;
+    width: 150px;
+    border: 1px solid #a6c9e2;
+    border-radius: 5px;
+}
+
+#right {
+    float: right;
+    background-color: #ECF3FD;
+    padding: 5px;
+    width: 150px;
+    border: 1px solid #a6c9e2;
+    border-radius: 5px;
+}
+
+.center_content {
+    position: relative;
+    padding: 5px;
+    min-height: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.left_content {
+    background-color: #dddddd;
+    padding: 5px;
+    margin-left: 170px;
+}
+
+.right_content {
+    position: relative;
+    padding: 5px;
+    min-height: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    min-height:400px;
+}
+
+#top a:link, #top a:visited {
+    color: white;
+    font-weight : bold;
+    text-decoration: none;
+}
+
+#top a:link:hover, #top a:visited:hover  {
+    color: black;
+    font-weight : bold;
+    text-decoration : underline;
+}
+
+#conteiner{
+    width: 1200px;
+    margin-left: auto;    
+    margin-right: auto;    
+}
+
+.homesiscacao-icon{
+    background-image:url("/siscacao/resources/gfx/favicon.ico");
+    background-size:30px 30px;
+    background-repeat:no-repeat;
+    display: block;
+    text-indent: 30px;
+    overflow: hidden; 
+}
+.homesiscacao-icon:hover{
+    background-image:url("/siscacao/resources/gfx/favicon.ico");
+    background-size:30px 30px;
+    background-position: left;
+    background-repeat:no-repeat;
+    display: block;
+    text-indent: 30px;
+    overflow: hidden; 
+}
+.mycarusel-caption{
+    position: absolute;
+    max-width: 700px;
+    padding: 0 20px;
+    margin-top: 100px;
+}
+
+.mycarusel-caption h1{
+    line-height: 1.25;
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(0,0,0,.4);
+    font-size: 38.5px;
+
+}
+.mycarusel-caption .lead {
+    margin: 0;
+    line-height: 2;
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(0,0,0,.4);
+    font-size: 21px;
+    font-weight: 200;
+}

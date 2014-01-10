@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition template="./../templatePortal.xhtml">
+            <ui:define name="top">&nbsp;</ui:define>
+            <ui:define name="content">
+                <h:form>
+                    <p:menubar>  
+                        <p:menuitem value="#{msg.home}" url="#{appBean.baseURL}portal/index.jsf?faces-redirect=true"  styleClass="homesiscacao-icon" />  
+                    </p:menubar>
+                </h:form>
+            </ui:define>
+            <ui:define name="middle_content">
+                <h:form id="form">
+                    <p:messages id="msgs" closable="true"  />         
+                    <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();" >  
+                        <p:dialog modal="true" widgetVar="statusDialog"   
+                                  draggable="false" closable="false">  
+                            <p:graphicImage value="#{appBean.baseURL}resources/gfx/ajax-loader.gif" />
+                        </p:dialog> 
+                    </p:ajaxStatus>
+                    <p:wizard widgetVar="wiz" nextLabel="Siguiente" backLabel="Volver" showStepStatus="false" >  
+                        <p:tab id="personal" title="Datos personales" >
+                            <p:panel id="panel" header="Datos personales" style="margin-bottom:10px;">  
+                                <h:panelGrid columns="3" cellpadding="2">
+                                    <h:outputLabel value="Nombre completo:" for="nombreSolicitante" />
+                                    <p:inputText id="nombreSolicitante" value="#{solicitanteBean.solicitante.nombreSolicitante}" requiredMessage="Es necesario que indique su nombre completo" required="true" label="nombreSolicitante"/>
+                                    <p:message for="nombreSolicitante" />
+                                    <h:outputLabel value="Departamento:" for="departamento" />
+                                    <p:selectOneMenu id="departamento" value="#{solicitanteBean.selectedDepartamento}" required="true" requiredMessage="Es necesario que indique su departamento de origen" filter="true">  
+                                        <f:selectItem itemLabel="seleccione" itemValue="" />  
+                                        <f:selectItems value="#{solicitanteBean.listDepartamentos}" var="depto" itemLabel="#{depto.nombreDepartamento}" itemValue="#{depto.idDepartamento}"/>
+                                    </p:selectOneMenu>
+                                    <p:message for="departamento" />
+                                    <h:outputLabel value="Tipo de documento:" for="idTipoDocumento" />
+                                    <p:selectOneMenu id="idTipoDocumento" value="#{solicitanteBean.selectedTipoDocumento}" >
+                                        <f:selectItems value="#{solicitanteBean.listTblTipoDocumentos}" var="tipos" itemLabel="#{tipos.nombreTipo}-#{tipos.descripcionTipo}" itemValue="#{tipos.idTipoDocumento}" />
+                                    </p:selectOneMenu>
+                                    <p:column/>
+                                    <h:outputLabel value="Numero de documento:" for="numeroDocumento" />
+                                    <p:inputText id="numeroDocumento"  value="#{solicitanteBean.solicitante.numeroDocumento}" title="numero de documento" required="true" label="numeroDocumento" requiredMessage="Este campo es obligatorio para iniciar el proceso" converterMessage="No es un numero valido de documento" >
+                                        <f:convertNumber type="number"/>
+                                        <f:validateLength minimum="2" /> 
+                                    </p:inputText>
+                                    <p:message for="numeroDocumento" /> 
+                                    <h:outputLabel value="Telefono Fijo:" for="idContactoFijo" />
+                                    <p:inputText id="idContactoFijo"  value="#{solicitanteBean.telefonoFijo}" title="numero de telefono fijo"  requiredMessage="Es necesario que indique un numero de telefono " required="true" >
+                                    </p:inputText>
+                                    <p:message for="idContactoFijo" />
+                                    <h:outputLabel value="Telefono movil:" for="idContactoMovil" />
+                                    <p:inputMask id="idContactoMovil" value="#{solicitanteBean.telefonoMovil}" mask="(999) 999-9999" required="true" requiredMessage="Es necesario que indique un numero de telefono movil"/>
+                                    <p:message for="idContactoMovil" />
+                                </h:panelGrid>
+                            </p:panel>
+                        </p:tab> 
+
+                        <p:tab id="address" title="Informacion de cultivo">  
+                            <p:panel id="panel2" header="Informacion de cultivo" style="margin-bottom:10px;">  
+                                <h:panelGrid columns="3" cellpadding="2">
+                                    <h:outputLabel value="Nombre Cultivo:" for="nombreCultivo" />
+                                    <p:inputText id="nombreCultivo" value="#{solicitanteBean.cultivo.nombreCultivo}" requiredMessage="Es necesario que indique un nombre que identifique el cultivo" required="true" label="nombreCultivo"/>
+                                    <p:message for="nombreCultivo" />                              
+
+                                    <h:outputLabel value="Extensión del Cultivo:" for="extensionCultivo" />
+                                    <p:inputText id="extensionCultivo" value="#{solicitanteBean.cultivo.extensionCultivo}"  label="extensionCultivo"/>
+                                    <p:message for="extensionCultivo" />  
+
+                                    <h:outputLabel value="Clima:" for="nombreClima" />
+                                    <p:selectOneMenu id="nombreClima" value="#{solicitanteBean.selectedClima}">  
+                                        <f:selectItem itemLabel="Seleccione" itemValue="" />  
+                                        <f:selectItems value="#{solicitanteBean.listClima}" var="clima" itemLabel="#{clima.nombreClima}" itemValue="#{clima.idClima}"/>
+                                    </p:selectOneMenu>
+                                    <p:column/>
+
+                                    <h:outputLabel value="Edad del Cultivo:" for="edadCultivo" />
+                                    <p:inputText id="edadCultivo" value="#{solicitanteBean.cultivo.edadCultivo}"  label="edadCultivo"/>
+                                    <p:message for="edadCultivo"/>
+
+                                    <h:outputLabel value="Variedad:" for="nombreVariedad" />
+                                    <p:selectOneMenu id="nombreVariedad" value="#{solicitanteBean.selectedVariedad}">  
+                                        <f:selectItem itemLabel="Seleccione" itemValue="" />  
+                                        <f:selectItems value="#{solicitanteBean.listVariedad}" var="variedad" itemValue="#{variedad.idVariedad}" itemLabel="#{variedad.nombreVariedad}" />
+                                    </p:selectOneMenu>
+                                    <p:column/>
+
+                                    <h:outputLabel value="Tecnica sobre el cultivo:" for="nombreTecnica" />
+                                    <p:selectOneMenu id="nombreTecnica" value="#{solicitanteBean.selectedTecnica}">  
+                                        <f:selectItem itemLabel="Seleccione" itemValue="" />  
+                                        <f:selectItems value="#{solicitanteBean.listTecnica}" var="tecnica" itemLabel="#{tecnica.nombreTecnica}" itemValue="#{tecnica.idTecnica}"/>
+                                    </p:selectOneMenu>
+                                    <p:column/>
+
+                                    <h:outputLabel value="Estado de producción:" for="descripcionEstado" />
+                                    <p:selectOneMenu id="descripcionEstado" value="#{solicitanteBean.selectedEstadoPro}">  
+                                        <f:selectItem itemLabel="Seleccione" itemValue="" />  
+                                        <f:selectItems value="#{solicitanteBean.listEstadoPro}" var="estPro" itemLabel="#{estPro.descripcionEstado}" itemValue="#{estPro.idEstadoProduccion}" />
+                                    </p:selectOneMenu>
+                                    <p:column/>                                
+                                </h:panelGrid>
+                            </p:panel>
+                        </p:tab>  
+
+                        <p:tab id="contact" title="Informacion multimedia"> 
+                            <p:panel header="Informacion multimedia">  
+                                <h:form enctype="multipart/form-data" id="form_file">  
+                                    <p:messages id="msfile" showDetail="true"/>
+                                    <p:outputLabel value="Si tiene fotos de su cultivo o imagenes de los frutos afectados, puede cargarlos para que un experto analize el caso." />
+                                    <br/>
+                                    <p:outputLabel value="Las imagenes tomadas pueden ser similares a las siguientes:" />
+                                    <br/>
+                                    <br/>
+                                    <p:lightBox styleClass="imagebox">  
+                                        <h:outputLink value="#{appBean.baseURL}resources/gfx/example-1.JPG"  title="Fruto Sano">  
+                                            <p:graphicImage value="#{appBean.baseURL}resources/gfx/example-1.JPG"/>  
+                                        </h:outputLink>  
+                                        <p:spacer/>
+                                        <h:outputLink value="#{appBean.baseURL}resources/gfx/example-2.JPG" title="phitophtora">  
+                                            <p:graphicImage value="#{appBean.baseURL}resources/gfx/example-2.JPG" />  
+                                        </h:outputLink>  
+                                        <p:spacer/>
+                                        <h:outputLink value="#{appBean.baseURL}resources/gfx/example-3.JPG" title="Monilia">  
+                                            <p:graphicImage value="#{appBean.baseURL}resources/gfx/example-3.JPG"/>  
+                                        </h:outputLink>  
+                                        <p:spacer/>
+                                        <h:outputLink value="#{appBean.baseURL}resources/gfx/example-4.JPG" title="Escoba de bruja">  
+                                            <p:graphicImage value="#{appBean.baseURL}resources/gfx/example-4.JPG"/>  
+                                        </h:outputLink>  
+                                    </p:lightBox>
+                                    <br/>
+                                    <br/>
+                                    <p:fileUpload fileUploadListener="#{solicitanteBean.uploadToTmpUserFolder}"  
+                                                  mode="advanced"  
+                                                  update="msfile"   
+                                                  multiple="true"  
+                                                  sizeLimit="1000000"   
+                                                  cancelLabel="Cancelar"
+                                                  invalidFileMessage="Tipo de imagen no soportada"
+                                                  invalidSizeMessage="Tamaño de imagen no soportado"
+                                                  required="true"
+                                                  requiredMessage="Es necesario anexar como minimo una imagen al proceso"
+                                                  uploadLabel="Subir imagen"
+                                                  label="selccionar"
+                                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                                  />  
+                                </h:form>
+                                <br/>
+                                <p:outputLabel value="Para finalizar el registro, de click en guardar; se le indicara un numero de registro que usted usará para ver los resultados de su caso" />
+                                <br/>
+                                <br/>
+                                <p:commandButton value="guardar" icon="ui-icon-disk" update="panel" 
+                                                 actionListener="#{solicitanteBean.saveInfoSolicitante}" title="Guardar toda la informacion registrada|"/>  
+                            </p:panel>                                                               
+                        </p:tab>  
+                        <!--
+                        <p:tab id="confirm" title="Confirmation">  
+                            <p:panel header="Confirmation">  
+                                <h:panelGrid id="confirmation" columns="6">  
+                                </h:panelGrid>  
+                                <p:commandButton value="guardar" icon="ui-icon-disk" update="panel" 
+                                                 actionListener="#{solicitanteBean.saveInfoSolicitante}"/>  
+                            </p:panel>  
+                        </p:tab>  
+                        -->
+                    </p:wizard>  
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

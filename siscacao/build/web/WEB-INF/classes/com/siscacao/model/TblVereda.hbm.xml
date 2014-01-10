@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.siscacao.model.TblVereda" table="tbl_vereda" schema="public">
+        <id name="idVereda" type="int">
+            <column name="id_vereda" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="tblDepartamento" class="com.siscacao.model.TblDepartamento" fetch="select">
+            <column name="id_departamento" />
+        </many-to-one>
+        <property name="nombreVereda" type="string">
+            <column name="nombre_vereda" length="80" />
+        </property>
+        <set name="tblSolicituds" inverse="true">
+            <key>
+                <column name="id_vereda" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblSolicitud" />
+        </set>
+    </class>
+</hibernate-mapping>

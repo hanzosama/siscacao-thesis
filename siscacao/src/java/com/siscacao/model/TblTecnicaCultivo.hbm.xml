@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.siscacao.model.TblTecnicaCultivo" table="tbl_tecnica_cultivo" schema="public">
+        <id name="idTecnica" type="long">
+            <column name="id_tecnica" />
+            <generator class="identity" />
+        </id>
+        <property name="nombreTecnica" type="string">
+            <column name="nombre_tecnica" length="64" />
+        </property>
+        <set name="tblCultivos" inverse="true">
+            <key>
+                <column name="id_tecnica" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblCultivo" />
+        </set>
+    </class>
+</hibernate-mapping>

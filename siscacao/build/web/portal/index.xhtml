@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./templatePortal.xhtml">
+            <ui:define name="content">
+                <p:growl id="msgs" showDetail="true" />  
+                <p:carousel  pageLinks="8" autoPlayInterval="4000" numVisible="1" effect="easeInStrong" circular="true" styleClass="conteiner"> 
+                    <p:graphicImage value="#{appBean.baseURL}resources/gfx/slide-01.png" style="width: 1180px; height: 350px;">
+                        <div class="mycarusel-caption">
+                            <h1>Mejore y Aprenada para el futuro</h1>
+                            <p class="lead">Si tiene problemas con el cultivo,necesita ayuda de un profesional o consejos sobre nuevas tecnologias y procesos para mejorar sus practicas agricolas</p>
+                            <p:button value="registrarme" href="#{appBean.baseURL}portal/usuarios/registro.jsf?faces-redirect=true"></p:button>
+                        </div>                    
+                    </p:graphicImage>
+                    <p:graphicImage value="#{appBean.baseURL}resources/gfx/slide-02.png" style="width: 1180px; height: 350px;">
+                        <div class="mycarusel-caption">
+                            <h1>Resultados y Cambios</h1>
+                            <p class="lead">Consulte los datos , el avance de la investigacion y los consejos ofrecidos por el procesional, para tratar sanar y mejorar su cultivo</p>
+                            <h:form id="form_old_users">
+                                <p:commandButton value="#{msg.login}" oncomplete="dialogUsuarioRegister.show()"></p:commandButton>
+                            </h:form>
+                        </div> 
+                    </p:graphicImage>  
+                    <p:graphicImage value="#{appBean.baseURL}resources/gfx/slide-03.png" style="width: 1180px; height: 350px;"/>
+                    <p:graphicImage value="#{appBean.baseURL}resources/gfx/slide-04.png" style="width: 1180px; height: 350px;"/>                   
+                    <p:graphicImage value="#{appBean.baseURL}resources/gfx/slide-05.png" style="width: 1180px; height: 350px;"/>                   
+                    <p:graphicImage value="#{appBean.baseURL}resources/gfx/slide-06.png" style="width: 1180px; height: 350px;"/>                   
+                    <p:graphicImage value="#{appBean.baseURL}resources/gfx/slide-07.png" style="width: 1180px; height: 350px;"/>                   
+                    <p:graphicImage value="#{appBean.baseURL}resources/gfx/slide-08.png" style="width: 1180px; height: 350px;"/>                   
+                </p:carousel>           
+            </ui:define>
+            <ui:define name="middle_content">
+                <p:layout  id="layout">  
+                    <p:layoutUnit position="west" size="200" header=" " resizable="true" collapsible="true">  
+                    </p:layoutUnit>  
+                    <p:layoutUnit position="center">  
+                    </p:layoutUnit>  
+                    <p:layoutUnit position="east"  size="310" header="#{msg.hdlogin}" resizable="true" collapsible="true">    
+                        <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();" >  
+                            <p:dialog modal="true" widgetVar="statusDialog" header="#{msg.loading_session}"   
+                                      draggable="false" closable="false">  
+                                <p:graphicImage value="#{appBean.baseURL}resources/gfx/ajax-loader.gif" />
+                            </p:dialog> 
+                        </p:ajaxStatus> 
+                        <h:form id="form_login">  
+                            <p:panel id="ingreso">  
+                                <h:panelGrid columns="2" cellpadding="5">  
+                                    <h:outputLabel for="username" value="#{msg.user}" />
+                                    <p:inputText value="#{loginBean.usuario.cuenta}"   
+                                                 id="username" required="true" requiredMessage="#{msg.rquser}" label="username"  /> 
+                                    <h:outputLabel for="password" value="#{msg.pass}" />  
+                                    <p:password value="#{loginBean.usuario.contrasena}"   
+                                                id="password" required="true" requiredMessage="#{msg.rqpass}" label="password" />  
+                                    <f:facet name="footer">  
+                                        <p:commandButton id="loginButton" value="#{msg.login}" update=":msgs,ingreso" action="#{loginBean.login}"  />
+                                    </f:facet>  
+                                </h:panelGrid>  
+                            </p:panel>  
+                        </h:form>
+                    </p:layoutUnit> 
+                </p:layout>
+                <h:form id="form_user_register">
+                    <p:dialog widgetVar="dialogUsuarioRegister" resizable="false" id="dlgUsuarioRegister"  
+                              showEffect="fade" hideEffect="clip" modal="true">
+                        <p:messages id="local_msgs" closable="true" autoUpdate="true"/>  
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">           
+                            <h:outputText value="#{msg.number_document}" />  
+                            <p:inputText value="#{solicitanteBean.solicitante.numeroDocumento}" required="true" requiredMessage="Es necesario el numero de documento" validatorMessage="Ingrese un numero de documento valido" placeholder="TI,CC,Codigo estudiantil ...">
+                               <f:validateLength minimum="2" maximum="18" />  
+                            </p:inputText>  
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <p:commandButton id="btnRegisterAccept" update=":msgs,local_msgs,dlgUsuarioRegister"  actionListener="#{solicitanteBean.loginSolicitante}" oncomplete="handleSubmitRequest(xhr, status, args)"  value="#{msg.login}" icon="ui-icon-person"/>  
+                                <p:commandButton id="btnRegisterCancel" oncomplete="dialogUsuarioRegister.hide();"  title="#{msg.cancel}" value="#{msg.cancel}" icon="ui-icon-closethick"/>  
+                            </f:facet>
+                        </h:panelGrid>
+                        <p:ajax event="close" oncomplete="dialogUsuarioRegister.hide();"/> 
+                    </p:dialog>                     
+
+                    <h:form id="form_new_register">
+                        <p:confirmDialog id="newRegisterDialog" message="Desea registrar sus datos y reportar su caso?"  severity="alert" widgetVar="dialogNewRegister" showEffect="fade" hideEffect="clip" >
+                            <p:button id="comfirm" value="#{msg.yes}" href="#{appBean.baseURL}portal/usuarios/registro.jsf?faces-redirect=true"   icon="ui-icon-check" />
+                            <p:commandButton id="decline" value="#{msg.no}" onclick="dialogNewRegister.hide(); dialogUsuarioRegister.show();" icon="ui-icon-closethick" type="button"/>   
+                        </p:confirmDialog>    
+                    </h:form>
+
+                </h:form> 
+                <script type="text/javascript">
+                            //pendiente implementacion de callback
+                            function handleSubmitRequest(xhr, status, args) {
+                                if (args.validationFailed) {
+                                    dialogUsuarioRegister.show();
+                                    //dialog.effect("shake", {times: 3}, 100);
+                                } else if (args.loggedIn == false) {
+                                    dialogUsuarioRegister.hide();
+                                    dialogNewRegister.show();
+                                    //  dialog.show();                               
+                                }
+                            }
+                </script>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

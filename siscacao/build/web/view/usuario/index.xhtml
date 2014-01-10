@@ -1,0 +1,245 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="content">
+                <p:growl id="msgs" showDetail="true" /> 
+                <!--CRUD usuarios -->           
+                <h:form id="form_user_admin">
+                    <p:commandButton id="btnUsuarioCreate" update=":form_user_create:dlgUsuarioCreate" oncomplete="dialogUsuarioCreate.show()" icon="ui-icon-person" title="#{msg.create}" value="#{msg.create}"/>                       
+                    <p:commandButton id="btnRoles"  icon="ui-icon-link" title="Roles" update=":form_data_roles:dlgRoles" value="Roles" oncomplete="dialogRoles.show()"/>                       
+                </h:form>
+
+                <h:form id="form_data_users">  
+                    <p:dataTable id="users"  var="usuario" value="#{usuarioBean.usuarios}" paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 sortMode="multiple" filteredValue=""  >  
+                        <f:facet name="header">  
+                            #{msg.users_registered} 
+                        </f:facet>
+                        <p:column headerText="#{msg.user_name}" style="width:24%">  
+                            <h:outputText value="#{usuario.nombreUsuario}" />  
+                        </p:column>  
+                        <p:column headerText="#{msg.user_account}"  style="width:24%" >  
+                            <h:outputText value="#{usuario.cuenta}" />  
+                        </p:column>  
+                        <p:column  headerText="#{msg.user_date_register}"  style="width:24%">  
+                            <h:outputText value="#{usuario.fechaRegistro}"/>  
+                        </p:column>  
+                        <p:column  headerText="#{msg.user_rol}"  style="width:24%">  
+                            <h:outputText value="#{usuario.rol}"/>
+                        </p:column>  
+                        <p:column style="width:15%">  
+                            <p:commandButton id="btnUsuarioUpdate" update=":form_user_update:dlgUsuarioUpdate" oncomplete="dialogUsuarioUpdate.show()" icon="ui-icon-pencil" title="#{msg.update}">  
+                                <f:setPropertyActionListener value="#{usuario}" target="#{usuarioBean.selectedUser}" />  
+                            </p:commandButton>  
+                            <p:commandButton id="btnUsuarioDelete" update=":form_user_delete:deleteUserDialog" oncomplete="dialogUsuarioDelete.show()" icon="ui-icon-trash" title="#{msg.delete}"  >  
+                                <f:setPropertyActionListener id="diferente" value="#{usuario}" target="#{usuarioBean.selectedUser}" /> 
+                            </p:commandButton> 
+                            <p:commandButton id="btnUsuarioResetPwd" update=":form_user_reset_pwd:dlgUsuarioResetPwd" oncomplete="dialogUsuarioResetPwd.show()" icon="ui-icon-locked" title="#{msg.user_reset_pwd}">  
+                                <f:setPropertyActionListener value="#{usuario}" target="#{usuarioBean.selectedUser}"  />  
+                            </p:commandButton> 
+                        </p:column>  
+
+                    </p:dataTable>  
+                </h:form>
+
+                <h:form id="form_user_create">
+                    <p:dialog header="#{msg.user_create}" widgetVar="dialogUsuarioCreate" resizable="false" id="dlgUsuarioCreate"  
+                              showEffect="fade" hideEffect="clip" modal="true">  
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">           
+                            <h:outputText value="#{msg.lbuser_name}" />  
+                            <p:inputText value="#{usuarioBean.selectedUser.nombreUsuario}" required="true" requiredMessage="#{msg.rq_user_name}"/>  
+                            <h:outputText value="#{msg.lbuser_account}" />  
+                            <p:inputText value="#{usuarioBean.selectedUser.cuenta}" required="true" requiredMessage="#{msg.rq_user_account}"/> 
+                            <h:outputText value="#{msg.lbuser_rol}" /> 
+                            <p:selectOneMenu id="roles" value="#{usuarioBean.rol}" required="true" requiredMessage="#{msg.rq_user_perfil}">  
+                                <f:selectItem itemLabel="#{msg.selection} #{msg.user_rol}" itemValue="" />  
+                                <f:selectItems value="#{usuarioBean.roles}" />  
+                            </p:selectOneMenu> 
+                            <h:outputText value="#{msg.pass}" />
+                            <p:password id="pwd1" value="#{usuarioBean.selectedUser.contrasena}" match="pwd2" validatorMessage="#{msg.rq_no_coincide_pass}" required="true" requiredMessage="#{msg.rq_user_pass}" maxlength="200" feedback="true" goodLabel="#{msg.pass_level_middle}" inline="true" strongLabel="#{msg.pass_level_strong}" weakLabel="#{msg.pass_level_weak}"/>
+                            <h:outputText value="#{msg.confirm} #{msg.pass}" />
+                            <p:password id="pwd2" value="#{usuarioBean.selectedUser.contrasena}" required="true" maxlength="200"/>
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <p:commandButton id="btnCreateAccept" update=":form_data_users:users,:form_user_admin,:msgs,dlgUsuarioCreate"  actionListener="#{usuarioBean.createSelectedUser}" oncomplete="dialogUsuarioCreate.show()" title="#{msg.save}" value="#{msg.create}" icon="ui-icon-disk"/>  
+                                <p:commandButton id="btnCreateCancel" oncomplete="dialogUsuarioCreate.hide()"  title="#{msg.cancel}" value="#{msg.cancel}" icon="ui-icon-closethick"/>  
+                            </f:facet>
+                        </h:panelGrid>
+                        <p:ajax event="close" oncomplete="dialogUsuarioCreate.hide()"/> 
+                    </p:dialog>  
+                </h:form> 
+
+                <h:form id="form_user_update">
+                    <p:dialog header="#{msg.user_update}" widgetVar="dialogUsuarioUpdate" resizable="false" id="dlgUsuarioUpdate"  
+                              showEffect="fade" hideEffect="clip" modal="true" >  
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">           
+                            <h:column/>
+                            <p:inputText type="hidden" value="#{usuarioBean.selectedUser.idUsuario}" />
+                            <h:column/>
+                            <p:inputText type="hidden" value="#{usuarioBean.selectedUser.contrasena}" /> 
+                            <h:outputText value="Cuenta:" />  
+                            <h:outputText value="#{usuarioBean.selectedUser.cuenta}" />
+                            <h:column/>  
+                            <p:inputText type="hidden" value="#{usuarioBean.selectedUser.cuenta}" />
+                            <h:outputText value="#{msg.lbuser_name}" />  
+                            <p:inputText value="#{usuarioBean.selectedUser.nombreUsuario}" required="true" requiredMessage="#{msg.rq_user_name}"/>
+                            <h:outputText value="#{msg.lbuser_rol}" /> 
+                            <p:selectOneMenu id="roles" value="#{usuarioBean.selectedUser.rol}" required="true" requiredMessage="#{msg.rq_user_perfil}">  
+                                <f:selectItem itemLabel="#{msg.selection} #{msg.user_rol}" itemValue="" />  
+                                <f:selectItems value="#{usuarioBean.roles}" />  
+                            </p:selectOneMenu> 
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <p:commandButton id="btnCreateAccept" update=":form_data_users:users,:msgs,dlgUsuarioUpdate" oncomplete="dialogUsuarioUpdate.show()" actionListener="#{usuarioBean.updateSelectedUser}" title="#{msg.save}" value="#{msg.save}" icon="ui-icon-disk"/>
+                                <p:commandButton id="btnCreateCancel" oncomplete="dialogUsuarioUpdate.hide()"  title="#{msg.cancel}" value="#{msg.cancel}" icon="ui-icon-closethick"/>  
+                            </f:facet>
+                        </h:panelGrid>  
+                    </p:dialog>  
+                </h:form>  
+
+                <h:form id="form_user_reset_pwd">
+                    <p:dialog header="#{msg.reset_user_pass} #{usuarioBean.selectedUser.cuenta} " widgetVar="dialogUsuarioResetPwd" resizable="false" id="dlgUsuarioResetPwd"  
+                              showEffect="fade" hideEffect="clip" modal="true" >
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">           
+                            <h:column/>
+                            <p:inputText type="hidden" value="#{usuarioBean.selectedUser.idUsuario}" />
+                            <h:column/>
+                            <p:inputText type="hidden" value="#{usuarioBean.selectedUser.contrasena}" />
+                            <h:outputText value="#{msg.current_pass}" />
+                            <p:password  value="#{usuarioBean.oldPwd}"    required="true" requiredMessage="#{msg.rg_current_pass}" maxlength="200" immediate="true" />
+                            <h:outputText value="#{msg.new_pass}" />
+                            <p:password id="pwd1" value="#{usuarioBean.newPwd}" match="pwd2" validatorMessage="#{msg.rq_no_coincide_pass}" required="true" requiredMessage="#{msg.rq_user_pass}" maxlength="200" feedback="true" goodLabel="#{msg.pass_level_middle}" inline="true" strongLabel="#{msg.pass_level_strong}" weakLabel="#{msg.pass_level_weak}"/>
+                            <h:outputText value="#{msg.confirm_new_pass}" />
+                            <p:password id="pwd2" value="#{usuarioBean.newPwd}" required="true" maxlength="200"/>                
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <p:commandButton id="btnCreateAccept" update=":msgs,dlgUsuarioResetPwd" oncomplete="dialogUsuarioResetPwd.show()"  title="#{msg.save}" value="#{msg.save}" icon="ui-icon-disk" actionListener="#{usuarioBean.resetPwdSelectedUser}"/>
+                                <p:commandButton id="btnCreateCancel" oncomplete="dialogUsuarioResetPwd.hide()"  title="Cancelar" value="Cancelar" icon="ui-icon-closethick"/>  
+                            </f:facet>
+                        </h:panelGrid>  
+                    </p:dialog>  
+                </h:form>  
+                <h:form id="form_user_delete">
+                    <p:confirmDialog id="deleteUserDialog" message="#{msg.wrn_delete_user_confirm} #{usuarioBean.selectedUser.nombreUsuario} " header="#{msg.user_delete}" severity="alert" widgetVar="dialogUsuarioDelete" showEffect="fade" hideEffect="clip" >
+                        <p:inputText value="#{usuarioBean.selectedUser.idUsuario}" type="hidden"/>  
+                        <p:commandButton id="comfirm" value="#{msg.yes}" update=":form_data_users:users,:msgs" oncomplete="dialogUsuarioDelete.hide()"  icon="ui-icon-check" actionListener="#{usuarioBean.deleteSelectedUser}"/>
+                        <p:commandButton id="decline" value="#{msg.no}" onclick="dialogUsuarioDelete.hide()" icon="ui-icon-closethick" type="button"/>   
+                    </p:confirmDialog>    
+                </h:form>
+                <!--CRUD ROLES-->
+                <h:form id="form_data_roles"> 
+                    <p:dialog header="#{msg.rols}" widgetVar="dialogRoles" resizable="false" id="dlgRoles"  
+                              showEffect="fade" hideEffect="clip" dynamic="true" modal="true">  
+                        <h:form id="form_roles">
+                            <p:commandButton id="btnRolCreate" update=":form_rol_create:dlgRolCreate" oncomplete="dialogRoles.hide(),dialogRolCreate.show()" icon="ui-icon-person" title="#{msg.create}" value="#{msg.create}"/>                       
+                        </h:form>
+                        <p:dataTable id="roles"  var="rol" value="#{rolBean.roles}" paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                     sortMode="multiple" >  
+                            <f:facet name="header">  
+                                #{msg.rols_of_users}
+                            </f:facet>
+                            <p:column headerText="#{msg.rol_perf}" style="width:24%">  
+                                <h:outputText value="#{rol.nombreRol}" />  
+                            </p:column>  
+                            <p:column headerText="#{msg.escription}"  style="width:24%" >  
+                                <h:outputText value="#{rol.descripcion}" />  
+                            </p:column>  
+                            <p:column  headerText="#{msg.lbl_date_register}"  style="width:24%">  
+                                <h:outputText value="#{rol.fechaModificacion}"/>  
+                            </p:column>
+
+                            <p:column style="width:15%">  
+                                <p:commandButton id="btnRolUpdate" update=":form_rol_update:dlgRolUpdate" oncomplete="dialogRoles.hide(),dialogRolUpdate.show()" icon="ui-icon-pencil" title="#{msg.update}">  
+                                    <f:setPropertyActionListener value="#{rol}" target="#{rolBean.selectedRol}"  /> 
+                                </p:commandButton>  
+                                <p:commandButton id="btnRolDelete" update=":form_rol_delete:deleteRolDialog" oncomplete="dialogRoles.hide(),dialogRolDelete.show()" icon="ui-icon-trash" title="#{msg.delete}"  >  
+                                    <f:setPropertyActionListener id="diferente" value="#{rol}" target="#{rolBean.selectedRol}" /> 
+                                </p:commandButton>  
+                            </p:column> 
+                        </p:dataTable>  
+                    </p:dialog>
+                </h:form>
+
+                <h:form id="form_rol_create" >
+                    <p:dialog header="#{lbl_create_new_rol}" widgetVar="dialogRolCreate" resizable="false" id="dlgRolCreate"  
+                              showEffect="fade" hideEffect="clip" modal="true">  
+
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">           
+                            <h:outputText value="#{msg.lbl_name_of_rol}" />  
+                            <p:inputText value="#{rolBean.selectedRol.nombreRol}" required="true" requiredMessage="#{msg.rq_name_of_rol}" />  
+                            <h:outputText value="#{msg.lbl_description}" />  
+                            <p:inputTextarea value="#{rolBean.selectedRol.descripcion}" rendered="true" requiredMessage="#{msg.rq_description}"/> 
+                            <h:outputText value="#{msg.lbl_permission}" />
+                            <p:selectCheckboxMenu value="#{rolBean.funcionesSelected}" label="#{msg.selection}" panelStyle="width:170px" style="width:170px" required="true" requiredMessage="#{msg.rq_select_a_per}">  
+                                <f:selectItems value="#{rolBean.funciones}"   />  
+                            </p:selectCheckboxMenu>
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <p:commandButton id="btnCreateAccept" update=":form_data_roles:dlgRoles,:msgs,dlgRolCreate" oncomplete="dialogRolCreate.show()" actionListener="#{rolBean.createRol}"   title="#{msg.create}" value="#{msg.create}" icon="ui-icon-disk" />  
+                                <p:commandButton id="btnCreateCancel" oncomplete="dialogRolCreate.hide(),dialogRoles.show()"  title="#{msg.cancel}" value="#{msg.cancel}" icon="ui-icon-closethick"/>  
+                            </f:facet>
+                        </h:panelGrid>  
+                        <p:ajax event="close" oncomplete="dialogRolCreate.hide(),dialogRoles.show()"/> 
+
+                    </p:dialog>  
+                </h:form> 
+
+                <h:form id="form_rol_update">
+                    <p:dialog header="Modificar Rol" widgetVar="dialogRolUpdate" resizable="false" id="dlgRolUpdate"  
+                              showEffect="fade" hideEffect="clip" modal="true">  
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;"> 
+                            <p:inputText value="#{rolBean.selectedRol.idRol}"  type="hidden"/> 
+                            <h:column/>
+                            <h:outputText value="#{msg.lbl_name_of_rol}" />  
+                            <p:inputText value="#{rolBean.selectedRol.nombreRol}"/>  
+                            <h:outputText value="#{msg.lbl_description}" />  
+                            <p:inputTextarea value="#{rolBean.selectedRol.descripcion}" /> 
+                            <h:outputText value="#{msg.lbl_permission}" />
+                            <p:selectCheckboxMenu value="#{rolBean.funcionesSelected}" label="#{msg.selection}"  panelStyle="width:170px" style="width:170px" required="true" requiredMessage="#{msg.rq_select_a_per}"  >  
+                                <f:selectItems value="#{rolBean.funciones}"  /> 
+                            </p:selectCheckboxMenu>
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <p:commandButton id="btnCreateAccept" update=":form_data_roles:dlgRoles,:msgs,dlgRolUpdate" oncomplete="dialogRolUpdate.show()" actionListener="#{rolBean.updateSelectedRol}"  title="#{msg.save}" value="#{msg.save}" icon="ui-icon-disk"/>
+                                <p:commandButton id="btnCreateCancel" oncomplete="dialogRolUpdate.hide(),dialogRoles.show()"  title="#{msg.cancel}" value="#{msg.cancel}" icon="ui-icon-closethick"/>  
+                            </f:facet>
+                        </h:panelGrid>
+                        <p:ajax event="close" oncomplete="dialogRolUpdate.hide(),dialogRoles.show()"/> 
+                    </p:dialog>  
+                </h:form>  
+                <h:form id="form_rol_delete">
+                    <p:confirmDialog id="deleteRolDialog" message="#{msg.wrn_delete_rol_confim} #{rolBean.selectedRol.nombreRol} " header="#{msg.lbl_delete_rol}" severity="alert" widgetVar="dialogRolDelete" showEffect="fade" hideEffect="clip" >
+                        <p:inputText value="#{rolBean.selectedRol.idRol}" type="hidden"/>  
+                        <p:commandButton id="comfirm" value="#{msg.yes}" update=":form_data_roles:roles,:msgs" oncomplete="dialogRolDelete.hide(),dialogRoles.show()"  icon="ui-icon-check" actionListener="#{rolBean.deleteSelectedRol}"/>
+                        <p:commandButton id="decline" value="#{msg.no}" onclick="dialogRolDelete.hide(), dialogRoles.show()" icon="ui-icon-closethick" type="button"/>   
+                    </p:confirmDialog>    
+                </h:form>
+                <script type="text/javascript">
+                            //pendiente implementacion de callback
+                            function handleSubmitRequest(xhr, status, args, dialogName, formName) {
+                                dialog = jQuery('#' + dialogName);
+                                if (args.validationFailed) {
+                                    dialog.effect("shake", {times: 3}, 100);
+                                } else {
+                                    clearForm(formName);
+                                    newUserDialog.hide();
+                                    userDialog.hide();
+                                }
+                            }
+                            function clearForm(formName) {
+                                jQuery('#' + formName).each(function() {
+                                    this.reset();
+                                });
+                            }
+                </script> 
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

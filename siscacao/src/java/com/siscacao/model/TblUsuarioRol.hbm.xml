@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.siscacao.model.TblUsuarioRol" table="tbl_usuario_rol" schema="public">
+        <id name="idUsuarioRol" type="long">
+            <column name="id_usuario_rol" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="tblRol" class="com.siscacao.model.TblRol" fetch="select" >
+            <column name="id_rol" />
+        </many-to-one>
+        <many-to-one name="tblUsuario" class="com.siscacao.model.TblUsuario" fetch="select">
+            <column name="id_usuario" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

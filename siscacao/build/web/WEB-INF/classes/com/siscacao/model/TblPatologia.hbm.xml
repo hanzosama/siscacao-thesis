@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.siscacao.model.TblPatologia" table="tbl_patologia" schema="public">
+        <id name="idPatologia" type="int">
+            <column name="id_patologia" />
+            <generator class="assigned" />
+        </id>
+        <property name="descripcionPatologia" type="string">
+            <column name="descripcion_patologia" length="512" />
+        </property>
+        <property name="observacionesPatologia" type="string">
+            <column name="observaciones_patologia" length="512" />
+        </property>
+        <set name="tblSolicituds" inverse="true">
+            <key>
+                <column name="id_patologia" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblSolicitud" />
+        </set>
+        <set name="tblSintomaPatologias" inverse="true">
+            <key>
+                <column name="id_patologia" />
+            </key>
+            <one-to-many class="com.siscacao.model.TblSintomaPatologia" />
+        </set>
+    </class>
+</hibernate-mapping>
