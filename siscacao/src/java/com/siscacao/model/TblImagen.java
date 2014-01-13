@@ -1,6 +1,13 @@
 package com.siscacao.model;
 // Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+
 
 
 /**
@@ -8,8 +15,11 @@ package com.siscacao.model;
  */
 public class TblImagen  implements java.io.Serializable {
 
-
-     private int idImagen;
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+     @Basic(optional = false)
+     @Column(name = "id_imagen") 
+     private Long idImagen;
      private TblSolicitud tblSolicitud;
      private String nombreImagen;
      private String pathImagen;
@@ -18,21 +28,21 @@ public class TblImagen  implements java.io.Serializable {
     }
 
 	
-    public TblImagen(int idImagen) {
+    public TblImagen(Long idImagen) {
         this.idImagen = idImagen;
     }
-    public TblImagen(int idImagen, TblSolicitud tblSolicitud, String nombreImagen, String pathImagen) {
+    public TblImagen(Long idImagen, TblSolicitud tblSolicitud, String nombreImagen, String pathImagen) {
        this.idImagen = idImagen;
        this.tblSolicitud = tblSolicitud;
        this.nombreImagen = nombreImagen;
        this.pathImagen = pathImagen;
     }
    
-    public int getIdImagen() {
+    public Long getIdImagen() {
         return this.idImagen;
     }
     
-    public void setIdImagen(int idImagen) {
+    public void setIdImagen(Long idImagen) {
         this.idImagen = idImagen;
     }
     public TblSolicitud getTblSolicitud() {

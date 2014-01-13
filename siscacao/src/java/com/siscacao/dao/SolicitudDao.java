@@ -12,4 +12,5 @@ import com.siscacao.model.TblSolicitud;
  */
 public interface SolicitudDao {
   public boolean createSolicitud(TblSolicitud tblSolicitud);
+  public boolean updateSolicitud(TblSolicitud tblSolicitud);
 }

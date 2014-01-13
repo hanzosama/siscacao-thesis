@@ -4,7 +4,7 @@
  */
 package com.siscacao.dao;
 
-import com.siscacao.model.TblSolicitud;
+import com.siscacao.model.TblImagen;
 import com.siscacao.util.HibernateConnectUtil;
 import org.hibernate.Session;
 
@@ -12,15 +12,32 @@ import org.hibernate.Session;
  *
  * @author Hanzo
  */
-public class SolicitudDaoImpl implements SolicitudDao{
+public class ImagenDaoImpl implements ImagenDao{
 
     @Override
-    public boolean createSolicitud(TblSolicitud tblSolicitud) {
+    public boolean createImagen(TblImagen imagen) {
+ boolean result;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        try {
+            session.beginTransaction();
+            session.save(imagen);
+            session.beginTransaction().commit();
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = false;
+            session.beginTransaction().rollback();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean updateImagen(TblImagen imagen) {
         boolean result;
         Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
         try {
             session.beginTransaction();
-            session.save(tblSolicitud);
+            session.update(imagen);
             session.beginTransaction().commit();
             result = true;
         } catch (Exception e) {
@@ -30,21 +47,5 @@ public class SolicitudDaoImpl implements SolicitudDao{
         }
         return result;
     }
-
-    @Override
-    public boolean updateSolicitud(TblSolicitud tblSolicitud) {
-         boolean result;
-        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
-        try {
-            session.beginTransaction();
-            session.update(tblSolicitud);
-            session.beginTransaction().commit();
-            result = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            result = false;
-            session.beginTransaction().rollback();
-        }
-        return result;
-    }
+    
 }

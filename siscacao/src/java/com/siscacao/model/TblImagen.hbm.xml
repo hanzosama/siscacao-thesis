@@ -4,9 +4,9 @@
 <!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
     <class name="com.siscacao.model.TblImagen" table="tbl_imagen" schema="public">
-        <id name="idImagen" type="int">
+        <id name="idImagen" type="long">
             <column name="id_imagen" />
-            <generator class="assigned" />
+            <generator class="identity" />
         </id>
         <many-to-one name="tblSolicitud" class="com.siscacao.model.TblSolicitud" fetch="select">
             <column name="id_solicitud" />

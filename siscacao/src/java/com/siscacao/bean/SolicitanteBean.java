@@ -16,6 +16,8 @@ import com.siscacao.dao.EstadoProduccionDao;
 import com.siscacao.dao.EstadoProduccionDaoImpl;
 import com.siscacao.dao.SolicitanteDao;
 import com.siscacao.dao.SolicitanteDaoImpl;
+import com.siscacao.dao.SolicitudDao;
+import com.siscacao.dao.SolicitudDaoImpl;
 import com.siscacao.dao.TecnicaDao;
 import com.siscacao.dao.TecnicaDaoImpl;
 import com.siscacao.dao.TipoContactoDao;
@@ -29,10 +31,12 @@ import com.siscacao.model.TblCultivo;
 import com.siscacao.model.TblDepartamento;
 import com.siscacao.model.TblEstadoProduccion;
 import com.siscacao.model.TblSolicitante;
+import com.siscacao.model.TblSolicitud;
 import com.siscacao.model.TblTecnicaCultivo;
 import com.siscacao.model.TblTipoDocumento;
 import com.siscacao.model.TblVariedad;
 import com.siscacao.util.FileUploadController;
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -72,7 +76,7 @@ public class SolicitanteBean implements Serializable {
     private TipoDocumentoDao tipoDocumentoDao;
     private String telefonoFijo;
     private String telefonoMovil;
-    private String folderName="";
+    private String folderName = "";
     private Long selectedClima;
     private List<TblClima> listClima;
     private ClimaDao climaDao;
@@ -90,6 +94,8 @@ public class SolicitanteBean implements Serializable {
     private TipoContactoDao tipoContactoDao;
     private TblCultivo cultivo;
     private CultivoDao cultivoDao;
+    private SolicitudDao solicitudDao;
+    private TblSolicitud tblSolicitud;
 
     public SolicitanteBean() {
         this.baseURL = new AppBean();
@@ -104,7 +110,7 @@ public class SolicitanteBean implements Serializable {
         this.tipoContactoDao = new TipoContactoDaoImpl();
         this.fileUploadController = new FileUploadController();
         this.cultivoDao = new CultivoDaoImpl();
-
+        this.solicitudDao = new SolicitudDaoImpl();
         if (this.solicitante == null) {
             this.solicitante = new TblSolicitante();
         }
@@ -275,24 +281,36 @@ public class SolicitanteBean implements Serializable {
 
         contactoDao.createContacto(contactoMovil);
         contactoDao.createContacto(contactoFijo);
-                
+
         //Guarda Información del cultivo
 
         saveCultivoSolicitante();
-        
+
         //Guarda  imagenes del usuario en path de applicacion
         uploadApplicationUserFolder();
-        
+
         //registrar solicitud
-        
+
+        createSolicitud();
+
         //registra imagenes url para el usuario
-        
-     FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        
+
+        File f = new File(baseURL.baseURLUserImage() + "/" + folderName);
+        if (f.exists()) {
+            // Recuperamos la lista de ficheros
+            File[] ficheros = f.listFiles();
+            for (int x = 0; x < ficheros.length; x++) {
+                System.out.println(ficheros[x].getName());
+            }
+        } else {
+            System.out.println("No existe ese directorio");
+        }
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+
     }
 
     public void uploadToTmpUserFolder(FileUploadEvent event) {
-        
+
         folderName = this.solicitante.getNombreSolicitante().toLowerCase().trim().replace(" ", "") + this.solicitante.getNumeroDocumento().toLowerCase().trim().replace(" ", "");
         fileUploadController.uploadToTmpUserFolder(event, folderName);
     }
@@ -322,29 +340,47 @@ public class SolicitanteBean implements Serializable {
 
     private void saveCultivoSolicitante() {
         cultivo.setIdClima(selectedClima);
-        
+
         for (TblVariedad variedad : listVariedad) {
             if (variedad.getIdVariedad().equals(selectedVariedad)) {
                 cultivo.setTblVariedad(variedad);
             }
         }
-        for(TblTecnicaCultivo tecnica: listTecnica){
-        if(tecnica.getIdTecnica().equals(selectedTecnica)){
-            cultivo.setTblTecnicaCultivo(tecnica);
+        for (TblTecnicaCultivo tecnica : listTecnica) {
+            if (tecnica.getIdTecnica().equals(selectedTecnica)) {
+                cultivo.setTblTecnicaCultivo(tecnica);
+            }
         }
+        for (TblEstadoProduccion estadoPro : listEstadoPro) {
+            if (estadoPro.getIdEstadoProduccion().equals(selectedEstadoPro)) {
+                cultivo.setTblEstadoProduccion(estadoPro);
+            }
         }
-        for(TblEstadoProduccion estadoPro:listEstadoPro){
-        if(estadoPro.getIdEstadoProduccion().equals(selectedEstadoPro)){
-        cultivo.setTblEstadoProduccion(estadoPro);
-        }
-        }
-        
+
         cultivoDao.createCultivo(cultivo);
     }
 
     private void uploadApplicationUserFolder() {
-        if(!folderName.equals("") && folderName!=null){
-       fileUploadController.uploadToApplicationUserFolder(folderName);
-               }
+        if (!folderName.equals("") && folderName != null) {
+            fileUploadController.uploadToApplicationUserFolder(folderName);
+        }
+    }
+
+    public void createSolicitud() {
+
+        Date currentDate = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+        this.tblSolicitud = new TblSolicitud();
+        this.tblSolicitud.setFechaSolicitud(currentDate);
+        this.tblSolicitud.setTblSolicitante(solicitante);
+        this.tblSolicitud.setTblCultivo(cultivo);
+        String serial = currentDate.toString();
+        serial = serial.replace("-", "");
+        serial = serial.replace(":", "");
+        serial = serial.replace(" ", "");
+        serial = serial.substring(0, 12);
+        solicitudDao.createSolicitud(tblSolicitud);
+        serial = serial + tblSolicitud.getIdSolicitud().toString();
+        this.tblSolicitud.setSerial(serial);
+        solicitudDao.updateSolicitud(tblSolicitud);
     }
 }
