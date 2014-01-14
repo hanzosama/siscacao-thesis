@@ -381,7 +381,6 @@ public class SolicitanteBean implements Serializable {
         solicitudDao.createSolicitud(tblSolicitud);
         serial = serial + tblSolicitud.getIdSolicitud().toString();
         this.tblSolicitud.setSerial(serial);
-        solicitudDao.updateSolicitud(tblSolicitud);
-        
+        solicitudDao.updateSolicitud(tblSolicitud);        
     }
 }
