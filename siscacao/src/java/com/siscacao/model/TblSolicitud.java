@@ -37,7 +37,6 @@ public class TblSolicitud  implements java.io.Serializable {
 
     public TblSolicitud() {
     }
-
 	
     public TblSolicitud(Long idSolicitud, Date fechaSolicitud) {
         this.idSolicitud = idSolicitud;
