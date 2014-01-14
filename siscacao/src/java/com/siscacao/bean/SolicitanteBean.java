@@ -14,6 +14,8 @@ import com.siscacao.dao.DepartamentoDao;
 import com.siscacao.dao.DepartamentoDaoImpl;
 import com.siscacao.dao.EstadoProduccionDao;
 import com.siscacao.dao.EstadoProduccionDaoImpl;
+import com.siscacao.dao.ImagenDao;
+import com.siscacao.dao.ImagenDaoImpl;
 import com.siscacao.dao.SolicitanteDao;
 import com.siscacao.dao.SolicitanteDaoImpl;
 import com.siscacao.dao.SolicitudDao;
@@ -25,11 +27,13 @@ import com.siscacao.dao.TipoDocumentoDao;
 import com.siscacao.dao.TipoDocumentoDaoImpl;
 import com.siscacao.dao.VariedadDao;
 import com.siscacao.dao.VariedadDaoImpl;
+import com.siscacao.model.TblAsignacionSolicitud;
 import com.siscacao.model.TblClima;
 import com.siscacao.model.TblContacto;
 import com.siscacao.model.TblCultivo;
 import com.siscacao.model.TblDepartamento;
 import com.siscacao.model.TblEstadoProduccion;
+import com.siscacao.model.TblImagen;
 import com.siscacao.model.TblSolicitante;
 import com.siscacao.model.TblSolicitud;
 import com.siscacao.model.TblTecnicaCultivo;
@@ -96,6 +100,8 @@ public class SolicitanteBean implements Serializable {
     private CultivoDao cultivoDao;
     private SolicitudDao solicitudDao;
     private TblSolicitud tblSolicitud;
+    private ImagenDao imagenDao;
+    private String serial;
 
     public SolicitanteBean() {
         this.baseURL = new AppBean();
@@ -111,6 +117,8 @@ public class SolicitanteBean implements Serializable {
         this.fileUploadController = new FileUploadController();
         this.cultivoDao = new CultivoDaoImpl();
         this.solicitudDao = new SolicitudDaoImpl();
+        this.imagenDao = new ImagenDaoImpl();
+
         if (this.solicitante == null) {
             this.solicitante = new TblSolicitante();
         }
@@ -256,6 +264,7 @@ public class SolicitanteBean implements Serializable {
     }
 
     public void saveInfoSolicitante(ActionEvent actionEvent) {
+        RequestContext context = RequestContext.getCurrentInstance();
         //Guarda Solicitante
         TblContacto contactoFijo = new TblContacto();
         contactoFijo.setContacto(telefonoFijo);
@@ -292,25 +301,14 @@ public class SolicitanteBean implements Serializable {
         //registrar solicitud
 
         createSolicitud();
-
         //registra imagenes url para el usuario
-
-        File f = new File(baseURL.baseURLUserImage() + "/" + folderName);
-        if (f.exists()) {
-            // Recuperamos la lista de ficheros
-            File[] ficheros = f.listFiles();
-            for (int x = 0; x < ficheros.length; x++) {
-                System.out.println(ficheros[x].getName());
-            }
-        } else {
-            System.out.println("No existe ese directorio");
-        }
-        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        createImagesSolicitud();
+        System.out.println(this.serial);
+        context.addCallbackParam("serial", this.serial);
 
     }
 
     public void uploadToTmpUserFolder(FileUploadEvent event) {
-
         folderName = this.solicitante.getNombreSolicitante().toLowerCase().trim().replace(" ", "") + this.solicitante.getNumeroDocumento().toLowerCase().trim().replace(" ", "");
         fileUploadController.uploadToTmpUserFolder(event, folderName);
     }
@@ -367,20 +365,50 @@ public class SolicitanteBean implements Serializable {
     }
 
     public void createSolicitud() {
-
         Date currentDate = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
         this.tblSolicitud = new TblSolicitud();
         this.tblSolicitud.setFechaSolicitud(currentDate);
         this.tblSolicitud.setTblSolicitante(solicitante);
         this.tblSolicitud.setTblCultivo(cultivo);
-        String serial = currentDate.toString();
+        serial = currentDate.toString();
         serial = serial.replace("-", "");
         serial = serial.replace(":", "");
         serial = serial.replace(" ", "");
         serial = serial.substring(0, 12);
         solicitudDao.createSolicitud(tblSolicitud);
-        serial = serial + tblSolicitud.getIdSolicitud().toString();
+        this.serial = serial + tblSolicitud.getIdSolicitud().toString();
         this.tblSolicitud.setSerial(serial);
-        solicitudDao.updateSolicitud(tblSolicitud);        
+        solicitudDao.updateSolicitud(tblSolicitud);
+    }
+
+    public void createImagesSolicitud() {
+        if (!folderName.equals("") && folderName != null) {
+            File f = new File(baseURL.baseURLUserImage() + "/" + folderName);
+            if (f.exists()) {
+                // Recuperamos la lista de ficheros
+                String filePath;
+                File[] ficheros = f.listFiles();
+                for (int x = 0; x < ficheros.length; x++) {
+                    filePath = folderName + "/" + ficheros[x].getName();
+                    TblImagen imagen = new TblImagen();
+                    imagen.setPathImagen(filePath);
+                    imagen.setNombreImagen(ficheros[x].getName());
+                    imagen.setTblSolicitud(tblSolicitud);
+                    imagenDao.createImagen(imagen);
+                }
+            } else {
+                System.out.println("No existe ese directorio");
+            }
+        }
+    }
+
+    public String closeRegistro() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        FacesContext.getCurrentInstance().getViewRoot().setViewId("");
+        return "portal/index.jsf?faces-redirect=true";
+    }
+
+    public String getSerial() {
+        return serial;
     }
 }

@@ -153,7 +153,7 @@
                                 <br/>
                                 <br/>
                                 <p:commandButton value="guardar" icon="ui-icon-disk" update="panel" 
-                                                 actionListener="#{solicitanteBean.saveInfoSolicitante}" title="Guardar toda la informacion registrada|"/>  
+                                                 actionListener="#{solicitanteBean.saveInfoSolicitante}" title="Guardar toda la informacion registrada|" oncomplete="handleSubmitRequest(xhr, status, args)"/>  
                             </p:panel>                                                               
                         </p:tab>  
                         <!--
@@ -168,6 +168,22 @@
                         -->
                     </p:wizard>  
                 </h:form>
+                <h:form id="form_result">
+                    <p:confirmDialog id="resultDialog" message="Este es el consecutivo de su solicitud, Porfavor anotelo:"  severity="alert" widgetVar="dialogResult" showEffect="fade" hideEffect="clip" closable="false">
+                        <h:panelGrid id="display" columns="1" cellpadding="4" style="margin:0 auto;"> 
+                            <h:outputText id="serialResult" value="" />    
+                            <p:commandButton id="comfirm" value="#{msg.yes}" action="#{solicitanteBean.closeRegistro}"   icon="ui-icon-check" />
+                        </h:panelGrid>
+                    </p:confirmDialog>    
+                </h:form>
+                <script type="text/javascript">
+                    function handleSubmitRequest(xhr, status, args) {
+                        if (args.serial != null) {
+                            $('[id="form_result:serialResult"]').text(args.serial);
+                            dialogResult.show();
+                        }
+                    }
+                </script>
             </ui:define>
 
         </ui:composition>
