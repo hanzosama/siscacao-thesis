@@ -4,9 +4,9 @@
 <!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
     <class name="com.siscacao.model.TblEstado" table="tbl_estado" schema="public">
-        <id name="idEstado" type="int">
+        <id name="idEstado" type="long">
             <column name="id_estado" />
-            <generator class="assigned" />
+            <generator class="identity" />
         </id>
         <property name="descripcionEstado" type="string">
             <column name="descripcion_estado" length="64" />

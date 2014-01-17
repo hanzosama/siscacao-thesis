@@ -1,6 +1,13 @@
 package com.siscacao.model;
 // Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+
 
 
 /**
@@ -8,8 +15,11 @@ package com.siscacao.model;
  */
 public class TblDiagnosticoImagen  implements java.io.Serializable {
 
-
-     private int idDiagnosticoImagen;
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+     @Basic(optional = false)
+     @Column(name = "id_diagnostico_imagen") 
+     private Long idDiagnosticoImagen;
      private TblDiagnostico tblDiagnosticoByIdDiagnostico;
      private TblDiagnostico tblDiagnosticoByIdDiagnosticoRelacionado;
 
@@ -17,20 +27,20 @@ public class TblDiagnosticoImagen  implements java.io.Serializable {
     }
 
 	
-    public TblDiagnosticoImagen(int idDiagnosticoImagen) {
+    public TblDiagnosticoImagen(Long idDiagnosticoImagen) {
         this.idDiagnosticoImagen = idDiagnosticoImagen;
     }
-    public TblDiagnosticoImagen(int idDiagnosticoImagen, TblDiagnostico tblDiagnosticoByIdDiagnostico, TblDiagnostico tblDiagnosticoByIdDiagnosticoRelacionado) {
+    public TblDiagnosticoImagen(Long idDiagnosticoImagen, TblDiagnostico tblDiagnosticoByIdDiagnostico, TblDiagnostico tblDiagnosticoByIdDiagnosticoRelacionado) {
        this.idDiagnosticoImagen = idDiagnosticoImagen;
        this.tblDiagnosticoByIdDiagnostico = tblDiagnosticoByIdDiagnostico;
        this.tblDiagnosticoByIdDiagnosticoRelacionado = tblDiagnosticoByIdDiagnosticoRelacionado;
     }
    
-    public int getIdDiagnosticoImagen() {
+    public Long getIdDiagnosticoImagen() {
         return this.idDiagnosticoImagen;
     }
     
-    public void setIdDiagnosticoImagen(int idDiagnosticoImagen) {
+    public void setIdDiagnosticoImagen(Long idDiagnosticoImagen) {
         this.idDiagnosticoImagen = idDiagnosticoImagen;
     }
     public TblDiagnostico getTblDiagnosticoByIdDiagnostico() {

@@ -1,6 +1,13 @@
 package com.siscacao.model;
 // Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+
 
 
 /**
@@ -8,8 +15,11 @@ package com.siscacao.model;
  */
 public class TblAsignacionSolicitud  implements java.io.Serializable {
 
-
-     private int idAsignacionSolicitud;
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+     @Basic(optional = false)
+     @Column(name = "id_asignacion_solicitud")    
+     private Long idAsignacionSolicitud;
      private TblSolicitud tblSolicitud;
      private TblUsuario tblUsuario;
 
@@ -17,20 +27,20 @@ public class TblAsignacionSolicitud  implements java.io.Serializable {
     }
 
 	
-    public TblAsignacionSolicitud(int idAsignacionSolicitud) {
+    public TblAsignacionSolicitud(Long idAsignacionSolicitud) {
         this.idAsignacionSolicitud = idAsignacionSolicitud;
     }
-    public TblAsignacionSolicitud(int idAsignacionSolicitud, TblSolicitud tblSolicitud, TblUsuario tblUsuario) {
+    public TblAsignacionSolicitud(Long idAsignacionSolicitud, TblSolicitud tblSolicitud, TblUsuario tblUsuario) {
        this.idAsignacionSolicitud = idAsignacionSolicitud;
        this.tblSolicitud = tblSolicitud;
        this.tblUsuario = tblUsuario;
     }
    
-    public int getIdAsignacionSolicitud() {
+    public Long getIdAsignacionSolicitud() {
         return this.idAsignacionSolicitud;
     }
     
-    public void setIdAsignacionSolicitud(int idAsignacionSolicitud) {
+    public void setIdAsignacionSolicitud(Long idAsignacionSolicitud) {
         this.idAsignacionSolicitud = idAsignacionSolicitud;
     }
     public TblSolicitud getTblSolicitud() {

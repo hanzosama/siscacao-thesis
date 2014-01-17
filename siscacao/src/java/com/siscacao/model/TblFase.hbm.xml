@@ -4,9 +4,9 @@
 <!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
     <class name="com.siscacao.model.TblFase" table="tbl_fase" schema="public">
-        <id name="idFase" type="int">
+        <id name="idFase" type="long">
             <column name="id_fase" />
-            <generator class="assigned" />
+            <generator class="identity" />
         </id>
         <property name="descripcionFase" type="string">
             <column name="descripcion_fase" length="64" />

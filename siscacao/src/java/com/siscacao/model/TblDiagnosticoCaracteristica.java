@@ -1,6 +1,13 @@
 package com.siscacao.model;
 // Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+
 
 
 /**
@@ -8,8 +15,11 @@ package com.siscacao.model;
  */
 public class TblDiagnosticoCaracteristica  implements java.io.Serializable {
 
-
-     private int idDiagnosticoCaracteristica;
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+     @Basic(optional = false)
+     @Column(name = "id_diagnostico_caracteristica") 
+     private Long idDiagnosticoCaracteristica;
      private TblDiagnostico tblDiagnosticoByIdDiagnostico;
      private TblDiagnostico tblDiagnosticoByIdDiagnosticoRelacionado;
 
@@ -17,20 +27,20 @@ public class TblDiagnosticoCaracteristica  implements java.io.Serializable {
     }
 
 	
-    public TblDiagnosticoCaracteristica(int idDiagnosticoCaracteristica) {
+    public TblDiagnosticoCaracteristica(Long idDiagnosticoCaracteristica) {
         this.idDiagnosticoCaracteristica = idDiagnosticoCaracteristica;
     }
-    public TblDiagnosticoCaracteristica(int idDiagnosticoCaracteristica, TblDiagnostico tblDiagnosticoByIdDiagnostico, TblDiagnostico tblDiagnosticoByIdDiagnosticoRelacionado) {
+    public TblDiagnosticoCaracteristica(Long idDiagnosticoCaracteristica, TblDiagnostico tblDiagnosticoByIdDiagnostico, TblDiagnostico tblDiagnosticoByIdDiagnosticoRelacionado) {
        this.idDiagnosticoCaracteristica = idDiagnosticoCaracteristica;
        this.tblDiagnosticoByIdDiagnostico = tblDiagnosticoByIdDiagnostico;
        this.tblDiagnosticoByIdDiagnosticoRelacionado = tblDiagnosticoByIdDiagnosticoRelacionado;
     }
    
-    public int getIdDiagnosticoCaracteristica() {
+    public Long getIdDiagnosticoCaracteristica() {
         return this.idDiagnosticoCaracteristica;
     }
     
-    public void setIdDiagnosticoCaracteristica(int idDiagnosticoCaracteristica) {
+    public void setIdDiagnosticoCaracteristica(Long idDiagnosticoCaracteristica) {
         this.idDiagnosticoCaracteristica = idDiagnosticoCaracteristica;
     }
     public TblDiagnostico getTblDiagnosticoByIdDiagnostico() {

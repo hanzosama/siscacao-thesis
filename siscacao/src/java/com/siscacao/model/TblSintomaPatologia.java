@@ -1,6 +1,13 @@
 package com.siscacao.model;
 // Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+
 
 
 /**
@@ -8,8 +15,11 @@ package com.siscacao.model;
  */
 public class TblSintomaPatologia  implements java.io.Serializable {
 
-
-     private int idSintomaPatologia;
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+     @Basic(optional = false)
+     @Column(name = "id_sintoma_patologia") 
+     private Long idSintomaPatologia;
      private TblSintoma tblSintoma;
      private TblPatologia tblPatologia;
 
@@ -17,20 +27,20 @@ public class TblSintomaPatologia  implements java.io.Serializable {
     }
 
 	
-    public TblSintomaPatologia(int idSintomaPatologia) {
+    public TblSintomaPatologia(Long idSintomaPatologia) {
         this.idSintomaPatologia = idSintomaPatologia;
     }
-    public TblSintomaPatologia(int idSintomaPatologia, TblSintoma tblSintoma, TblPatologia tblPatologia) {
+    public TblSintomaPatologia(Long idSintomaPatologia, TblSintoma tblSintoma, TblPatologia tblPatologia) {
        this.idSintomaPatologia = idSintomaPatologia;
        this.tblSintoma = tblSintoma;
        this.tblPatologia = tblPatologia;
     }
    
-    public int getIdSintomaPatologia() {
+    public Long getIdSintomaPatologia() {
         return this.idSintomaPatologia;
     }
     
-    public void setIdSintomaPatologia(int idSintomaPatologia) {
+    public void setIdSintomaPatologia(Long idSintomaPatologia) {
         this.idSintomaPatologia = idSintomaPatologia;
     }
     public TblSintoma getTblSintoma() {

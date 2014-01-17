@@ -4,9 +4,9 @@
 <!-- Generated 20/10/2013 04:28:11 PM by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
     <class name="com.siscacao.model.TblEtapa" table="tbl_etapa" schema="public">
-        <id name="idEtapa" type="int">
+        <id name="idEtapa" type="long">
             <column name="id_etapa" />
-            <generator class="assigned" />
+            <generator class="identity" />
         </id>
         <property name="descripcionEtapa" type="string">
             <column name="descripcion_etapa" length="50" />
