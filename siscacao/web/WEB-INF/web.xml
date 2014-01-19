@@ -50,11 +50,11 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
-    <!-- <session-config>
+     <session-config>
         <session-timeout>
-          1
+         20
         </session-timeout>
-    </session-config> -->
+    </session-config> 
     <welcome-file-list>
         <welcome-file>portal/index.jsf</welcome-file>
     </welcome-file-list>
@@ -62,4 +62,9 @@
         <param-name>primefaces.THEME</param-name>
         <param-value>start</param-value>
     </context-param>
+    <listener>
+		<listener-class>
+			org.quartz.ee.servlet.QuartzInitializerListener
+		</listener-class>
+	</listener>
 </web-app>

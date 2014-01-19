@@ -39,6 +39,7 @@ import javax.faces.context.FacesContext;
 public class UsuarioBean implements Serializable {
 
     private List<TblUsuario> usuarios;
+    private List<TblUsuario> filteredUsers;
     private TblUsuario selectedUser;
     private UsuarioDao usuarioDao;
     private RolDao rolDao;
@@ -106,6 +107,15 @@ public class UsuarioBean implements Serializable {
     public void setNewPwd(String newPwd) {
         this.newPwd = CriptoUtils.MD5Digest(newPwd);
     }
+
+    public List<TblUsuario> getFilteredUsers() {
+        return filteredUsers;
+    }
+
+    public void setFilteredUsers(List<TblUsuario> filteredUsers) {
+        this.filteredUsers = filteredUsers;
+    }
+    
 
     public void createSelectedUser(ActionEvent actionEvent) {
         UsuarioDao usuarioDao = new UsuarioDaoImpl();

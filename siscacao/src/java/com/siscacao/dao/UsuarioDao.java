@@ -19,4 +19,5 @@ public interface UsuarioDao {
     public boolean updateUser(TblUsuario usuario);
     public boolean deleteUser(Long id);
     public boolean resetPwdUser(Long id, String Pwd);
+    public TblUsuario retrieveLastUserToSolicitud();
 }

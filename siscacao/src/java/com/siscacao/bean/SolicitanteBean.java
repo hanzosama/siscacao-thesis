@@ -12,6 +12,8 @@ import com.siscacao.dao.CultivoDao;
 import com.siscacao.dao.CultivoDaoImpl;
 import com.siscacao.dao.DepartamentoDao;
 import com.siscacao.dao.DepartamentoDaoImpl;
+import com.siscacao.dao.EstadoDao;
+import com.siscacao.dao.EstadoDaoImpl;
 import com.siscacao.dao.EstadoProduccionDao;
 import com.siscacao.dao.EstadoProduccionDaoImpl;
 import com.siscacao.dao.ImagenDao;
@@ -32,6 +34,7 @@ import com.siscacao.model.TblClima;
 import com.siscacao.model.TblContacto;
 import com.siscacao.model.TblCultivo;
 import com.siscacao.model.TblDepartamento;
+import com.siscacao.model.TblEstado;
 import com.siscacao.model.TblEstadoProduccion;
 import com.siscacao.model.TblImagen;
 import com.siscacao.model.TblSolicitante;
@@ -102,6 +105,7 @@ public class SolicitanteBean implements Serializable {
     private TblSolicitud tblSolicitud;
     private ImagenDao imagenDao;
     private String serial;
+    private EstadoDao estadoDao;
 
     public SolicitanteBean() {
         this.baseURL = new AppBean();
@@ -118,6 +122,7 @@ public class SolicitanteBean implements Serializable {
         this.cultivoDao = new CultivoDaoImpl();
         this.solicitudDao = new SolicitudDaoImpl();
         this.imagenDao = new ImagenDaoImpl();
+        this.estadoDao = new EstadoDaoImpl();
 
         if (this.solicitante == null) {
             this.solicitante = new TblSolicitante();
@@ -262,7 +267,10 @@ public class SolicitanteBean implements Serializable {
     public void setListEstadoPro(List<TblEstadoProduccion> listEstadoPro) {
         this.listEstadoPro = listEstadoPro;
     }
-
+    public String getSerial() {
+        return serial;
+    }
+    
     public void saveInfoSolicitante(ActionEvent actionEvent) {
         RequestContext context = RequestContext.getCurrentInstance();
         //Guarda Solicitante
@@ -303,7 +311,6 @@ public class SolicitanteBean implements Serializable {
         createSolicitud();
         //registra imagenes url para el usuario
         createImagesSolicitud();
-        System.out.println(this.serial);
         context.addCallbackParam("serial", this.serial);
 
     }
@@ -366,10 +373,12 @@ public class SolicitanteBean implements Serializable {
 
     public void createSolicitud() {
         Date currentDate = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+        TblEstado estado = this.estadoDao.findEstadoById(Long.valueOf(1));
         this.tblSolicitud = new TblSolicitud();
         this.tblSolicitud.setFechaSolicitud(currentDate);
         this.tblSolicitud.setTblSolicitante(solicitante);
         this.tblSolicitud.setTblCultivo(cultivo);
+        this.tblSolicitud.setTblEstado(estado);
         serial = currentDate.toString();
         serial = serial.replace("-", "");
         serial = serial.replace(":", "");
@@ -408,7 +417,4 @@ public class SolicitanteBean implements Serializable {
         return "portal/index.jsf?faces-redirect=true";
     }
 
-    public String getSerial() {
-        return serial;
-    }
 }

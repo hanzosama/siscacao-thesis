@@ -10,6 +10,12 @@
         <ui:composition template="./../template.xhtml">
             <ui:define name="content">
                 <p:growl id="msgs" showDetail="true" /> 
+                <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();" >  
+                    <p:dialog modal="true" widgetVar="statusDialog"   
+                              draggable="false" closable="false">  
+                        <p:graphicImage value="#{appBean.baseURL}resources/gfx/ajax-loader.gif" />
+                    </p:dialog> 
+                </p:ajaxStatus>
                 <!--CRUD usuarios -->           
                 <h:form id="form_user_admin">
                     <p:commandButton id="btnUsuarioCreate" update=":form_user_create:dlgUsuarioCreate" oncomplete="dialogUsuarioCreate.show()" icon="ui-icon-person" title="#{msg.create}" value="#{msg.create}"/>                       
@@ -18,14 +24,21 @@
 
                 <h:form id="form_data_users">  
                     <p:dataTable id="users"  var="usuario" value="#{usuarioBean.usuarios}" paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
-                                 sortMode="multiple" filteredValue=""  >  
-                        <f:facet name="header">  
-                            #{msg.users_registered} 
+                                 sortMode="multiple"  widgetVar="usersTable"   filteredValue="#{usuarioBean.filteredUsers}" emptyMessage="No se encotraron usuarios relacionados">  
+                        <f:facet name="header" >  
+                            #{msg.users_registered}
+                            <BR/>
+                            <p:outputPanel style="position: absolute; right: 20px;">  
+                                <h:outputText value="Buscar usuario :" />  
+                                <p:inputText id="globalFilter" onblur="usersTable.filter()"  style="width:150px" />  
+                            </p:outputPanel> 
+                            <BR/>
+                            <BR/>
                         </f:facet>
-                        <p:column headerText="#{msg.user_name}" style="width:24%">  
+                        <p:column headerText="#{msg.user_name}" filterBy="nombreUsuario" filterStyle="display:none;" style="width:24%">  
                             <h:outputText value="#{usuario.nombreUsuario}" />  
                         </p:column>  
-                        <p:column headerText="#{msg.user_account}"  style="width:24%" >  
+                        <p:column headerText="#{msg.user_account}" filterBy="cuenta" filterStyle="display:none;"  style="width:24%" >  
                             <h:outputText value="#{usuario.cuenta}" />  
                         </p:column>  
                         <p:column  headerText="#{msg.user_date_register}"  style="width:24%">  
@@ -148,7 +161,7 @@
                             <p:column headerText="#{msg.rol_perf}" style="width:24%">  
                                 <h:outputText value="#{rol.nombreRol}" />  
                             </p:column>  
-                            <p:column headerText="#{msg.escription}"  style="width:24%" >  
+                            <p:column headerText="#{msg.description}"  style="width:24%" >  
                                 <h:outputText value="#{rol.descripcion}" />  
                             </p:column>  
                             <p:column  headerText="#{msg.lbl_date_register}"  style="width:24%">  
@@ -222,22 +235,22 @@
                     </p:confirmDialog>    
                 </h:form>
                 <script type="text/javascript">
-                            //pendiente implementacion de callback
-                            function handleSubmitRequest(xhr, status, args, dialogName, formName) {
-                                dialog = jQuery('#' + dialogName);
-                                if (args.validationFailed) {
-                                    dialog.effect("shake", {times: 3}, 100);
-                                } else {
-                                    clearForm(formName);
-                                    newUserDialog.hide();
-                                    userDialog.hide();
-                                }
-                            }
-                            function clearForm(formName) {
-                                jQuery('#' + formName).each(function() {
-                                    this.reset();
-                                });
-                            }
+                                    //pendiente implementacion de callback
+                                    function handleSubmitRequest(xhr, status, args, dialogName, formName) {
+                                        dialog = jQuery('#' + dialogName);
+                                        if (args.validationFailed) {
+                                            dialog.effect("shake", {times: 3}, 100);
+                                        } else {
+                                            clearForm(formName);
+                                            newUserDialog.hide();
+                                            userDialog.hide();
+                                        }
+                                    }
+                                    function clearForm(formName) {
+                                        jQuery('#' + formName).each(function() {
+                                            this.reset();
+                                        });
+                                    }
                 </script> 
             </ui:define>
         </ui:composition>

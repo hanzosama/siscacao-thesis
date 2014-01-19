@@ -8,11 +8,11 @@ import com.siscacao.dao.UsuarioDao;
 import com.siscacao.dao.UsuarioDaoImpl;
 import com.siscacao.model.TblUsuario;
 import org.primefaces.context.RequestContext;
-import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.NavigationHandler;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
@@ -53,9 +53,16 @@ public class LoginBean implements Serializable {
         if (this.usuario != null) {
             loggedIn = true;
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario.getCuenta());
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("perfil", this.usuario.getRol());
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenido ", this.usuario.getNombreUsuario());
             FacesContext.getCurrentInstance().getViewRoot().setViewId("");
+            if(this.usuario.getRol().equals("Administrador")){
             redirect = "view/inicio.jsf?faces-redirect=true";
+            }else if(this.usuario.getRol().equals("Consultor")){
+            redirect = "view/revision.jsf?faces-redirect=true";    
+            }else if(this.usuario.getRol().equals("Operador")){
+            redirect = "view/registro.jsf?faces-redirect=true";    
+            }
         } else {
             loggedIn = false;
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Usuario y/o clave incorrectos", "");
@@ -95,5 +102,5 @@ public class LoginBean implements Serializable {
             faceContext.getViewRoot().setViewId("");
             nh.handleNavigation(faceContext, null, "login.xhtml?faces-redirect=true");
         }
-    }
+    }   
 }
