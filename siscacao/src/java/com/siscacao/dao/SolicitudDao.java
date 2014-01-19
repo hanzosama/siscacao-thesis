@@ -4,6 +4,7 @@
  */
 package com.siscacao.dao;
 
+import com.siscacao.model.TblSolicitante;
 import com.siscacao.model.TblSolicitud;
 import com.siscacao.model.TblUsuario;
 import java.util.List;
@@ -17,4 +18,6 @@ public interface SolicitudDao {
   public boolean updateSolicitud(TblSolicitud tblSolicitud);
   public List<TblSolicitud> retrieveListSolicitudPending();
   public void signedSolicitud(TblSolicitud tblSolicitud,TblUsuario tblUsuario);
+  public TblSolicitud findSolicitudByIdSolicitante(TblSolicitante solicitante);  
+  public TblSolicitud findSolicitudBySerial(TblSolicitud solicitud);
 }

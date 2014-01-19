@@ -5,6 +5,7 @@
 package com.siscacao.dao;
 
 import com.siscacao.model.TblAsignacionSolicitud;
+import com.siscacao.model.TblSolicitante;
 import com.siscacao.model.TblSolicitud;
 import com.siscacao.model.TblUsuario;
 import com.siscacao.util.HibernateConnectUtil;
@@ -86,6 +87,38 @@ public class SolicitudDaoImpl implements SolicitudDao {
             e.printStackTrace();
             session.beginTransaction().rollback();
         }               
+    }
+     @Override
+    public TblSolicitud findSolicitudByIdSolicitante(TblSolicitante solicitante) {
+        TblSolicitud solicitudModel = null;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        String sql = "FROM TblSolicitud WHERE idSolicitante='" + solicitante.getIdSolicitante() + "'";
+        System.out.println(sql);
+        try {
+            session.beginTransaction();
+            solicitudModel = (TblSolicitud) session.createQuery(sql).uniqueResult();
+            session.beginTransaction().commit();
+        } catch (Exception e) {
+            session.beginTransaction().rollback();
+        }
+        return solicitudModel;
+    }
+     
+         @Override
+    public TblSolicitud findSolicitudBySerial(TblSolicitud solicitud) {
+        TblSolicitud solicitudModel = null;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        String sql = "FROM TblSolicitud WHERE serial='" + solicitud.getSerial() + "'";
+        System.out.println(sql);
+        try {
+            session.beginTransaction();
+            solicitudModel = (TblSolicitud) session.createQuery(sql).uniqueResult();
+            session.beginTransaction().commit();
+        } catch (Exception e) {
+            session.beginTransaction().rollback();
+        }
+        return solicitudModel;
+    
     }
     
     
