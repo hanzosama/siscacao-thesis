@@ -24,7 +24,7 @@ public class SolicitanteDaoImpl implements SolicitanteDao {
             solicitanteTmp = (TblSolicitante) session.createQuery(sql).uniqueResult();
             session.beginTransaction().commit();
         } catch (Exception e) {
-            session.beginTransaction().rollback();
+            session.beginTransaction().rollback();            
         }
         return solicitanteTmp;    
     }

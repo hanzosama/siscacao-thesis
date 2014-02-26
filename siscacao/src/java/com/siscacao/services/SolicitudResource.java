@@ -51,15 +51,26 @@ public class SolicitudResource {
     @Produces("text/html")
     public String getSolicitud(final SolicitudJson solicitudJson ) {
         String result="-1";
-       if(!solicitudJson.numeroSolictud.isEmpty()){
-         this.solicitud.setSerial(solicitudJson.numeroSolictud);
+        this.solicitante= new TblSolicitante();
+        this.solicitud= new TblSolicitud();
+       if(!solicitudJson.numeroSolicitud.isEmpty()){          
+         this.solicitud.setSerial(solicitudJson.numeroSolicitud);
          this.solicitud= solicitudDao.findSolicitudBySerial(solicitud);
-         return this.solicitud.getIdSolicitud().toString();
+         if(this.solicitud != null && !this.solicitud.getIdSolicitud().toString().isEmpty())
+         {
+            return this.solicitud.getIdSolicitud().toString();
+         }
        }else if(!solicitudJson.numeroDocumento.isEmpty()){           
           this.solicitante.setNumeroDocumento(solicitudJson.numeroDocumento);
           this.solicitante= solicitanteDao.findSolicitanteByNumeroDeDocumento(solicitante);
-          this.solicitud=solicitudDao.findSolicitudByIdSolicitante(solicitante);
-          return this.solicitud.getIdSolicitud().toString();        
+          if( this.solicitante != null)
+          {
+              this.solicitud=solicitudDao.findSolicitudByIdSolicitante(solicitante);
+          }          
+          if( this.solicitud != null && solicitud.getIdSolicitud() != null &&  !this.solicitud.getIdSolicitud().toString().isEmpty())
+         {
+            return this.solicitud.getIdSolicitud().toString();
+         }
        }
        return result;
     }

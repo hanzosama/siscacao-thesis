@@ -92,14 +92,14 @@ public class SolicitudDaoImpl implements SolicitudDao {
     public TblSolicitud findSolicitudByIdSolicitante(TblSolicitante solicitante) {
         TblSolicitud solicitudModel = null;
         Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
-        String sql = "FROM TblSolicitud WHERE idSolicitante='" + solicitante.getIdSolicitante() + "'";
+        String sql = "FROM TblSolicitud WHERE id_Solicitante='" + solicitante.getIdSolicitante() + "'";
         System.out.println(sql);
         try {
             session.beginTransaction();
             solicitudModel = (TblSolicitud) session.createQuery(sql).uniqueResult();
             session.beginTransaction().commit();
         } catch (Exception e) {
-            session.beginTransaction().rollback();
+            session.beginTransaction().rollback();            
         }
         return solicitudModel;
     }
@@ -115,7 +115,7 @@ public class SolicitudDaoImpl implements SolicitudDao {
             solicitudModel = (TblSolicitud) session.createQuery(sql).uniqueResult();
             session.beginTransaction().commit();
         } catch (Exception e) {
-            session.beginTransaction().rollback();
+            session.beginTransaction().rollback();           
         }
         return solicitudModel;
     
