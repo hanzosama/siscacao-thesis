@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./../solicitudesTemplate.xhtml">
+            <ui:define name="content" >
+                <p:panel header="Imagenes Cargadas por el Usuario" footer="Seleccione la imagen que desea analizar"> 
+                 <p:dataGrid id="availableFotos" value="#{solicitudBean.selectedImagenes}" var="fotos" columns="4" paginator="true" rows="5" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">  
+                                <p:column>  
+                                    <p:lightBox iframe="true" iframeTitle="Fotos de: #{solicitudBean.selectedSolicitud.tblSolicitante.nombreSolicitante}">
+                                    <h:outputLink value="#{request.contextPath}/resources/user/#{fotos.pathImagen}" title="#{fotos.nombreImagen}"> 
+                                        <p:graphicImage id="fotos" value="/resources/user/#{fotos.pathImagen}" style="width: 150px; " />  
+                                    </h:outputLink>
+                                    <p:draggable for="fotos" revert="true" scope="#{fotos.idImagen}" />  
+                                    </p:lightBox>
+                                </p:column>  
+                  </p:dataGrid> 
+                </p:panel>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

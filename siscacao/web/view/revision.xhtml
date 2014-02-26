@@ -1,12 +1,49 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
- <ui:composition template="template.xhtml">
-    <body>      
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="solicitudesTemplate.xhtml">
+        <body>      
             <ui:define name="content">
-            Hola usuario operador
+                <h:form id="form_data_solicitudes">  
+                    <p:dataTable id="users"  var="solicitud" value="#{solicitudBean.solicitudes}" paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 sortMode="multiple"  widgetVar="solicitudTable"   filteredValue="#{solicitudBean.filteredSolicitudes}" emptyMessage="No se solicitudes asignadas">  
+                        <f:facet name="header" >  
+                            Solicitudes pendientes
+                            <BR/>
+                            <p:outputPanel style="position: absolute; right: 20px;">  
+                                <h:outputText value="Buscar solicitud :" />  
+                                <p:inputText id="globalFilter" onblur="solicitudTable.filter()"  style="width:150px" />  
+                            </p:outputPanel> 
+                            <BR/>
+                            <BR/>
+                        </f:facet>
+                        <p:column headerText="Numero de solicitud" filterBy="serial" filterStyle="display:none;" style="width:24%">  
+                            <h:outputText value="#{solicitud.serial}" />  
+                        </p:column> 
+                        <p:column headerText="Nombre solicitante" filterBy="tblSolicitante.nombreSolicitante" filterStyle="display:none;" style="width:24%">  
+                            <h:outputText value="#{solicitud.tblSolicitante.nombreSolicitante}" />  
+                        </p:column>   
+                        <p:column headerText="Documento" filterBy="tblSolicitante.numeroDocumento" filterStyle="display:none;" style="width:24%">  
+                            <h:outputText value="#{solicitud.tblSolicitante.numeroDocumento}" />  
+                        </p:column>
+                        <p:column headerText="Departamento"   filterStyle="display:none;" style="width:24%">  
+                            <h:outputText value="#{solicitud.tblSolicitante.idDepartamento}" converter="DepartamentoConvert"  />  
+                        </p:column>
+                        <p:column headerText="Estado" filterBy="tblEstado.descripcionEstado" filterStyle="display:none;" style="width:24%">  
+                            <h:outputText value="#{solicitud.tblEstado.descripcionEstado}" />  
+                        </p:column> 
+                         <p:column style="width:15%">  
+                            <p:commandButton id="btnUsuarioUpdate" action="#{solicitudBean.detalleSolicitud()}"   icon="ui-icon-search" title="ver detalle">  
+                                <f:setPropertyActionListener value="#{solicitud}" target="#{solicitudBean.selectedSolicitud}" />  
+                            </p:commandButton>                       
+                        </p:column> 
+                    </p:dataTable>  
+                </h:form>
             </ui:define>
-    </body>
-     </ui:composition>
+        </body>
+    </ui:composition>
 </html>

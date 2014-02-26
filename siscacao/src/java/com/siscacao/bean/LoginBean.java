@@ -54,6 +54,7 @@ public class LoginBean implements Serializable {
             loggedIn = true;
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario.getCuenta());
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("perfil", this.usuario.getRol());
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("id_usuario", this.usuario.getIdUsuario());
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenido ", this.usuario.getNombreUsuario());
             FacesContext.getCurrentInstance().getViewRoot().setViewId("");
             if(this.usuario.getRol().equals("Administrador")){

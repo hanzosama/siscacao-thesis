@@ -58,6 +58,7 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.context.RequestContext;
@@ -392,7 +393,8 @@ public class SolicitanteBean implements Serializable {
 
     public void createImagesSolicitud() {
         if (!folderName.equals("") && folderName != null) {
-            File f = new File(baseURL.baseURLUserImage() + "/" + folderName);
+            ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
+            File f = new File(extContext.getRealPath("resources/" + "/user/" + folderName));
             if (f.exists()) {
                 // Recuperamos la lista de ficheros
                 String filePath;

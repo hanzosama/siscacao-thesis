@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.apache.commons.io.FileUtils;
 
@@ -22,19 +23,17 @@ import org.primefaces.model.UploadedFile;
 public class FileUploadController {
 
     private String destination_tmp = "C:\\tmp\\";
-    private String destinationApp; 
+    // private String destinationApp; 
     private AppBean baseURL;
 
     public FileUploadController() {
+
         this.baseURL = new AppBean();
-        this.destinationApp = baseURL.baseURLUserImage();
     }
-    
-    
-    
-    public void uploadToTmpUserFolder(FileUploadEvent event,String folderName) {
+
+    public void uploadToTmpUserFolder(FileUploadEvent event, String folderName) {
         try {
-            copyFileTmpLocalFolder(event.getFile().getFileName(), event.getFile().getInputstream(),folderName);
+            copyFileTmpLocalFolder(event.getFile().getFileName(), event.getFile().getInputstream(), folderName);
             FacesMessage msg = new FacesMessage("Completado! ", event.getFile().getFileName() + " guardado.");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (IOException e) {
@@ -42,28 +41,32 @@ public class FileUploadController {
         }
 
     }
-    
+
     public void uploadToApplicationUserFolder(String folderName) {
-           File folder = new File(destinationApp+"/"+folderName);
-           folder.mkdir();
+
+        ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
+        File folder = new File(extContext.getRealPath("resources/" + "/user/" + folderName));
+        System.out.println("FOLDER PATH: "+folder.getAbsolutePath());
+        folder.mkdir();
         try {
             //copia del archivo
-            FileUtils.copyDirectory(new File(destination_tmp+"\\"+folderName), folder);
+            FileUtils.copyDirectory(new File(destination_tmp + "\\" + folderName), folder);
             //elimina carpeta tmp
-            FileUtils.deleteDirectory(new File(destination_tmp+"\\"+folderName));
+            FileUtils.deleteDirectory(new File(destination_tmp + "\\" + folderName));
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error copiando las imagenes en el servido", ""));
         }
-            
-       
+
+
     }
-  public void copyFileTmpLocalFolder(String fileName, InputStream in,String userFolderName) {
+
+    public void copyFileTmpLocalFolder(String fileName, InputStream in, String userFolderName) {
         try {
             // write the inputStream to a FileOutputStream
-            File folder = new File(destination_tmp+"\\"+userFolderName);
+            File folder = new File(destination_tmp + "\\" + userFolderName);
             folder.mkdirs();
-            OutputStream out = new FileOutputStream(new File(destination_tmp+"\\"+userFolderName+"\\"+ fileName));
-            
+            OutputStream out = new FileOutputStream(new File(destination_tmp + "\\" + userFolderName + "\\" + fileName));
+
             int read = 0;
             byte[] bytes = new byte[1024];
 
@@ -79,13 +82,14 @@ public class FileUploadController {
 
         }
     }
+
     public void copyFile(String fileName, InputStream in) {
         try {
             // write the inputStream to a FileOutputStream
-            File folder = new File(destination_tmp+"\\"+fileName);
+            File folder = new File(destination_tmp + "\\" + fileName);
             folder.mkdirs();
-            OutputStream out = new FileOutputStream(new File(destination_tmp+"\\"+fileName+"\\"+ fileName));
-            
+            OutputStream out = new FileOutputStream(new File(destination_tmp + "\\" + fileName + "\\" + fileName));
+
             int read = 0;
             byte[] bytes = new byte[1024];
 
@@ -101,5 +105,4 @@ public class FileUploadController {
 
         }
     }
-
 }
