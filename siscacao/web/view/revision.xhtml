@@ -6,9 +6,9 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <ui:composition template="solicitudesTemplate.xhtml">
-        <body>      
+        <body onload="calledOnLoad();" >      
             <ui:define name="content">
-                <h:form id="form_data_solicitudes">  
+                <h:form id="form_data_solicitudes"> 
                     <p:dataTable id="users"  var="solicitud" value="#{solicitudBean.solicitudes}" paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
                                  sortMode="multiple"  widgetVar="solicitudTable"   filteredValue="#{solicitudBean.filteredSolicitudes}" emptyMessage="No se solicitudes asignadas">  
                         <f:facet name="header" >  

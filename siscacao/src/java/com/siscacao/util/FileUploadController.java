@@ -41,7 +41,7 @@ public class FileUploadController {
         }
 
     }
-
+    
     public void uploadToApplicationUserFolder(String folderName) {
 
         ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();

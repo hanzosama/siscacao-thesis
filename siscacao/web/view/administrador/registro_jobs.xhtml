@@ -13,25 +13,25 @@
                     <p:dataTable value="#{scheduler.quartzJobList}" var="quartz" > 
                         <p:column>
                             <!-- column header -->
-                            <f:facet name="header">Job Name</f:facet>
+                            <f:facet name="header">Tarea</f:facet>
                             <!-- row record -->
                             #{quartz.jobName}
                         </p:column>
 
                         <p:column>
-                            <f:facet name="header">Job Group</f:facet>
+                            <f:facet name="header">Grupo</f:facet>
                                 #{quartz.jobGroup}
                         </p:column>
 
                         <p:column>
-                            <f:facet name="header">Next Fire Time</f:facet>
+                            <f:facet name="header">Hora del la siguiente ejecución</f:facet>
                             <h:outputText value="#{quartz.nextFireTime}">
-                                <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
                             </h:outputText>
                         </p:column>
 
                         <p:column>
-                            <f:facet name="header">Action</f:facet>
+                            <f:facet name="header">Ejecutar</f:facet>
                             <h:commandLink value="Run Now"
                                            action="#{scheduler.fireNow(quartz.jobName, quartz.jobGroup)}" />
                         </p:column>
