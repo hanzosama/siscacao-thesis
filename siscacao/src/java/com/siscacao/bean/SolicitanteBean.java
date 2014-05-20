@@ -106,6 +106,7 @@ public class SolicitanteBean implements Serializable {
     private TblSolicitud tblSolicitud;
     private ImagenDao imagenDao;
     private String serial;
+    private String descripcion;
     private EstadoDao estadoDao;
 
     public SolicitanteBean() {
@@ -380,6 +381,7 @@ public class SolicitanteBean implements Serializable {
         this.tblSolicitud.setTblSolicitante(solicitante);
         this.tblSolicitud.setTblCultivo(cultivo);
         this.tblSolicitud.setTblEstado(estado);
+        this.tblSolicitud.setDescripcion(descripcion);
         serial = currentDate.toString();
         serial = serial.replace("-", "");
         serial = serial.replace(":", "");
@@ -418,5 +420,15 @@ public class SolicitanteBean implements Serializable {
         FacesContext.getCurrentInstance().getViewRoot().setViewId("");
         return "portal/index.jsf?faces-redirect=true";
     }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+    
+    
 
 }

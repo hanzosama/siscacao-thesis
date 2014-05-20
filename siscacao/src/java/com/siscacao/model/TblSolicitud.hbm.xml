@@ -35,8 +35,12 @@
         <property name="fechaSolicitud" type="time">
             <column name="fecha_solicitud" length="15" not-null="true" />
         </property>
-         <property name="serial" type="string">
+        <property name="serial" type="string">
             <column name="serial" length="100" />
+        </property>
+        
+        <property name="descripcion" type="string">
+            <column name="descripcion" length="600" />
         </property>
         <set name="tblImagens" inverse="true">
             <key>

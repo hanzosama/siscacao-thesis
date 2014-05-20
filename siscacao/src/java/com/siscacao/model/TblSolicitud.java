@@ -34,6 +34,8 @@ public class TblSolicitud  implements java.io.Serializable {
      private Set tblRespuestaSolicituds = new HashSet(0);
      private Set tblAsignacionSolicituds = new HashSet(0);
      private String serial;
+     
+     private String descripcion;
 
     public TblSolicitud() {
     }
@@ -158,9 +160,14 @@ public class TblSolicitud  implements java.io.Serializable {
         this.serial = serial;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-
-
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+    
 }
 
 

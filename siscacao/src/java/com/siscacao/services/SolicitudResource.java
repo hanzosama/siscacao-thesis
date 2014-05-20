@@ -236,7 +236,7 @@ public class SolicitudResource {
         solicitudJson.estado=this.estadoDao.findEstadoById(Long.valueOf(1)).getDescripcionEstado();
         solicitudJson.recomendaciones="PENDIENTE";
         solicitudJson.diagnostico="PENDIENTE";
-        System.out.println(solicitudJson.toString());
+        System.out.println(solicitudJson.estado);
         return solicitudJson;
     }
 

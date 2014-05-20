@@ -100,7 +100,11 @@
                                         <f:selectItem itemLabel="Seleccione" itemValue="" />  
                                         <f:selectItems value="#{solicitanteBean.listEstadoPro}" var="estPro" itemLabel="#{estPro.descripcionEstado}" itemValue="#{estPro.idEstadoProduccion}" />
                                     </p:selectOneMenu>
-                                    <p:column/>                                
+                                    <p:column/>  
+                                    
+                                    <h:outputLabel value="Descropción del problema:" for="descripcionProblema"/>
+                                    <p:inputTextarea id="descripcionProblema" rows="5" cols="40" required="true" requiredMessage="Porfavor indique las caracteristicas u observaciones registradas que han afectado su cultivo "   autoResize="false" value="#{solicitanteBean.descripcion}" />
+                                     <p:column/> 
                                 </h:panelGrid>
                             </p:panel>
                         </p:tab>  
