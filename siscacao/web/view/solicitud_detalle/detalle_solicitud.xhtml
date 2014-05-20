@@ -4,11 +4,12 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <body>
         <ui:composition template="./../solicitudesTemplate.xhtml">
-            <ui:define name="content" >
+            <ui:define name="content">
                 <p:growl id="msgs" showDetail="true" />
                 <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();" >  
                     <p:dialog modal="true" widgetVar="statusDialog"   
@@ -17,35 +18,54 @@
                     </p:dialog> 
                 </p:ajaxStatus>
                 <h:form id="form"> 
-                    <h:panelGrid columns="2" columnClasses="lineup,squad" >
-                        <p:panel header="Imagenes Cargadas por el Usuario" footer="Seleccione la imagen que desea analizar" style="height:500px;width:500px;"> 
-                            <p:dataGrid id="availableFotos" value="#{solicitudBean.selectedImagenes}" var="fotos" columns="2"  >  
-                                <p:column>  
-                                    <p:graphicImage id="fotos" value="/resources/user/#{fotos.pathImagen}" style="width: 150px;display: block;margin-left: auto;margin-right: auto;" />  
-                                    <p:commandLink id="view" update=":form:fotoDetail" title="Seleccionar">
-                                    <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0 auto;" /> 
-                                    <f:setPropertyActionListener value="#{fotos}" target="#{solicitudBean.selectedImagen}" />
-                                </p:commandLink>
-                                </p:column>  
+                    <p:panelGrid id="dashboard" >
+                        <p:row>
+                            <p:column style="display: block;margin-left: auto;margin-right: auto;">
+                                <p:panel header="Imagenes Cargadas por el Usuario" footer="Seleccione la imagen que desea analizar" style="height:350px;width:350px;"> 
+                                    <p:dataGrid id="availableFotos" value="#{solicitudBean.selectedImagenes}" var="fotos" columns="2"  >  
+                                        <p:column>  
+                                            <p:graphicImage id="fotos" value="/resources/user/#{fotos.pathImagen}" style="width: 130px;display: block;margin-left: auto;margin-right: auto;" />  
+                                            <p:commandLink id="view" update=":form:fotoDetail" title="Seleccionar">
+                                                <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0 auto;" /> 
+                                                <f:setPropertyActionListener value="#{fotos}" target="#{solicitudBean.selectedImagen}" />
+                                            </p:commandLink>
+                                        </p:column>  
 
-                            </p:dataGrid> 
-                        </p:panel>
-                        <p:panel header="Imagen a analizar" style="height:500px;width:650px;" > 
-                            <p:panelGrid id="fotoDetail" columns="2"  style="width:610px;">
-                                <p:column style="display: block;margin-left: auto;margin-right: auto;"  >
-                                <p:imageCropper id="selectedImage" image="/resources/#{solicitudBean.pathImage}" value="#{solicitudBean.croppedImage}"  maxSize="100,100" minSize="50,50" initialCoords="0,0,5,5" />
-                                </p:column>
-                                <p:graphicImage id="localCroppedImage"   value="/resources/#{solicitudBean.newImageName}" />
-                                <p:column colspan="2">
-                                    <p:commandButton value="Recortar Imagen"  update="localCroppedImage,fotoDetail,:msgs" actionListener="#{solicitudBean.crop}"/>
-                                </p:column>    
-                                <p:column>
-                                    <p:commandButton value="Analizar Imagen"  update="" actionListener="#{solicitudBean.analizeImage}"/>
-                                </p:column>
-                                <p:pieChart id="pieResul"  value="#{solicitudBean.pieResult}" style="height:250px" title="Resultado analisis"/> 
-                            </p:panelGrid>
-                        </p:panel>
-                    </h:panelGrid>  
+                                    </p:dataGrid> 
+                                </p:panel>
+                            </p:column>
+                            <p:column>
+                                <p:panel header="Imagen a analizar" id="image_analize" style="height:1000px;width:775px;">
+                                    <p:scrollPanel mode="native" style="height:950px;width:760px;">
+                                        <p:panelGrid id="fotoDetail"   style="width:760px;">
+                                            <p:row>
+                                                <p:column style="display: block;margin-left: auto;margin-right: auto;"  >
+                                                    <p:imageCropper id="selectedImage" image="/resources/#{solicitudBean.pathImage}" value="#{solicitudBean.croppedImage}"  maxSize="100,100" minSize="50,50" initialCoords="0,0,5,5"  />
+                                                </p:column>
+                                                <p:column style="width: 100px">
+                                                    <p:commandButton value="Recortar Imagen"  update="localCroppedImage,fotoDetail,:msgs" actionListener="#{solicitudBean.crop}"/>
+                                                </p:column> 
+                                            </p:row>
+                                            <p:row>
+                                                <p:column>
+                                                    <p:graphicImage id="localCroppedImage"   value="/resources/#{solicitudBean.newImageName}" />
+                                                </p:column>
+                                                <p:column>
+                                                    <p:commandButton value="Analizar Imagen"  update="fotoDetail,pieResult,:msgs" actionListener="#{solicitudBean.analizeImage}"/>
+                                                </p:column>
+                                            </p:row>    
+
+                                            <p:row>
+                                                <p:column colspan="2">
+                                                    <p:pieChart id="pieResult"  value="#{solicitudBean.pieResult}" legendPosition="w" fill="true" showDataLabels="true" diameter="200"  title="Resultado analisis"/> 
+                                                </p:column>
+                                            </p:row>
+                                        </p:panelGrid>
+                                    </p:scrollPanel>
+                                </p:panel>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>  
                 </h:form>
             </ui:define>
         </ui:composition>

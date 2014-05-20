@@ -148,15 +148,22 @@ public class SolicitudResource {
     @Path("registro")
     @Consumes("application/json")
     @Produces("text/html")
-    public String getSolicitud(final SolicitudJson solicitudJson) {
+    public SolicitudJson getSolicitud(final SolicitudJson solicitudJson) {
         String result = "-1";
+        SolicitudJson returnSolicitudJson = new SolicitudJson();
         this.solicitante = new TblSolicitante();
         this.solicitud = new TblSolicitud();
         if (!solicitudJson.numeroSolicitud.isEmpty()) {
             this.solicitud.setSerial(solicitudJson.numeroSolicitud);
             this.solicitud = solicitudDao.findSolicitudBySerial(solicitud);
             if (this.solicitud != null && !this.solicitud.getIdSolicitud().toString().isEmpty()) {
-                return this.solicitud.getIdSolicitud().toString();
+                solicitudJson.nombreSolicitante=this.solicitud.getTblSolicitante().getNombreSolicitante();
+                solicitudJson.estado= this.solicitud.getTblEstado().getDescripcionEstado();
+                solicitudJson.numeroDocumento=this.solicitud.getTblSolicitante().getNumeroDocumento();
+                solicitudJson.nombreSolicitante=this.solicitud.getTblSolicitante().getNombreSolicitante();
+                solicitudJson.diagnostico="PENDIENTE";
+                solicitudJson.recomendaciones="PENDIENTE";
+                return solicitudJson;
             }
         } else if (!solicitudJson.numeroDocumento.isEmpty()) {
             this.solicitante.setNumeroDocumento(solicitudJson.numeroDocumento);
@@ -165,17 +172,23 @@ public class SolicitudResource {
                 this.solicitud = solicitudDao.findSolicitudByIdSolicitante(solicitante);
             }
             if (this.solicitud != null && solicitud.getIdSolicitud() != null && !this.solicitud.getIdSolicitud().toString().isEmpty()) {
-                return this.solicitud.getIdSolicitud().toString();
+                solicitudJson.nombreSolicitante=this.solicitud.getTblSolicitante().getNombreSolicitante();
+                solicitudJson.estado= this.solicitud.getTblEstado().getDescripcionEstado();
+                solicitudJson.numeroDocumento=this.solicitud.getTblSolicitante().getNumeroDocumento();
+                solicitudJson.nombreSolicitante=this.solicitud.getTblSolicitante().getNombreSolicitante();
+                solicitudJson.diagnostico="PENDIENTE";
+                solicitudJson.recomendaciones="PENDIENTE";
+                return solicitudJson;
             }
         }
-        return result;
+        return solicitudJson;
     }
 
     @POST
     @Path("registrar_solicitud")
     @Consumes("application/json")
-    @Produces("text/html")
-    public String resgistrarSolicitud(final SolicitudMovil solicitudMovil) {
+    @Produces("application/json")
+    public SolicitudJson resgistrarSolicitud(final SolicitudMovil solicitudMovil) {
         String result = "1";
         System.out.println(solicitudMovil.imagenSolicitud);
         System.out.println(solicitudMovil.nombreSolicitante);
@@ -215,7 +228,16 @@ public class SolicitudResource {
         saveImage(solicitudMovil);
         createSolicitud(solicitudMovil);
         createImagesSolicitud();
-        return serial;
+        
+        SolicitudJson solicitudJson = new SolicitudJson();
+        solicitudJson.nombreSolicitante=solicitudMovil.nombreSolicitante;
+        solicitudJson.numeroDocumento=solicitudMovil.numeroDocumento;
+        solicitudJson.numeroSolicitud=serial;
+        solicitudJson.estado=this.estadoDao.findEstadoById(Long.valueOf(1)).getDescripcionEstado();
+        solicitudJson.recomendaciones="PENDIENTE";
+        solicitudJson.diagnostico="PENDIENTE";
+        System.out.println(solicitudJson.toString());
+        return solicitudJson;
     }
 
     private void saveCultivoSolicitante(final SolicitudMovil solicitudMovil) {

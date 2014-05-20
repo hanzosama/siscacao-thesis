@@ -15,6 +15,14 @@
     margin: 10px 0px 0px 0px;
 }
 
+#content{
+    background-color: #f5f5f5;
+    border: 1px solid #eee;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px 0 5px 0;
+}
+
 #left {
     float: left;
     background-color: #ECF3FD;

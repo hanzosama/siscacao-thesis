@@ -13,4 +13,8 @@ import javax.xml.bind.annotation.XmlElement;
 public class SolicitudJson {
     @XmlElement public String numeroSolicitud;
     @XmlElement public String numeroDocumento;  
+    @XmlElement public String nombreSolicitante;  
+    @XmlElement public String diagnostico;  
+    @XmlElement public String recomendaciones;  
+    @XmlElement public String estado;  
 }

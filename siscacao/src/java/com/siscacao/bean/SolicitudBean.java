@@ -63,12 +63,10 @@ public class SolicitudBean implements Serializable {
         HttpSession session = (HttpSession) faceContext.getExternalContext().getSession(true);
         Object id_usuario = session.getAttribute("id_usuario");
         solicitudes = solicitudDao.retrieveListSolicitudPendingForUser((Long) id_usuario);
-               this.pieResult = new PieChartModel();
-this.pieResult.set("Work", 0);
-this.pieResult.set("Eat", 0);
-this.pieResult.set("Commute", 0);
-this.pieResult.set("Watch TV", 0);
-this.pieResult.set("Sleep", 0);
+        this.pieResult = new PieChartModel();
+        
+        pieResult.set("",null);
+
     }
 
     public List<TblSolicitud> getSolicitudes() {
@@ -94,6 +92,9 @@ this.pieResult.set("Sleep", 0);
     public String detalleSolicitud() {
         this.selectedImagen = null;
         this.newImageName = null;
+        this.newImageName=null;
+        this.pieResult.clear();
+        this.pieResult.set("", null);
         return "solicitud_detalle/detalle_solicitud.jsf?faces-redirect=true";
     }
 
@@ -169,21 +170,34 @@ this.pieResult.set("Sleep", 0);
 
     }
     public void analizeImage(ActionEvent actionEvent) {
+        
+        String msg ;
+        FacesMessage message;
+        System.out.println(this.newImageName);
+         if (this.newImageName == null || this.newImageName.equals("gfx/Imagen-animada-Lupa-10.png")) {
+            msg = "Recorte la imagen seleccionada";
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "Por favor recorte la imagen para relizar el analisis");
+            FacesContext.getCurrentInstance().addMessage(msg, message);
+            return;
+        }
+        
         imageNetIA = new ImageNetIA();
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         try {
             Map<String, Double> imageDiag = imageNetIA.getImageDiag(servletContext.getRealPath("") + File.separator + "resources/"+this.newImageName);
-            System.out.println(imageDiag);
+            for (Map.Entry<String,Double> entry: imageDiag.entrySet()){
+                pieResult.set(entry.getKey(), entry.getValue());
+            }
         } catch (IOException ex) {
             System.out.println(ex);
         }
         
-pieResult.set("Work", 11);
-pieResult.set("Eat", 2);
-pieResult.set("Commute", 2);
-pieResult.set("Watch TV", 2);
-pieResult.set("Sleep", 7);
-
+         try {
+            Thread.sleep(1500);
+        } catch (InterruptedException ex) {
+            System.out.println(ex);
+        }
+       
     }
 
     public String getNewImageName() {

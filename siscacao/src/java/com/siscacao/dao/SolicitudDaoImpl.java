@@ -128,6 +128,7 @@ public class SolicitudDaoImpl implements SolicitudDao {
         try {
             session.beginTransaction();
             solicitudModel = (TblSolicitud) session.createQuery(sql).uniqueResult();
+            solicitudModel.setTblEstado((TblEstado)(session.createSQLQuery("select * from tbl_estado estado where id_estado=" + solicitudModel.getTblEstado().getIdEstado() + "").addEntity("estado", TblEstado.class).uniqueResult()));
             session.beginTransaction().commit();
         } catch (Exception e) {
             session.beginTransaction().rollback();            
@@ -144,6 +145,7 @@ public class SolicitudDaoImpl implements SolicitudDao {
         try {
             session.beginTransaction();
             solicitudModel = (TblSolicitud) session.createQuery(sql).uniqueResult();
+            solicitudModel.setTblEstado((TblEstado)(session.createSQLQuery("select * from tbl_estado estado where id_estado=" + solicitudModel.getTblEstado().getIdEstado() + "").addEntity("estado", TblEstado.class).uniqueResult()));
             session.beginTransaction().commit();
         } catch (Exception e) {
             session.beginTransaction().rollback();           
