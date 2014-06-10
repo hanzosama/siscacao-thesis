@@ -4,16 +4,21 @@
  */
 package com.siscacao.bean;
 
+import com.siscacao.dao.SintomaDao;
+import com.siscacao.dao.SintomaDaoImpl;
 import com.siscacao.dao.SolicitudDao;
 import com.siscacao.dao.SolicitudDaoImpl;
 import com.siscacao.model.TblImagen;
+import com.siscacao.model.TblSintoma;
 import com.siscacao.model.TblSolicitud;
 import com.siscacao.util.ImageNetIA;
+import com.siscacao.util.SymptomIA;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -27,6 +32,8 @@ import javax.faces.event.ActionEvent;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
+import org.neuroph.core.learning.DataSet;
+import org.neuroph.core.learning.DataSetRow;
 import org.primefaces.model.CroppedImage;
 import org.primefaces.model.chart.PieChartModel;
 
@@ -37,8 +44,11 @@ import org.primefaces.model.chart.PieChartModel;
 @ManagedBean
 @SessionScoped
 public class SolicitudBean implements Serializable {
+
     private ImageNetIA imageNetIA;
+    private SymptomIA symptomIA;
     private SolicitudDao solicitudDao;
+    private SintomaDao sintomasDao;
     private List<TblSolicitud> solicitudes;
     private List<TblSolicitud> filteredSolicitudes;
     private TblSolicitud selectedSolicitud;
@@ -48,6 +58,9 @@ public class SolicitudBean implements Serializable {
     private CroppedImage croppedImage;
     private String newImageName;
     private PieChartModel pieResult;
+    private PieChartModel pieResultSymptom;
+    private List<TblSintoma> sintomas;
+    private String[] selectedSintomas;
 
     public TblImagen getSelectedImagen() {
         return selectedImagen;
@@ -64,8 +77,13 @@ public class SolicitudBean implements Serializable {
         Object id_usuario = session.getAttribute("id_usuario");
         solicitudes = solicitudDao.retrieveListSolicitudPendingForUser((Long) id_usuario);
         this.pieResult = new PieChartModel();
-        
-        pieResult.set("",null);
+        this.pieResultSymptom = new PieChartModel();
+        this.selectedSintomas=null;    
+        pieResult.set("", null);
+        pieResultSymptom.set("",null);
+
+        sintomasDao = new SintomaDaoImpl();
+        sintomas = sintomasDao.getAllSintomas();
 
     }
 
@@ -89,12 +107,50 @@ public class SolicitudBean implements Serializable {
         this.selectedSolicitud = selectedSolicitud;
     }
 
+    public List<TblSintoma> getSintomas() {
+        return sintomas;
+    }
+
+    public String[] getSelectedSintomas() {
+        return selectedSintomas;
+    }
+
+    public void setSelectedSintomas(String[] selectedSintomas) {
+        this.selectedSintomas = selectedSintomas;
+    }
+
+    public void evaluateSintomas(ActionEvent actionEvent) {
+        DataSet PruebaSet = new DataSet(14, 7);
+        this.symptomIA = new SymptomIA();
+        double[] sintomas = new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+        for (TblSintoma sintoma : this.sintomas) {
+            for (int i = 0; i < this.selectedSintomas.length; i++) {
+                if (sintoma.getDescripcionSintoma().equals(this.selectedSintomas[i])) {
+                    sintomas[sintoma.getIdSintoma().intValue() - 1] = (double) 1;
+                }
+            }
+        }
+
+
+        PruebaSet.addRow(new DataSetRow(sintomas, new double[]{0, 0, 0, 0, 0, 0, 0}));
+        Map<String, Double> symptom = this.symptomIA.getSymptom(PruebaSet);
+        
+        for (Map.Entry<String, Double> entry : symptom.entrySet()) {
+                pieResultSymptom.set(entry.getKey(), entry.getValue());
+            }
+
+    }
+
     public String detalleSolicitud() {
+        this.selectedSintomas=null;
         this.selectedImagen = null;
         this.newImageName = null;
-        this.newImageName=null;
+        this.newImageName = null;
         this.pieResult.clear();
         this.pieResult.set("", null);
+        this.pieResultSymptom.clear();
+        this.pieResultSymptom.set("", null);
         return "solicitud_detalle/detalle_solicitud.jsf?faces-redirect=true";
     }
 
@@ -133,7 +189,7 @@ public class SolicitudBean implements Serializable {
     }
 
     public void crop(ActionEvent actionEvent) {
-        String msg ;
+        String msg;
         FacesMessage message;
 
         if (croppedImage == null) {
@@ -169,35 +225,36 @@ public class SolicitudBean implements Serializable {
         }
 
     }
+
     public void analizeImage(ActionEvent actionEvent) {
-        
-        String msg ;
+
+        String msg;
         FacesMessage message;
         System.out.println(this.newImageName);
-         if (this.newImageName == null || this.newImageName.equals("gfx/Imagen-animada-Lupa-10.png")) {
+        if (this.newImageName == null || this.newImageName.equals("gfx/Imagen-animada-Lupa-10.png")) {
             msg = "Recorte la imagen seleccionada";
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "Por favor recorte la imagen para relizar el analisis");
             FacesContext.getCurrentInstance().addMessage(msg, message);
             return;
         }
-        
+
         imageNetIA = new ImageNetIA();
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         try {
-            Map<String, Double> imageDiag = imageNetIA.getImageDiag(servletContext.getRealPath("") + File.separator + "resources/"+this.newImageName);
-            for (Map.Entry<String,Double> entry: imageDiag.entrySet()){
+            Map<String, Double> imageDiag = imageNetIA.getImageDiag(servletContext.getRealPath("") + File.separator + "resources/" + this.newImageName);
+            for (Map.Entry<String, Double> entry : imageDiag.entrySet()) {
                 pieResult.set(entry.getKey(), entry.getValue());
             }
         } catch (IOException ex) {
             System.out.println(ex);
         }
-        
-         try {
+
+        try {
             Thread.sleep(1500);
         } catch (InterruptedException ex) {
             System.out.println(ex);
         }
-       
+
     }
 
     public String getNewImageName() {
@@ -210,6 +267,10 @@ public class SolicitudBean implements Serializable {
 
     public PieChartModel getPieResult() {
         return pieResult;
+    }
+
+    public PieChartModel getPieResultSymptom() {
+        return pieResultSymptom;
     }
     
     

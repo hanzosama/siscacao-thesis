@@ -190,11 +190,12 @@ public class SolicitudResource {
     @Produces("application/json")
     public SolicitudJson resgistrarSolicitud(final SolicitudMovil solicitudMovil) {
         String result = "1";
-        System.out.println(solicitudMovil.imagenSolicitud);
-        System.out.println(solicitudMovil.nombreSolicitante);
+        System.out.println(" Datos" +solicitudMovil.toString());
+        
         this.solicitante = new TblSolicitante();
         this.solicitante.setNombreSolicitante(solicitudMovil.nombreSolicitante);
         this.solicitante.setNumeroDocumento(solicitudMovil.numeroDocumento);
+        
         TblContacto contactoFijo = new TblContacto();
         contactoFijo.setContacto(solicitudMovil.telefonoFijo);
         contactoFijo.setTblTipoContacto(tipoContactoDao.findTipoContactoId("TF"));

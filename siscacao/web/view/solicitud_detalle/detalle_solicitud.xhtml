@@ -19,7 +19,8 @@
                 </p:ajaxStatus>
                 <h:form id="form"> 
                     <p:panelGrid id="dashboard" >
-                        <p:row>
+                        <!-- Analisis por imagen -->
+                        <p:row >
                             <p:column style="display: block;margin-left: auto;margin-right: auto;">
                                 <p:panel header="Imagenes Cargadas por el Usuario" footer="Seleccione la imagen que desea analizar" style="height:350px;width:350px;"> 
                                     <p:dataGrid id="availableFotos" value="#{solicitudBean.selectedImagenes}" var="fotos" columns="2"  >  
@@ -62,6 +63,42 @@
                                             </p:row>
                                         </p:panelGrid>
                                     </p:scrollPanel>
+                                </p:panel>
+                            </p:column>
+                        </p:row>
+                        <!-- analisis por caracteristicas -->
+                        <p:row>
+                            <p:column  style="display: block;margin-left: auto;margin-right: auto;">
+                                <p:panel id="descripcionPanel" header="Caracteristicas y descripción del problema" style="margin-bottom:10px;">  
+                                    <p:panelGrid columns="2" >                                                                      
+                                        <h:outputLabel value="Descripción del problema:" for="descripcionProblema"/>
+                                        <p:inputTextarea id="descripcionProblema" rows="10" cols="20" disabled="true"   autoResize="false" value="#{solicitudBean.selectedSolicitud.descripcion}" />
+                                    </p:panelGrid>
+                                </p:panel>
+                            </p:column>   
+                            <p:column >
+                                <p:panel id="sintomasPanel" header="Sintomatologia relacionada">  
+                                    <p:panelGrid style="width:775px;" > 
+                                        <p:row>
+                                            <p:column>
+                                                <h:outputLabel for="menuSintomas" value="Sintomas comunes:" />
+                                            </p:column>
+                                            <p:column colspan="2">
+                                                <p:selectCheckboxMenu id="menuSintomas" value="#{solicitudBean.selectedSintomas}" label="Sintomas"
+                                                                      filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
+                                                    <f:selectItems value="#{solicitudBean.sintomas}" var="sintoma" itemDescription="#{sintoma.descripcionSintoma}" itemValue="#{sintoma.descripcionSintoma}" itemLabel="#{sintoma.descripcionSintoma}"/>
+                                                </p:selectCheckboxMenu>
+                                            </p:column>
+                                            <p:column>
+                                                <p:commandButton value="Analizar sintomas"  update="pieResultSymptom,:msgs" actionListener="#{solicitudBean.evaluateSintomas}"/>                                      
+                                            </p:column>
+                                        </p:row> 
+                                        <p:row>
+                                            <p:column colspan="4">   
+                                                <p:pieChart id="pieResultSymptom"  value="#{solicitudBean.pieResultSymptom}" legendPosition="w" fill="true" showDataLabels="true" diameter="200"  title="Resultado analisis"/> 
+                                            </p:column>
+                                        </p:row>
+                                    </p:panelGrid>
                                 </p:panel>
                             </p:column>
                         </p:row>

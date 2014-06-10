@@ -24,4 +24,12 @@ public class SolicitudMovil {
     @XmlElement public String idVariedad; 
     @XmlElement public String idEstadoCultivo;
     @XmlElement public String imagenSolicitud;    
+
+    @Override
+    public String toString() {
+        return "SolicitudMovil{" + "nombreSolicitante=" + nombreSolicitante + ", tipoDocumento=" + tipoDocumento + ", numeroDocumento=" + numeroDocumento + ", numeroCelular=" + numeroCelular + ", telefonoFijo=" + telefonoFijo + ", idDepartamento=" + idDepartamento + ", nombreVereda=" + nombreVereda + ", nombreCultivo=" + nombreCultivo + ", extensionCultivo=" + extensionCultivo + ", idClima=" + idClima + ", idVariedad=" + idVariedad + ", idEstadoCultivo=" + idEstadoCultivo + ", imagenSolicitud=" + imagenSolicitud + '}';
+    }
+    
+    
+    
 }
