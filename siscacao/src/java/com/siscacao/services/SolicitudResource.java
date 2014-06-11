@@ -147,7 +147,7 @@ public class SolicitudResource {
     @POST
     @Path("registro")
     @Consumes("application/json")
-    @Produces("text/html")
+    @Produces("application/json")
     public SolicitudJson getSolicitud(final SolicitudJson solicitudJson) {
         String result = "-1";
         SolicitudJson returnSolicitudJson = new SolicitudJson();
@@ -160,7 +160,6 @@ public class SolicitudResource {
                 solicitudJson.nombreSolicitante=this.solicitud.getTblSolicitante().getNombreSolicitante();
                 solicitudJson.estado= this.solicitud.getTblEstado().getDescripcionEstado();
                 solicitudJson.numeroDocumento=this.solicitud.getTblSolicitante().getNumeroDocumento();
-                solicitudJson.nombreSolicitante=this.solicitud.getTblSolicitante().getNombreSolicitante();
                 solicitudJson.diagnostico="PENDIENTE";
                 solicitudJson.recomendaciones="PENDIENTE";
                 return solicitudJson;
@@ -175,7 +174,6 @@ public class SolicitudResource {
                 solicitudJson.nombreSolicitante=this.solicitud.getTblSolicitante().getNombreSolicitante();
                 solicitudJson.estado= this.solicitud.getTblEstado().getDescripcionEstado();
                 solicitudJson.numeroDocumento=this.solicitud.getTblSolicitante().getNumeroDocumento();
-                solicitudJson.nombreSolicitante=this.solicitud.getTblSolicitante().getNombreSolicitante();
                 solicitudJson.diagnostico="PENDIENTE";
                 solicitudJson.recomendaciones="PENDIENTE";
                 return solicitudJson;

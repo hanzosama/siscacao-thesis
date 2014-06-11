@@ -1,0 +1,3709 @@
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: tbl_asignacion_solicitud; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_asignacion_solicitud (
+    id_asignacion_solicitud integer NOT NULL,
+    id_usuario integer,
+    id_solicitud integer
+);
+
+
+ALTER TABLE public.tbl_asignacion_solicitud OWNER TO postgres;
+
+--
+-- Name: tbl_asignacion_solicitud_id_asignacion_solicitud_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_asignacion_solicitud_id_asignacion_solicitud_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_asignacion_solicitud_id_asignacion_solicitud_seq OWNER TO postgres;
+
+--
+-- Name: tbl_asignacion_solicitud_id_asignacion_solicitud_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_asignacion_solicitud_id_asignacion_solicitud_seq OWNED BY tbl_asignacion_solicitud.id_asignacion_solicitud;
+
+
+--
+-- Name: tbl_ciudad; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_ciudad (
+    id_ciudad integer NOT NULL,
+    nombre_ciudad character varying(80),
+    id_departamento integer
+);
+
+
+ALTER TABLE public.tbl_ciudad OWNER TO postgres;
+
+--
+-- Name: tbl_ciudad_id_ciudad_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_ciudad_id_ciudad_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_ciudad_id_ciudad_seq OWNER TO postgres;
+
+--
+-- Name: tbl_ciudad_id_ciudad_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_ciudad_id_ciudad_seq OWNED BY tbl_ciudad.id_ciudad;
+
+
+--
+-- Name: tbl_clima; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_clima (
+    id_clima integer NOT NULL,
+    nombre_clima character varying(64)
+);
+
+
+ALTER TABLE public.tbl_clima OWNER TO postgres;
+
+--
+-- Name: tbl_clima_id_clima_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_clima_id_clima_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_clima_id_clima_seq OWNER TO postgres;
+
+--
+-- Name: tbl_clima_id_clima_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_clima_id_clima_seq OWNED BY tbl_clima.id_clima;
+
+
+--
+-- Name: tbl_contacto; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_contacto (
+    id_contacto integer NOT NULL,
+    id_solicitante integer,
+    contacto character varying(40),
+    id_tipo_contacto integer
+);
+
+
+ALTER TABLE public.tbl_contacto OWNER TO postgres;
+
+--
+-- Name: tbl_contacto_id_contacto_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_contacto_id_contacto_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_contacto_id_contacto_seq OWNER TO postgres;
+
+--
+-- Name: tbl_contacto_id_contacto_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_contacto_id_contacto_seq OWNED BY tbl_contacto.id_contacto;
+
+
+--
+-- Name: tbl_cultivo; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_cultivo (
+    id_cultivo integer NOT NULL,
+    nombre_cultivo character varying(50) NOT NULL,
+    extension_cultivo character varying(64),
+    id_variedad integer,
+    id_clima integer,
+    id_estado_produccion integer,
+    id_tecnica integer,
+    edad_cultivo character varying(64)
+);
+
+
+ALTER TABLE public.tbl_cultivo OWNER TO postgres;
+
+--
+-- Name: tbl_cultivo_id_cultivo_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_cultivo_id_cultivo_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_cultivo_id_cultivo_seq OWNER TO postgres;
+
+--
+-- Name: tbl_cultivo_id_cultivo_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_cultivo_id_cultivo_seq OWNED BY tbl_cultivo.id_cultivo;
+
+
+--
+-- Name: tbl_departamento; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_departamento (
+    id_departamento integer NOT NULL,
+    nombre_departamento character varying(80)
+);
+
+
+ALTER TABLE public.tbl_departamento OWNER TO postgres;
+
+--
+-- Name: tbl_departamento_id_departamento_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_departamento_id_departamento_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_departamento_id_departamento_seq OWNER TO postgres;
+
+--
+-- Name: tbl_departamento_id_departamento_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_departamento_id_departamento_seq OWNED BY tbl_departamento.id_departamento;
+
+
+--
+-- Name: tbl_detalle_usuario; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_detalle_usuario (
+    id_detalle_usuario integer NOT NULL,
+    id_usuario integer,
+    nombre_usuario character varying(64),
+    apellido_usuario character varying(64),
+    id_tipo_documento integer,
+    numero_documento character varying(64),
+    direccion character varying(64),
+    email character varying(64),
+    id_contacto integer,
+    id_ciudad integer
+);
+
+
+ALTER TABLE public.tbl_detalle_usuario OWNER TO postgres;
+
+--
+-- Name: tbl_detalle_usuario_id_detalle_usuario_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_detalle_usuario_id_detalle_usuario_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_detalle_usuario_id_detalle_usuario_seq OWNER TO postgres;
+
+--
+-- Name: tbl_detalle_usuario_id_detalle_usuario_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_detalle_usuario_id_detalle_usuario_seq OWNED BY tbl_detalle_usuario.id_detalle_usuario;
+
+
+--
+-- Name: tbl_diagnostico; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_diagnostico (
+    id_diagnostico integer NOT NULL,
+    nombre_diagnostico character varying(6),
+    descripcion_diagnostico character varying(512)
+);
+
+
+ALTER TABLE public.tbl_diagnostico OWNER TO postgres;
+
+--
+-- Name: tbl_diagnostico_caracteristica; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_diagnostico_caracteristica (
+    id_diagnostico_caracteristica integer NOT NULL,
+    id_diagnostico integer,
+    id_diagnostico_relacionado integer
+);
+
+
+ALTER TABLE public.tbl_diagnostico_caracteristica OWNER TO postgres;
+
+--
+-- Name: tbl_diagnostico_caracteristic_id_diagnostico_caracteristica_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_diagnostico_caracteristic_id_diagnostico_caracteristica_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_diagnostico_caracteristic_id_diagnostico_caracteristica_seq OWNER TO postgres;
+
+--
+-- Name: tbl_diagnostico_caracteristic_id_diagnostico_caracteristica_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_diagnostico_caracteristic_id_diagnostico_caracteristica_seq OWNED BY tbl_diagnostico_caracteristica.id_diagnostico_caracteristica;
+
+
+--
+-- Name: tbl_diagnostico_id_diagnostico_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_diagnostico_id_diagnostico_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_diagnostico_id_diagnostico_seq OWNER TO postgres;
+
+--
+-- Name: tbl_diagnostico_id_diagnostico_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_diagnostico_id_diagnostico_seq OWNED BY tbl_diagnostico.id_diagnostico;
+
+
+--
+-- Name: tbl_diagnostico_imagen; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_diagnostico_imagen (
+    id_diagnostico_imagen integer NOT NULL,
+    id_diagnostico integer,
+    id_diagnostico_relacionado integer
+);
+
+
+ALTER TABLE public.tbl_diagnostico_imagen OWNER TO postgres;
+
+--
+-- Name: tbl_diagnostico_imagen_id_diagnostico_imagen_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_diagnostico_imagen_id_diagnostico_imagen_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_diagnostico_imagen_id_diagnostico_imagen_seq OWNER TO postgres;
+
+--
+-- Name: tbl_diagnostico_imagen_id_diagnostico_imagen_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_diagnostico_imagen_id_diagnostico_imagen_seq OWNED BY tbl_diagnostico_imagen.id_diagnostico_imagen;
+
+
+--
+-- Name: tbl_estado; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_estado (
+    id_estado integer NOT NULL,
+    descripcion_estado character varying(64)
+);
+
+
+ALTER TABLE public.tbl_estado OWNER TO postgres;
+
+--
+-- Name: tbl_estado_id_estado_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_estado_id_estado_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_estado_id_estado_seq OWNER TO postgres;
+
+--
+-- Name: tbl_estado_id_estado_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_estado_id_estado_seq OWNED BY tbl_estado.id_estado;
+
+
+--
+-- Name: tbl_estado_produccion; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_estado_produccion (
+    id_estado_produccion integer NOT NULL,
+    descripcion_estado character varying(64)
+);
+
+
+ALTER TABLE public.tbl_estado_produccion OWNER TO postgres;
+
+--
+-- Name: tbl_estado_produccion_id_estado_produccion_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_estado_produccion_id_estado_produccion_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_estado_produccion_id_estado_produccion_seq OWNER TO postgres;
+
+--
+-- Name: tbl_estado_produccion_id_estado_produccion_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_estado_produccion_id_estado_produccion_seq OWNED BY tbl_estado_produccion.id_estado_produccion;
+
+
+--
+-- Name: tbl_etapa; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_etapa (
+    id_etapa integer NOT NULL,
+    descripcion_etapa character varying(50)
+);
+
+
+ALTER TABLE public.tbl_etapa OWNER TO postgres;
+
+--
+-- Name: tbl_etapa_id_etapa_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_etapa_id_etapa_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_etapa_id_etapa_seq OWNER TO postgres;
+
+--
+-- Name: tbl_etapa_id_etapa_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_etapa_id_etapa_seq OWNED BY tbl_etapa.id_etapa;
+
+
+--
+-- Name: tbl_fase; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_fase (
+    id_fase integer NOT NULL,
+    descripcion_fase character varying(64)
+);
+
+
+ALTER TABLE public.tbl_fase OWNER TO postgres;
+
+--
+-- Name: tbl_fase_id_fase_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_fase_id_fase_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_fase_id_fase_seq OWNER TO postgres;
+
+--
+-- Name: tbl_fase_id_fase_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_fase_id_fase_seq OWNED BY tbl_fase.id_fase;
+
+
+--
+-- Name: tbl_funcion_rol; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_funcion_rol (
+    id_funcion_rol integer NOT NULL,
+    id_rol integer,
+    id_funcion integer
+);
+
+
+ALTER TABLE public.tbl_funcion_rol OWNER TO postgres;
+
+--
+-- Name: tbl_funcion_rol_id_funcion_rol_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_funcion_rol_id_funcion_rol_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_funcion_rol_id_funcion_rol_seq OWNER TO postgres;
+
+--
+-- Name: tbl_funcion_rol_id_funcion_rol_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_funcion_rol_id_funcion_rol_seq OWNED BY tbl_funcion_rol.id_funcion_rol;
+
+
+--
+-- Name: tbl_funciones; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_funciones (
+    id_funcion integer NOT NULL,
+    nombre_funcion character varying(50)
+);
+
+
+ALTER TABLE public.tbl_funciones OWNER TO postgres;
+
+--
+-- Name: tbl_funciones_id_funcion_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_funciones_id_funcion_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_funciones_id_funcion_seq OWNER TO postgres;
+
+--
+-- Name: tbl_funciones_id_funcion_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_funciones_id_funcion_seq OWNED BY tbl_funciones.id_funcion;
+
+
+--
+-- Name: tbl_imagen; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_imagen (
+    id_imagen integer NOT NULL,
+    id_solicitud integer,
+    nombre_imagen character varying(64),
+    path_imagen character varying(256)
+);
+
+
+ALTER TABLE public.tbl_imagen OWNER TO postgres;
+
+--
+-- Name: tbl_imagen_id_imagen_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_imagen_id_imagen_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_imagen_id_imagen_seq OWNER TO postgres;
+
+--
+-- Name: tbl_imagen_id_imagen_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_imagen_id_imagen_seq OWNED BY tbl_imagen.id_imagen;
+
+
+--
+-- Name: tbl_patologia; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_patologia (
+    id_patologia integer NOT NULL,
+    descripcion_patologia character varying(512),
+    observaciones_patologia character varying(512)
+);
+
+
+ALTER TABLE public.tbl_patologia OWNER TO postgres;
+
+--
+-- Name: tbl_patologia_id_patologia_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_patologia_id_patologia_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_patologia_id_patologia_seq OWNER TO postgres;
+
+--
+-- Name: tbl_patologia_id_patologia_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_patologia_id_patologia_seq OWNED BY tbl_patologia.id_patologia;
+
+
+--
+-- Name: tbl_respuesta_solicitud; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_respuesta_solicitud (
+    id_respuesta_solicitud integer NOT NULL,
+    id_solicitud integer,
+    id_diagnostico integer,
+    descripcion_respuesta character varying(512),
+    fecha_respuesta time without time zone,
+    fecha_solicitud time without time zone
+);
+
+
+ALTER TABLE public.tbl_respuesta_solicitud OWNER TO postgres;
+
+--
+-- Name: tbl_respuesta_solicitud_id_respuesta_solicitud_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_respuesta_solicitud_id_respuesta_solicitud_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_respuesta_solicitud_id_respuesta_solicitud_seq OWNER TO postgres;
+
+--
+-- Name: tbl_respuesta_solicitud_id_respuesta_solicitud_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_respuesta_solicitud_id_respuesta_solicitud_seq OWNED BY tbl_respuesta_solicitud.id_respuesta_solicitud;
+
+
+--
+-- Name: tbl_rol; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_rol (
+    id_rol integer NOT NULL,
+    nombre_rol character varying(50),
+    descripcion character varying(50),
+    fecha_modificacion timestamp with time zone
+);
+
+
+ALTER TABLE public.tbl_rol OWNER TO postgres;
+
+--
+-- Name: tbl_rol_id_rol_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_rol_id_rol_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_rol_id_rol_seq OWNER TO postgres;
+
+--
+-- Name: tbl_rol_id_rol_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_rol_id_rol_seq OWNED BY tbl_rol.id_rol;
+
+
+--
+-- Name: tbl_sintoma; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_sintoma (
+    id_sintoma integer NOT NULL,
+    descripcion_sintoma character varying(256)
+);
+
+
+ALTER TABLE public.tbl_sintoma OWNER TO postgres;
+
+--
+-- Name: tbl_sintoma_id_sintoma_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_sintoma_id_sintoma_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_sintoma_id_sintoma_seq OWNER TO postgres;
+
+--
+-- Name: tbl_sintoma_id_sintoma_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_sintoma_id_sintoma_seq OWNED BY tbl_sintoma.id_sintoma;
+
+
+--
+-- Name: tbl_sintoma_patologia; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_sintoma_patologia (
+    id_sintoma_patologia integer NOT NULL,
+    id_sintoma integer,
+    id_patologia integer
+);
+
+
+ALTER TABLE public.tbl_sintoma_patologia OWNER TO postgres;
+
+--
+-- Name: tbl_sintoma_patologia_id_sintoma_patologia_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_sintoma_patologia_id_sintoma_patologia_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_sintoma_patologia_id_sintoma_patologia_seq OWNER TO postgres;
+
+--
+-- Name: tbl_sintoma_patologia_id_sintoma_patologia_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_sintoma_patologia_id_sintoma_patologia_seq OWNED BY tbl_sintoma_patologia.id_sintoma_patologia;
+
+
+--
+-- Name: tbl_solicitante; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_solicitante (
+    id_solicitante integer NOT NULL,
+    nombre_solicitante character varying(50),
+    id_departamento integer,
+    id_tipo_documento integer,
+    numero_documento character varying(40)
+);
+
+
+ALTER TABLE public.tbl_solicitante OWNER TO postgres;
+
+--
+-- Name: tbl_solicitante_id_solicitante_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_solicitante_id_solicitante_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_solicitante_id_solicitante_seq OWNER TO postgres;
+
+--
+-- Name: tbl_solicitante_id_solicitante_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_solicitante_id_solicitante_seq OWNED BY tbl_solicitante.id_solicitante;
+
+
+--
+-- Name: tbl_solicitud; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_solicitud (
+    id_solicitud integer NOT NULL,
+    id_cultivo integer,
+    id_solicitante integer,
+    id_vereda integer,
+    id_tipo_solicitud integer,
+    id_patologia integer,
+    fecha_solicitud time without time zone NOT NULL,
+    id_etapa integer,
+    id_fase integer,
+    id_estado integer,
+    serial character varying(100),
+    descripcion character varying(600)
+);
+
+
+ALTER TABLE public.tbl_solicitud OWNER TO postgres;
+
+--
+-- Name: tbl_solicitud_id_solicitud_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_solicitud_id_solicitud_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_solicitud_id_solicitud_seq OWNER TO postgres;
+
+--
+-- Name: tbl_solicitud_id_solicitud_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_solicitud_id_solicitud_seq OWNED BY tbl_solicitud.id_solicitud;
+
+
+--
+-- Name: tbl_tecnica_cultivo; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_tecnica_cultivo (
+    id_tecnica integer NOT NULL,
+    nombre_tecnica character varying(64)
+);
+
+
+ALTER TABLE public.tbl_tecnica_cultivo OWNER TO postgres;
+
+--
+-- Name: tbl_tecnica_cultivo_id_tecnica_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_tecnica_cultivo_id_tecnica_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_tecnica_cultivo_id_tecnica_seq OWNER TO postgres;
+
+--
+-- Name: tbl_tecnica_cultivo_id_tecnica_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_tecnica_cultivo_id_tecnica_seq OWNED BY tbl_tecnica_cultivo.id_tecnica;
+
+
+--
+-- Name: tbl_tipo_contacto; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_tipo_contacto (
+    id_tipo_contacto integer NOT NULL,
+    descripcion character varying(50),
+    nombre_tipo character varying(2)
+);
+
+
+ALTER TABLE public.tbl_tipo_contacto OWNER TO postgres;
+
+--
+-- Name: tbl_tipo_contacto_id_tipo_contacto_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_tipo_contacto_id_tipo_contacto_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_tipo_contacto_id_tipo_contacto_seq OWNER TO postgres;
+
+--
+-- Name: tbl_tipo_contacto_id_tipo_contacto_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_tipo_contacto_id_tipo_contacto_seq OWNED BY tbl_tipo_contacto.id_tipo_contacto;
+
+
+--
+-- Name: tbl_tipo_documento; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_tipo_documento (
+    id_tipo_documento integer NOT NULL,
+    descripcion_tipo character varying(50),
+    nombre_tipo character varying(4)
+);
+
+
+ALTER TABLE public.tbl_tipo_documento OWNER TO postgres;
+
+--
+-- Name: tbl_tipo_documento_id_tipo_documento_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_tipo_documento_id_tipo_documento_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_tipo_documento_id_tipo_documento_seq OWNER TO postgres;
+
+--
+-- Name: tbl_tipo_documento_id_tipo_documento_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_tipo_documento_id_tipo_documento_seq OWNED BY tbl_tipo_documento.id_tipo_documento;
+
+
+--
+-- Name: tbl_tipo_solicitud; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_tipo_solicitud (
+    id_tipo_solicitud integer NOT NULL,
+    nombre_tipo character varying(64)
+);
+
+
+ALTER TABLE public.tbl_tipo_solicitud OWNER TO postgres;
+
+--
+-- Name: tbl_tipo_solicitud_id_tipo_solicitud_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_tipo_solicitud_id_tipo_solicitud_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_tipo_solicitud_id_tipo_solicitud_seq OWNER TO postgres;
+
+--
+-- Name: tbl_tipo_solicitud_id_tipo_solicitud_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_tipo_solicitud_id_tipo_solicitud_seq OWNED BY tbl_tipo_solicitud.id_tipo_solicitud;
+
+
+--
+-- Name: tbl_usuario; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_usuario (
+    id_usuario integer NOT NULL,
+    nombre_usuario character varying(256),
+    fecha_ultima_actividad timestamp without time zone,
+    cuenta character varying(256),
+    contrasena character varying(512),
+    fecha_registro timestamp with time zone
+);
+
+
+ALTER TABLE public.tbl_usuario OWNER TO postgres;
+
+--
+-- Name: tbl_usuario_id_usuario_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_usuario_id_usuario_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_usuario_id_usuario_seq OWNER TO postgres;
+
+--
+-- Name: tbl_usuario_id_usuario_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_usuario_id_usuario_seq OWNED BY tbl_usuario.id_usuario;
+
+
+--
+-- Name: tbl_usuario_rol; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_usuario_rol (
+    id_usuario_rol integer NOT NULL,
+    id_rol integer,
+    id_usuario integer
+);
+
+
+ALTER TABLE public.tbl_usuario_rol OWNER TO postgres;
+
+--
+-- Name: tbl_usuario_rol_id_usuario_rol_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_usuario_rol_id_usuario_rol_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_usuario_rol_id_usuario_rol_seq OWNER TO postgres;
+
+--
+-- Name: tbl_usuario_rol_id_usuario_rol_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_usuario_rol_id_usuario_rol_seq OWNED BY tbl_usuario_rol.id_usuario_rol;
+
+
+--
+-- Name: tbl_variedad; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_variedad (
+    id_variedad integer NOT NULL,
+    nombre_variedad character varying(64)
+);
+
+
+ALTER TABLE public.tbl_variedad OWNER TO postgres;
+
+--
+-- Name: tbl_variedad_id_variedad_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_variedad_id_variedad_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_variedad_id_variedad_seq OWNER TO postgres;
+
+--
+-- Name: tbl_variedad_id_variedad_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_variedad_id_variedad_seq OWNED BY tbl_variedad.id_variedad;
+
+
+--
+-- Name: tbl_vereda; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_vereda (
+    id_vereda integer NOT NULL,
+    nombre_vereda character varying(80),
+    id_departamento integer
+);
+
+
+ALTER TABLE public.tbl_vereda OWNER TO postgres;
+
+--
+-- Name: tbl_vereda_id_vereda_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_vereda_id_vereda_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_vereda_id_vereda_seq OWNER TO postgres;
+
+--
+-- Name: tbl_vereda_id_vereda_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_vereda_id_vereda_seq OWNED BY tbl_vereda.id_vereda;
+
+
+--
+-- Name: id_asignacion_solicitud; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_asignacion_solicitud ALTER COLUMN id_asignacion_solicitud SET DEFAULT nextval('tbl_asignacion_solicitud_id_asignacion_solicitud_seq'::regclass);
+
+
+--
+-- Name: id_ciudad; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_ciudad ALTER COLUMN id_ciudad SET DEFAULT nextval('tbl_ciudad_id_ciudad_seq'::regclass);
+
+
+--
+-- Name: id_clima; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_clima ALTER COLUMN id_clima SET DEFAULT nextval('tbl_clima_id_clima_seq'::regclass);
+
+
+--
+-- Name: id_contacto; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_contacto ALTER COLUMN id_contacto SET DEFAULT nextval('tbl_contacto_id_contacto_seq'::regclass);
+
+
+--
+-- Name: id_cultivo; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_cultivo ALTER COLUMN id_cultivo SET DEFAULT nextval('tbl_cultivo_id_cultivo_seq'::regclass);
+
+
+--
+-- Name: id_departamento; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_departamento ALTER COLUMN id_departamento SET DEFAULT nextval('tbl_departamento_id_departamento_seq'::regclass);
+
+
+--
+-- Name: id_detalle_usuario; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_detalle_usuario ALTER COLUMN id_detalle_usuario SET DEFAULT nextval('tbl_detalle_usuario_id_detalle_usuario_seq'::regclass);
+
+
+--
+-- Name: id_diagnostico; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_diagnostico ALTER COLUMN id_diagnostico SET DEFAULT nextval('tbl_diagnostico_id_diagnostico_seq'::regclass);
+
+
+--
+-- Name: id_diagnostico_caracteristica; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_diagnostico_caracteristica ALTER COLUMN id_diagnostico_caracteristica SET DEFAULT nextval('tbl_diagnostico_caracteristic_id_diagnostico_caracteristica_seq'::regclass);
+
+
+--
+-- Name: id_diagnostico_imagen; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_diagnostico_imagen ALTER COLUMN id_diagnostico_imagen SET DEFAULT nextval('tbl_diagnostico_imagen_id_diagnostico_imagen_seq'::regclass);
+
+
+--
+-- Name: id_estado; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_estado ALTER COLUMN id_estado SET DEFAULT nextval('tbl_estado_id_estado_seq'::regclass);
+
+
+--
+-- Name: id_estado_produccion; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_estado_produccion ALTER COLUMN id_estado_produccion SET DEFAULT nextval('tbl_estado_produccion_id_estado_produccion_seq'::regclass);
+
+
+--
+-- Name: id_etapa; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_etapa ALTER COLUMN id_etapa SET DEFAULT nextval('tbl_etapa_id_etapa_seq'::regclass);
+
+
+--
+-- Name: id_fase; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_fase ALTER COLUMN id_fase SET DEFAULT nextval('tbl_fase_id_fase_seq'::regclass);
+
+
+--
+-- Name: id_funcion_rol; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_funcion_rol ALTER COLUMN id_funcion_rol SET DEFAULT nextval('tbl_funcion_rol_id_funcion_rol_seq'::regclass);
+
+
+--
+-- Name: id_funcion; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_funciones ALTER COLUMN id_funcion SET DEFAULT nextval('tbl_funciones_id_funcion_seq'::regclass);
+
+
+--
+-- Name: id_imagen; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_imagen ALTER COLUMN id_imagen SET DEFAULT nextval('tbl_imagen_id_imagen_seq'::regclass);
+
+
+--
+-- Name: id_patologia; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_patologia ALTER COLUMN id_patologia SET DEFAULT nextval('tbl_patologia_id_patologia_seq'::regclass);
+
+
+--
+-- Name: id_respuesta_solicitud; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_respuesta_solicitud ALTER COLUMN id_respuesta_solicitud SET DEFAULT nextval('tbl_respuesta_solicitud_id_respuesta_solicitud_seq'::regclass);
+
+
+--
+-- Name: id_rol; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_rol ALTER COLUMN id_rol SET DEFAULT nextval('tbl_rol_id_rol_seq'::regclass);
+
+
+--
+-- Name: id_sintoma; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_sintoma ALTER COLUMN id_sintoma SET DEFAULT nextval('tbl_sintoma_id_sintoma_seq'::regclass);
+
+
+--
+-- Name: id_sintoma_patologia; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_sintoma_patologia ALTER COLUMN id_sintoma_patologia SET DEFAULT nextval('tbl_sintoma_patologia_id_sintoma_patologia_seq'::regclass);
+
+
+--
+-- Name: id_solicitante; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_solicitante ALTER COLUMN id_solicitante SET DEFAULT nextval('tbl_solicitante_id_solicitante_seq'::regclass);
+
+
+--
+-- Name: id_solicitud; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_solicitud ALTER COLUMN id_solicitud SET DEFAULT nextval('tbl_solicitud_id_solicitud_seq'::regclass);
+
+
+--
+-- Name: id_tecnica; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_tecnica_cultivo ALTER COLUMN id_tecnica SET DEFAULT nextval('tbl_tecnica_cultivo_id_tecnica_seq'::regclass);
+
+
+--
+-- Name: id_tipo_contacto; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_tipo_contacto ALTER COLUMN id_tipo_contacto SET DEFAULT nextval('tbl_tipo_contacto_id_tipo_contacto_seq'::regclass);
+
+
+--
+-- Name: id_tipo_documento; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_tipo_documento ALTER COLUMN id_tipo_documento SET DEFAULT nextval('tbl_tipo_documento_id_tipo_documento_seq'::regclass);
+
+
+--
+-- Name: id_tipo_solicitud; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_tipo_solicitud ALTER COLUMN id_tipo_solicitud SET DEFAULT nextval('tbl_tipo_solicitud_id_tipo_solicitud_seq'::regclass);
+
+
+--
+-- Name: id_usuario; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_usuario ALTER COLUMN id_usuario SET DEFAULT nextval('tbl_usuario_id_usuario_seq'::regclass);
+
+
+--
+-- Name: id_usuario_rol; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_usuario_rol ALTER COLUMN id_usuario_rol SET DEFAULT nextval('tbl_usuario_rol_id_usuario_rol_seq'::regclass);
+
+
+--
+-- Name: id_variedad; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_variedad ALTER COLUMN id_variedad SET DEFAULT nextval('tbl_variedad_id_variedad_seq'::regclass);
+
+
+--
+-- Name: id_vereda; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_vereda ALTER COLUMN id_vereda SET DEFAULT nextval('tbl_vereda_id_vereda_seq'::regclass);
+
+
+--
+-- Data for Name: tbl_asignacion_solicitud; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_asignacion_solicitud (id_asignacion_solicitud, id_usuario, id_solicitud) FROM stdin;
+58	99	76
+59	96	77
+\.
+
+
+--
+-- Name: tbl_asignacion_solicitud_id_asignacion_solicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_asignacion_solicitud_id_asignacion_solicitud_seq', 59, true);
+
+
+--
+-- Data for Name: tbl_ciudad; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_ciudad (id_ciudad, nombre_ciudad, id_departamento) FROM stdin;
+1	Medellín	2
+2	Abejorral	2
+3	Abriaquí	2
+4	Alejandría	2
+5	Amagá	2
+6	Amalfi	2
+7	Andes	2
+8	Angelópolis	2
+9	Angostura	2
+10	Anorí	2
+11	Santafé de antioquia	2
+12	Anza	2
+13	Apartadó	2
+14	Arboletes	2
+15	Argelia	2
+16	Armenia	2
+17	Barbosa	2
+18	Belmira	2
+19	Bello	2
+20	Betania	2
+21	Betulia	2
+22	Ciudad bolívar	2
+23	Briceño	2
+24	Buriticá	2
+25	Cáceres	2
+26	Caicedo	2
+27	Caldas	2
+28	Campamento	2
+29	Cañasgordas	2
+30	Caracolí	2
+31	Caramanta	2
+32	Carepa	2
+33	El carmen de viboral	2
+34	Carolina	2
+35	Caucasia	2
+36	Chigorodó	2
+37	Cisneros	2
+38	Cocorná	2
+39	Concepción	2
+40	Concordia	2
+41	Copacabana	2
+42	Dabeiba	2
+43	Donmatías	2
+44	Ebéjico	2
+45	El bagre	2
+46	Entrerrios	2
+47	Envigado	2
+48	Fredonia	2
+49	Frontino	2
+50	Giraldo	2
+51	Girardota	2
+52	Gómez plata	2
+53	Granada	2
+54	Guadalupe	2
+55	Guarne	2
+56	Guatape	2
+57	Heliconia	2
+58	Hispania	2
+59	Itagui	2
+60	Ituango	2
+61	Jardín	2
+62	Jericó	2
+63	La ceja	2
+64	La estrella	2
+65	La pintada	2
+66	La unión	2
+67	Liborina	2
+68	Maceo	2
+69	Marinilla	2
+70	Montebello	2
+71	Murindó	2
+72	Mutatá	2
+73	Nariño	2
+74	Necoclí	2
+75	Nechí	2
+76	Olaya	2
+77	Peñol	2
+78	Peque	2
+79	Pueblorrico	2
+80	Puerto berrío	2
+81	Puerto nare	2
+82	Puerto triunfo	2
+83	Remedios	2
+84	Retiro	2
+85	Rionegro	2
+86	Sabanalarga	2
+87	Sabaneta	2
+88	Salgar	2
+89	San andrés de cuerquía	2
+90	San carlos	2
+91	San francisco	2
+92	San jerónimo	2
+93	San josé de la montaña	2
+94	San juan de urabá	2
+95	San luis	2
+96	San pedro de los milagros	2
+97	San pedro de uraba	2
+98	San rafael	2
+99	San roque	2
+100	San vicente	2
+101	Santa bárbara	2
+102	Santa rosa de osos	2
+103	Santo domingo	2
+104	El santuario	2
+105	Segovia	2
+106	Sonson	2
+107	Sopetrán	2
+108	Támesis	2
+109	Tarazá	2
+110	Tarso	2
+111	Titiribí	2
+112	Toledo	2
+113	Turbo	2
+114	Uramita	2
+115	Urrao	2
+116	Valdivia	2
+117	Valparaíso	2
+118	Vegachí	2
+119	Venecia	2
+120	Vigía del fuerte	2
+121	Yalí	2
+122	Yarumal	2
+123	Yolombó	2
+124	Yondó	2
+125	Zaragoza	2
+126	Barranquilla	4
+127	Baranoa	4
+128	Campo de la cruz	4
+129	Candelaria	4
+130	Galapa	4
+131	Juan de acosta	4
+132	Luruaco	4
+133	Malambo	4
+134	Manatí	4
+135	Palmar de varela	4
+136	Piojó	4
+137	Polonuevo	4
+138	Ponedera	4
+139	Puerto colombia	4
+140	Repelón	4
+141	Sabanagrande	4
+142	Sabanalarga	4
+143	Santa lucía	4
+144	Santo tomás	4
+145	Soledad	4
+146	Suan	4
+147	Tubará	4
+148	Usiacurí	4
+149	Bogotá, D.C.	33
+150	Cartagena	5
+151	Achí	5
+152	Altos del rosario	5
+153	Arenal	5
+154	Arjona	5
+155	Arroyohondo	5
+156	Barranco de loba	5
+157	Calamar	5
+158	Cantagallo	5
+159	Cicuco	5
+160	Córdoba	5
+161	Clemencia	5
+162	El carmen de bolívar	5
+163	El guamo	5
+164	El peñón	5
+165	Hatillo de loba	5
+166	Magangué	5
+167	Mahates	5
+168	Margarita	5
+169	María la baja	5
+170	Montecristo	5
+171	Mompós	5
+172	Morales	5
+173	Norosí	5
+174	Pinillos	5
+175	Regidor	5
+176	Río viejo	5
+177	San cristóbal	5
+178	San estanislao	5
+179	San fernando	5
+180	San jacinto	5
+181	San jacinto del cauca	5
+182	San juan nepomuceno	5
+183	San martín de loba	5
+184	San pablo	5
+185	Santa catalina	5
+186	Santa rosa	5
+187	Santa rosa del sur	5
+188	Simití	5
+189	Soplaviento	5
+190	Talaigua nuevo	5
+191	Tiquisio	5
+192	Turbaco	5
+193	Turbaná	5
+194	Villanueva	5
+195	Zambrano	5
+196	Tunja	6
+197	Almeida	6
+198	Aquitania	6
+199	Arcabuco	6
+200	Belén	6
+201	Berbeo	6
+202	Betéitiva	6
+203	Boavita	6
+204	Boyacá	6
+205	Briceño	6
+206	Buenavista	6
+207	Busbanzá	6
+208	Caldas	6
+209	Campohermoso	6
+210	Cerinza	6
+211	Chinavita	6
+212	Chiquinquirá	6
+213	Chiscas	6
+214	Chita	6
+215	Chitaraque	6
+216	Chivatá	6
+217	Ciénega	6
+218	Cómbita	6
+219	Coper	6
+220	Corrales	6
+221	Covarachía	6
+222	Cubará	6
+223	Cucaita	6
+224	Cuítiva	6
+225	Chíquiza	6
+226	Chivor	6
+227	Duitama	6
+228	El cocuy	6
+229	El espino	6
+230	Firavitoba	6
+231	Floresta	6
+232	Gachantivá	6
+233	Gameza	6
+234	Garagoa	6
+235	Guacamayas	6
+236	Guateque	6
+237	Guayatá	6
+238	Güicán	6
+239	Iza	6
+240	Jenesano	6
+241	Jericó	6
+242	Labranzagrande	6
+243	La capilla	6
+244	La victoria	6
+245	La uvita	6
+246	Villa de leyva	6
+247	Macanal	6
+248	Maripí	6
+249	Miraflores	6
+250	Mongua	6
+251	Monguí	6
+252	Moniquirá	6
+253	Motavita	6
+254	Muzo	6
+255	Nobsa	6
+256	Nuevo colón	6
+257	Oicatá	6
+258	Otanche	6
+259	Pachavita	6
+260	Páez	6
+261	Paipa	6
+262	Pajarito	6
+263	Panqueba	6
+264	Pauna	6
+265	Paya	6
+266	Paz de río	6
+267	Pesca	6
+268	Pisba	6
+269	Puerto boyacá	6
+270	Quípama	6
+271	Ramiriquí	6
+272	Ráquira	6
+273	Rondón	6
+274	Saboyá	6
+275	Sáchica	6
+276	Samacá	6
+277	San eduardo	6
+278	San josé de pare	6
+279	San luis de gaceno	6
+280	San mateo	6
+281	San miguel de sema	6
+282	San pablo de borbur	6
+283	Santana	6
+284	Santa maría	6
+285	Santa rosa de viterbo	6
+286	Santa sofía	6
+287	Sativanorte	6
+288	Sativasur	6
+289	Siachoque	6
+290	Soatá	6
+291	Socotá	6
+292	Socha	6
+293	Sogamoso	6
+294	Somondoco	6
+295	Sora	6
+296	Sotaquirá	6
+297	Soracá	6
+298	Susacón	6
+299	Sutamarchán	6
+300	Sutatenza	6
+301	Tasco	6
+302	Tenza	6
+303	Tibaná	6
+304	Tibasosa	6
+305	Tinjacá	6
+306	Tipacoque	6
+307	Toca	6
+308	Togüí	6
+309	Tópaga	6
+310	Tota	6
+311	Tununguá	6
+312	Turmequé	6
+313	Tuta	6
+314	Tutazá	6
+315	Umbita	6
+316	Ventaquemada	6
+317	Viracachá	6
+318	Zetaquira	6
+319	Manizales	7
+320	Aguadas	7
+321	Anserma	7
+322	Aranzazu	7
+323	Belalcázar	7
+324	Chinchiná	7
+325	Filadelfia	7
+326	La dorada	7
+327	La merced	7
+328	Manzanares	7
+329	Marmato	7
+330	Marquetalia	7
+331	Marulanda	7
+332	Neira	7
+333	Norcasia	7
+334	Pácora	7
+335	Palestina	7
+336	Pensilvania	7
+337	Riosucio	7
+338	Risaralda	7
+339	Salamina	7
+340	Samaná	7
+341	San josé	7
+342	Supía	7
+343	Victoria	7
+344	Villamaría	7
+345	Viterbo	7
+346	Florencia	8
+347	Albania	8
+348	Belén de los andaquíes	8
+349	Cartagena del chairá	8
+350	Curillo	8
+351	El doncello	8
+352	El paujil	8
+353	La montañita	8
+354	Milán	8
+355	Morelia	8
+356	Puerto rico	8
+357	San josé del fragua	8
+358	San vicente del caguán	8
+359	Solano	8
+360	Solita	8
+361	Valparaíso	8
+362	Popayán	10
+363	Almaguer	10
+364	Argelia	10
+365	Balboa	10
+366	Bolívar	10
+367	Buenos aires	10
+368	Cajibío	10
+369	Caldono	10
+370	Caloto	10
+371	Corinto	10
+372	El tambo	10
+373	Florencia	10
+374	Guachené	10
+375	Guapi	10
+376	Inzá	10
+377	Jambaló	10
+378	La sierra	10
+379	La vega	10
+380	López	10
+381	Mercaderes	10
+382	Miranda	10
+383	Morales	10
+384	Padilla	10
+385	Paez	10
+386	Patía	10
+387	Piamonte	10
+388	Piendamó	10
+389	Puerto tejada	10
+390	Puracé	10
+391	Rosas	10
+392	San sebastián	10
+393	Santander de quilichao	10
+394	Santa rosa	10
+395	Silvia	10
+396	Sotara	10
+397	Suárez	10
+398	Sucre	10
+399	Timbío	10
+400	Timbiquí	10
+401	Toribio	10
+402	Totoró	10
+403	Villa rica	10
+404	Valledupar	11
+405	Aguachica	11
+406	Agustín codazzi	11
+407	Astrea	11
+408	Becerril	11
+409	Bosconia	11
+410	Chimichagua	11
+411	Chiriguaná	11
+412	Curumaní	11
+413	El copey	11
+414	El paso	11
+415	Gamarra	11
+416	González	11
+417	La gloria	11
+418	La jagua de ibirico	11
+419	Manaure	11
+420	Pailitas	11
+421	Pelaya	11
+422	Pueblo bello	11
+423	Río de oro	11
+424	La paz	11
+425	San alberto	11
+426	San diego	11
+427	San martín	11
+428	Tamalameque	11
+429	Montería	13
+430	Ayapel	13
+431	Buenavista	13
+432	Canalete	13
+433	Cereté	13
+434	Chimá	13
+435	Chinú	13
+436	Ciénaga de oro	13
+437	Cotorra	13
+438	La apartada	13
+439	Lorica	13
+440	Los córdobas	13
+441	Momil	13
+442	Montelíbano	13
+443	Moñitos	13
+444	Planeta rica	13
+445	Pueblo nuevo	13
+446	Puerto escondido	13
+447	Puerto libertador	13
+448	Purísima	13
+449	Sahagún	13
+450	San andrés sotavento	13
+451	San antero	13
+452	San bernardo del viento	13
+453	San carlos	13
+454	San josé de uré	13
+455	San pelayo	13
+456	Tierralta	13
+457	Tuchín	13
+458	Valencia	13
+459	Agua de dios	14
+460	Albán	14
+461	Anapoima	14
+462	Anolaima	14
+463	Arbeláez	14
+464	Beltrán	14
+465	Bituima	14
+466	Bojacá	14
+467	Cabrera	14
+468	Cachipay	14
+469	Cajicá	14
+470	Caparrapí	14
+471	Caqueza	14
+472	Carmen de carupa	14
+473	Chaguaní	14
+474	Chía	14
+475	Chipaque	14
+476	Choachí	14
+477	Chocontá	14
+478	Cogua	14
+479	Cota	14
+480	Cucunubá	14
+481	El colegio	14
+482	El peñón	14
+483	El rosal	14
+484	Facatativá	14
+485	Fomeque	14
+486	Fosca	14
+487	Funza	14
+488	Fúquene	14
+489	Fusagasugá	14
+490	Gachala	14
+491	Gachancipá	14
+492	Gachetá	14
+493	Gama	14
+494	Girardot	14
+495	Granada	14
+496	Guachetá	14
+497	Guaduas	14
+498	Guasca	14
+499	Guataquí	14
+500	Guatavita	14
+501	Guayabal de siquima	14
+502	Guayabetal	14
+503	Gutiérrez	14
+504	Jerusalén	14
+505	Junín	14
+506	La calera	14
+507	La mesa	14
+508	La palma	14
+509	La peña	14
+510	La vega	14
+511	Lenguazaque	14
+512	Macheta	14
+513	Madrid	14
+514	Manta	14
+515	Medina	14
+516	Mosquera	14
+517	Nariño	14
+518	Nemocón	14
+519	Nilo	14
+520	Nimaima	14
+521	Nocaima	14
+522	Venecia	14
+523	Pacho	14
+524	Paime	14
+525	Pandi	14
+526	Paratebueno	14
+527	Pasca	14
+528	Puerto salgar	14
+529	Pulí	14
+530	Quebradanegra	14
+531	Quetame	14
+532	Quipile	14
+533	Apulo	14
+534	Ricaurte	14
+535	San antonio del tequendama	14
+536	San bernardo	14
+537	San cayetano	14
+538	San francisco	14
+539	San juan de río seco	14
+540	Sasaima	14
+541	Sesquilé	14
+542	Sibaté	14
+543	Silvania	14
+544	Simijaca	14
+545	Soacha	14
+546	Sopó	14
+547	Subachoque	14
+548	Suesca	14
+549	Supatá	14
+550	Susa	14
+551	Sutatausa	14
+552	Tabio	14
+553	Tausa	14
+554	Tena	14
+555	Tenjo	14
+556	Tibacuy	14
+557	Tibirita	14
+558	Tocaima	14
+559	Tocancipá	14
+560	Topaipí	14
+561	Ubalá	14
+562	Ubaque	14
+563	Villa de san diego de ubate	14
+564	Une	14
+565	Útica	14
+566	Vergara	14
+567	Vianí	14
+568	Villagómez	14
+569	Villapinzón	14
+570	Villeta	14
+571	Viotá	14
+572	Yacopí	14
+573	Zipacón	14
+574	Zipaquirá	14
+575	Quibdó	12
+576	Acandí	12
+577	Alto baudó	12
+578	Atrato	12
+579	Bagadó	12
+580	Bahía solano	12
+581	Bajo baudó	12
+582	Bojaya	12
+583	El cantón del san pablo	12
+584	Carmen del darien	12
+585	Cértegui	12
+586	Condoto	12
+587	El carmen de atrato	12
+588	El litoral del san juan	12
+589	Istmina	12
+590	Juradó	12
+591	Lloró	12
+592	Medio atrato	12
+593	Medio baudó	12
+594	Medio san juan	12
+595	Nóvita	12
+596	Nuquí	12
+597	Río iró	12
+598	Río quito	12
+599	Riosucio	12
+600	San josé del palmar	12
+601	Sipí	12
+602	Tadó	12
+603	Unguía	12
+604	Unión panamericana	12
+605	Neiva	17
+606	Acevedo	17
+607	Agrado	17
+608	Aipe	17
+609	Algeciras	17
+610	Altamira	17
+611	Baraya	17
+612	Campoalegre	17
+613	Colombia	17
+614	Elías	17
+615	Garzón	17
+616	Gigante	17
+617	Guadalupe	17
+618	Hobo	17
+619	Iquira	17
+620	Isnos	17
+621	La argentina	17
+622	La plata	17
+623	Nátaga	17
+624	Oporapa	17
+625	Paicol	17
+626	Palermo	17
+627	Palestina	17
+628	Pital	17
+629	Pitalito	17
+630	Rivera	17
+631	Saladoblanco	17
+632	San agustín	17
+633	Santa maría	17
+634	Suaza	17
+635	Tarqui	17
+636	Tesalia	17
+637	Tello	17
+638	Teruel	17
+639	Timaná	17
+640	Villavieja	17
+641	Yaguará	17
+642	Riohacha	18
+643	Albania	18
+644	Barrancas	18
+645	Dibulla	18
+646	Distracción	18
+647	El molino	18
+648	Fonseca	18
+649	Hatonuevo	18
+650	La jagua del pilar	18
+651	Maicao	18
+652	Manaure	18
+653	San juan del cesar	18
+654	Uribia	18
+655	Urumita	18
+656	Villanueva	18
+657	Santa marta	19
+658	Algarrobo	19
+659	Aracataca	19
+660	Ariguaní	19
+661	Cerro san antonio	19
+662	Chibolo	19
+663	Ciénaga	19
+664	Concordia	19
+665	El banco	19
+666	El piñon	19
+667	El retén	19
+668	Fundación	19
+669	Guamal	19
+670	Nueva granada	19
+671	Pedraza	19
+672	Pijiño del carmen	19
+673	Pivijay	19
+674	Plato	19
+675	Puebloviejo	19
+676	Remolino	19
+677	Sabanas de san angel	19
+678	Salamina	19
+679	San sebastián de buenavista	19
+680	San zenón	19
+681	Santa ana	19
+682	Santa bárbara de pinto	19
+683	Sitionuevo	19
+684	Tenerife	19
+685	Zapayán	19
+686	Zona bananera	19
+687	Villavicencio	20
+688	Acacías	20
+689	Barranca de upía	20
+690	Cabuyaro	20
+691	Castilla la nueva	20
+692	Cubarral	20
+693	Cumaral	20
+694	El calvario	20
+695	El castillo	20
+696	El dorado	20
+697	Fuente de oro	20
+698	Granada	20
+699	Guamal	20
+700	Mapiripán	20
+701	Mesetas	20
+702	La macarena	20
+703	Uribe	20
+704	Lejanías	20
+705	Puerto concordia	20
+706	Puerto gaitán	20
+707	Puerto lópez	20
+708	Puerto lleras	20
+709	Puerto rico	20
+710	Restrepo	20
+711	San carlos de guaroa	20
+712	San juan de arama	20
+713	San juanito	20
+714	San martín	20
+715	Vistahermosa	20
+716	Pasto	21
+717	Albán	21
+718	Aldana	21
+719	Ancuyá	21
+720	Arboleda	21
+721	Barbacoas	21
+722	Belén	21
+723	Buesaco	21
+724	Colón	21
+725	Consaca	21
+726	Contadero	21
+727	Córdoba	21
+728	Cuaspud	21
+729	Cumbal	21
+730	Cumbitara	21
+731	Chachagüí	21
+732	El charco	21
+733	El peñol	21
+734	El rosario	21
+735	El tablón de gómez	21
+736	El tambo	21
+737	Funes	21
+738	Guachucal	21
+739	Guaitarilla	21
+740	Gualmatán	21
+741	Iles	21
+742	Imués	21
+743	Ipiales	21
+744	La cruz	21
+745	La florida	21
+746	La llanada	21
+747	La tola	21
+748	La unión	21
+749	Leiva	21
+750	Linares	21
+751	Los andes	21
+752	Magüi	21
+753	Mallama	21
+754	Mosquera	21
+755	Nariño	21
+756	Olaya herrera	21
+757	Ospina	21
+758	Francisco pizarro	21
+759	Policarpa	21
+760	Potosí	21
+761	Providencia	21
+762	Puerres	21
+763	Pupiales	21
+764	Ricaurte	21
+765	Roberto payán	21
+766	Samaniego	21
+767	Sandoná	21
+768	San bernardo	21
+769	San lorenzo	21
+770	San pablo	21
+771	San pedro de cartago	21
+772	Santa bárbara	21
+773	Santacruz	21
+774	Sapuyes	21
+775	Taminango	21
+776	Tangua	21
+777	San andres de tumaco	21
+778	Túquerres	21
+779	Yacuanquer	21
+780	Cúcuta	22
+781	Abrego	22
+782	Arboledas	22
+783	Bochalema	22
+784	Bucarasica	22
+785	Cácota	22
+786	Cachirá	22
+787	Chinácota	22
+788	Chitagá	22
+789	Convención	22
+790	Cucutilla	22
+791	Durania	22
+792	El carmen	22
+793	El tarra	22
+794	El zulia	22
+795	Gramalote	22
+796	Hacarí	22
+797	Herrán	22
+798	Labateca	22
+799	La esperanza	22
+800	La playa	22
+801	Los patios	22
+802	Lourdes	22
+803	Mutiscua	22
+804	Ocaña	22
+805	Pamplona	22
+806	Pamplonita	22
+807	Puerto santander	22
+808	Ragonvalia	22
+809	Salazar	22
+810	San calixto	22
+811	San cayetano	22
+812	Santiago	22
+813	Sardinata	22
+814	Silos	22
+815	Teorama	22
+816	Tibú	22
+817	Toledo	22
+818	Villa caro	22
+819	Villa del rosario	22
+820	Armenia	24
+821	Buenavista	24
+822	Calarca	24
+823	Circasia	24
+824	Córdoba	24
+825	Filandia	24
+826	Génova	24
+827	La tebaida	24
+828	Montenegro	24
+829	Pijao	24
+830	Quimbaya	24
+831	Salento	24
+832	Pereira	25
+833	Apía	25
+834	Balboa	25
+835	Belén de umbría	25
+836	Dosquebradas	25
+837	Guática	25
+838	La celia	25
+839	La virginia	25
+840	Marsella	25
+841	Mistrató	25
+842	Pueblo rico	25
+843	Quinchía	25
+844	Santa rosa de cabal	25
+845	Santuario	25
+846	Bucaramanga	27
+847	Aguada	27
+848	Albania	27
+849	Aratoca	27
+850	Barbosa	27
+851	Barichara	27
+852	Barrancabermeja	27
+853	Betulia	27
+854	Bolívar	27
+855	Cabrera	27
+856	California	27
+857	Capitanejo	27
+858	Carcasí	27
+859	Cepitá	27
+860	Cerrito	27
+861	Charalá	27
+862	Charta	27
+863	Chima	27
+864	Chipatá	27
+865	Cimitarra	27
+866	Concepción	27
+867	Confines	27
+868	Contratación	27
+869	Coromoro	27
+870	Curití	27
+871	El carmen de chucurí	27
+872	El guacamayo	27
+873	El peñón	27
+874	El playón	27
+875	Encino	27
+876	Enciso	27
+877	Florián	27
+878	Floridablanca	27
+879	Galán	27
+880	Gambita	27
+881	Girón	27
+882	Guaca	27
+883	Guadalupe	27
+884	Guapotá	27
+885	Guavatá	27
+886	Güepsa	27
+887	Hato	27
+888	Jesús maría	27
+889	Jordán	27
+890	La belleza	27
+891	Landázuri	27
+892	La paz	27
+893	Lebrija	27
+894	Los santos	27
+895	Macaravita	27
+896	Málaga	27
+897	Matanza	27
+898	Mogotes	27
+899	Molagavita	27
+900	Ocamonte	27
+901	Oiba	27
+902	Onzaga	27
+903	Palmar	27
+904	Palmas del socorro	27
+905	Páramo	27
+906	Piedecuesta	27
+907	Pinchote	27
+908	Puente nacional	27
+909	Puerto parra	27
+910	Puerto wilches	27
+911	Rionegro	27
+912	Sabana de torres	27
+913	San andrés	27
+914	San benito	27
+915	San gil	27
+916	San joaquín	27
+917	San josé de miranda	27
+918	San miguel	27
+919	San vicente de chucurí	27
+920	Santa bárbara	27
+921	Santa helena del opón	27
+922	Simacota	27
+923	Socorro	27
+924	Suaita	27
+925	Sucre	27
+926	Suratá	27
+927	Tona	27
+928	Valle de san josé	27
+929	Vélez	27
+930	Vetas	27
+931	Villanueva	27
+932	Zapatoca	27
+933	Sincelejo	28
+934	Buenavista	28
+935	Caimito	28
+936	Coloso	28
+937	Corozal	28
+938	Coveñas	28
+939	Chalán	28
+940	El roble	28
+941	Galeras	28
+942	Guaranda	28
+943	La unión	28
+944	Los palmitos	28
+945	Majagual	28
+946	Morroa	28
+947	Ovejas	28
+948	Palmito	28
+949	Sampués	28
+950	San benito abad	28
+951	San juan de betulia	28
+952	San marcos	28
+953	San onofre	28
+954	San pedro	28
+955	San luis de sincé	28
+956	Sucre	28
+957	Santiago de tolú	28
+958	Tolú viejo	28
+959	Ibagué	29
+960	Alpujarra	29
+961	Alvarado	29
+962	Ambalema	29
+963	Anzoátegui	29
+964	Armero	29
+965	Ataco	29
+966	Cajamarca	29
+967	Carmen de apicalá	29
+968	Casabianca	29
+969	Chaparral	29
+970	Coello	29
+971	Coyaima	29
+972	Cunday	29
+973	Dolores	29
+974	Espinal	29
+975	Falan	29
+976	Flandes	29
+977	Fresno	29
+978	Guamo	29
+979	Herveo	29
+980	Honda	29
+981	Icononzo	29
+982	Lérida	29
+983	Líbano	29
+984	San sebastián de mariquita	29
+985	Melgar	29
+986	Murillo	29
+987	Natagaima	29
+988	Ortega	29
+989	Palocabildo	29
+990	Piedras	29
+991	Planadas	29
+992	Prado	29
+993	Purificación	29
+994	Rioblanco	29
+995	Roncesvalles	29
+996	Rovira	29
+997	Saldaña	29
+998	San antonio	29
+999	San luis	29
+1000	Santa isabel	29
+1001	Suárez	29
+1002	Valle de san juan	29
+1003	Venadillo	29
+1004	Villahermosa	29
+1005	Villarrica	29
+1006	Cali	30
+1007	Alcalá	30
+1008	Andalucía	30
+1009	Ansermanuevo	30
+1010	Argelia	30
+1011	Bolívar	30
+1012	Buenaventura	30
+1013	Guadalajara de buga	30
+1014	Bugalagrande	30
+1015	Caicedonia	30
+1016	Calima	30
+1017	Candelaria	30
+1018	Cartago	30
+1019	Dagua	30
+1020	El águila	30
+1021	El cairo	30
+1022	El cerrito	30
+1023	El dovio	30
+1024	Florida	30
+1025	Ginebra	30
+1026	Guacarí	30
+1027	Jamundí	30
+1028	La cumbre	30
+1029	La unión	30
+1030	La victoria	30
+1031	Obando	30
+1032	Palmira	30
+1033	Pradera	30
+1034	Restrepo	30
+1035	Riofrío	30
+1036	Roldanillo	30
+1037	San pedro	30
+1038	Sevilla	30
+1039	Toro	30
+1040	Trujillo	30
+1041	Tuluá	30
+1042	Ulloa	30
+1043	Versalles	30
+1044	Vijes	30
+1045	Yotoco	30
+1046	Yumbo	30
+1047	Zarzal	30
+1048	Arauca	3
+1049	Arauquita	3
+1050	Cravo norte	3
+1051	Fortul	3
+1052	Puerto rondón	3
+1053	Saravena	3
+1054	Tame	3
+1055	Yopal	9
+1056	Aguazul	9
+1057	Chameza	9
+1058	Hato corozal	9
+1059	La salina	9
+1060	Maní	9
+1061	Monterrey	9
+1062	Nunchía	9
+1063	Orocué	9
+1064	Paz de ariporo	9
+1065	Pore	9
+1066	Recetor	9
+1067	Sabanalarga	9
+1068	Sácama	9
+1069	San luis de palenque	9
+1070	Támara	9
+1071	Tauramena	9
+1072	Trinidad	9
+1073	Villanueva	9
+1074	Mocoa	23
+1075	Colón	23
+1076	Orito	23
+1077	Puerto asís	23
+1078	Puerto caicedo	23
+1079	Puerto guzmán	23
+1080	Puerto leguízamo	23
+1081	Sibundoy	23
+1082	San francisco	23
+1083	San miguel	23
+1084	Santiago	23
+1085	Valle del guamuez	23
+1086	Villagarzón	23
+1087	San andrés	26
+1088	Providencia	26
+1089	Leticia	1
+1090	El encanto	1
+1091	La chorrera	1
+1092	La pedrera	1
+1093	La victoria	1
+1094	Miriti - paraná	1
+1095	Puerto alegría	1
+1096	Puerto arica	1
+1097	Puerto nariño	1
+1098	Puerto santander	1
+1099	Tarapacá	1
+1100	Inírida	15
+1101	Barranco minas	15
+1102	Mapiripana	15
+1103	San felipe	15
+1104	Puerto colombia	15
+1105	La guadalupe	15
+1106	Cacahual	15
+1107	Pana pana	15
+1108	Morichal	15
+1109	San josé del guaviare	16
+1110	Calamar	16
+1111	El retorno	16
+1112	Miraflores	16
+1113	Mitú	31
+1114	Caruru	31
+1115	Pacoa	31
+1116	Taraira	31
+1117	Papunaua	31
+1118	Yavaraté	31
+1119	Puerto carreño	32
+1120	La primavera	32
+1121	Santa rosalía	32
+1122	Cumaribo	32
+\.
+
+
+--
+-- Name: tbl_ciudad_id_ciudad_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_ciudad_id_ciudad_seq', 1122, true);
+
+
+--
+-- Data for Name: tbl_clima; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_clima (id_clima, nombre_clima) FROM stdin;
+1	Severamente caluroso: 35 °C +
+2	Muy caluroso: 28 a 35 °C
+3	Caluroso: 23 a 28 °C
+4	Templado: 18 a 23 °C
+5	Medio: 10 a 18 °C
+6	Fresco: 0 a 10 °C
+7	Frío: −10 a 0 °C
+8	Muy frío: −25 a −10 °C
+9	Severamente frío: −40 a −25 °C
+10	Excesivamente frío: −40 °C -
+112312	12312312
+\.
+
+
+--
+-- Name: tbl_clima_id_clima_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_clima_id_clima_seq', 10, true);
+
+
+--
+-- Data for Name: tbl_contacto; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_contacto (id_contacto, id_solicitante, contacto, id_tipo_contacto) FROM stdin;
+269	203	(121) 212-2212	2
+270	203	121212	1
+271	204	320234759	2
+272	204	3754534	1
+\.
+
+
+--
+-- Name: tbl_contacto_id_contacto_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_contacto_id_contacto_seq', 272, true);
+
+
+--
+-- Data for Name: tbl_cultivo; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_cultivo (id_cultivo, nombre_cultivo, extension_cultivo, id_variedad, id_clima, id_estado_produccion, id_tecnica, edad_cultivo) FROM stdin;
+65	ghhd	65555	1	1	1	\N	\N
+66	ghhd	65555	1	1	1	\N	\N
+67	ghhd	65555	1	1	1	\N	\N
+68	limonar	52	1	2	1	\N	\N
+69	limonar	52	1	2	1	\N	\N
+70	jakal	623	1	2	1	\N	\N
+71	hojarasca	3233	1	2	1	\N	\N
+72	sdas	12	1	1	1	1	123
+73	1212	212	1	1	1	1	1212
+74	212	1212	1	1	1	1	2323
+75	wqe	qw	1	4	1	1	qw
+76	hdhhx	5885	1	2	1	\N	\N
+77	cultivo	12 mts	1	7	1	1	12
+78	fhfgg	558868	1	2	1	\N	\N
+79	fhfgg	558868	1	2	1	\N	\N
+80	fggg	555	1	2	1	\N	\N
+81	fggg	555	1	2	1	\N	\N
+82	fggg	555	1	2	1	\N	\N
+83	vfhcghg	55665	1	3	1	\N	\N
+84	vfhcghg	55665	1	3	1	\N	\N
+85	ggghgg	65566	1	2	1	\N	\N
+86	vvvcv	9996	1	3	1	\N	\N
+87	vvvcv	9996	1	3	1	\N	\N
+88	vvvcv	9996	1	3	1	\N	\N
+89	dfgf	5555	1	2	1	\N	\N
+90	gfggg	8856	1	2	1	\N	\N
+91	gdnc	8899	1	4	1	\N	\N
+92	asas	asasas	1	1	\N	1	121
+93	fxhv	9899	1	2	1	\N	\N
+94	fhg	88689	1	3	1	\N	\N
+95	bfhhhgg	56696	1	2	1	\N	\N
+96	vcvvv	9885	1	1	1	\N	\N
+97	vfg	5588	1	2	1	\N	\N
+98	gfgg	8888	1	2	1	\N	\N
+99	ccvvv	855	1	1	1	\N	\N
+100	gffvg	8886	1	2	1	\N	\N
+101	cultivo	12121	1	3	1	1	1212
+102	la sabana	\N	1	1	1	\N	\N
+\.
+
+
+--
+-- Name: tbl_cultivo_id_cultivo_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_cultivo_id_cultivo_seq', 102, true);
+
+
+--
+-- Data for Name: tbl_departamento; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_departamento (id_departamento, nombre_departamento) FROM stdin;
+1	Amazonas
+2	Antioquia
+3	Arauca
+4	Atlántico
+5	Bolívar
+6	Boyacá
+7	Caldas
+8	Caquetá
+9	Casanare
+10	Cauca
+11	Cesar
+12	Chocó
+13	Córdoba
+14	Cundinamarca
+15	Guainía
+16	Guaviare
+17	Huila
+18	La Guajira
+19	Magdalena
+20	Meta
+21	Nariño
+22	Norte de Santander
+23	Putumayo
+24	Quindío
+25	Risaralda
+26	San Andrés y Providencia
+27	Santander
+28	Sucre
+29	Tolima
+30	Valle del Cauca
+31	Vaupés
+32	Vichada
+33	Bogotá, D. C.
+\.
+
+
+--
+-- Name: tbl_departamento_id_departamento_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_departamento_id_departamento_seq', 34, true);
+
+
+--
+-- Data for Name: tbl_detalle_usuario; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_detalle_usuario (id_detalle_usuario, id_usuario, nombre_usuario, apellido_usuario, id_tipo_documento, numero_documento, direccion, email, id_contacto, id_ciudad) FROM stdin;
+\.
+
+
+--
+-- Name: tbl_detalle_usuario_id_detalle_usuario_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_detalle_usuario_id_detalle_usuario_seq', 1, false);
+
+
+--
+-- Data for Name: tbl_diagnostico; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_diagnostico (id_diagnostico, nombre_diagnostico, descripcion_diagnostico) FROM stdin;
+\.
+
+
+--
+-- Name: tbl_diagnostico_caracteristic_id_diagnostico_caracteristica_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_diagnostico_caracteristic_id_diagnostico_caracteristica_seq', 1, false);
+
+
+--
+-- Data for Name: tbl_diagnostico_caracteristica; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_diagnostico_caracteristica (id_diagnostico_caracteristica, id_diagnostico, id_diagnostico_relacionado) FROM stdin;
+\.
+
+
+--
+-- Name: tbl_diagnostico_id_diagnostico_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_diagnostico_id_diagnostico_seq', 1, false);
+
+
+--
+-- Data for Name: tbl_diagnostico_imagen; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_diagnostico_imagen (id_diagnostico_imagen, id_diagnostico, id_diagnostico_relacionado) FROM stdin;
+\.
+
+
+--
+-- Name: tbl_diagnostico_imagen_id_diagnostico_imagen_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_diagnostico_imagen_id_diagnostico_imagen_seq', 1, false);
+
+
+--
+-- Data for Name: tbl_estado; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_estado (id_estado, descripcion_estado) FROM stdin;
+1	PENDIENTE
+2	ASIGNADO
+3	CERRADO
+4	REABIERTO
+5	ABIERTO
+\.
+
+
+--
+-- Name: tbl_estado_id_estado_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_estado_id_estado_seq', 5, true);
+
+
+--
+-- Data for Name: tbl_estado_produccion; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_estado_produccion (id_estado_produccion, descripcion_estado) FROM stdin;
+1	En crecimiento
+\.
+
+
+--
+-- Name: tbl_estado_produccion_id_estado_produccion_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_estado_produccion_id_estado_produccion_seq', 1, true);
+
+
+--
+-- Data for Name: tbl_etapa; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_etapa (id_etapa, descripcion_etapa) FROM stdin;
+1	AVANZADO
+2	INICIAL
+3	INTERMEDIO
+4	INDEFINIDO
+\.
+
+
+--
+-- Name: tbl_etapa_id_etapa_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_etapa_id_etapa_seq', 4, true);
+
+
+--
+-- Data for Name: tbl_fase; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_fase (id_fase, descripcion_fase) FROM stdin;
+1	FASE 1
+2	FASE 2
+3	FASE 3
+4	INDEFINIDA
+\.
+
+
+--
+-- Name: tbl_fase_id_fase_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_fase_id_fase_seq', 4, true);
+
+
+--
+-- Data for Name: tbl_funcion_rol; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_funcion_rol (id_funcion_rol, id_rol, id_funcion) FROM stdin;
+3220	115	1
+3221	115	2
+3222	115	3
+3223	115	4
+3234	118	3
+3252	123	1
+3253	123	3
+3254	118	2
+3255	118	1
+3256	124	1
+3257	124	2
+3258	124	3
+3259	124	4
+\.
+
+
+--
+-- Name: tbl_funcion_rol_id_funcion_rol_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_funcion_rol_id_funcion_rol_seq', 3259, true);
+
+
+--
+-- Data for Name: tbl_funciones; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_funciones (id_funcion, nombre_funcion) FROM stdin;
+1	crear
+2	editar
+3	leer
+4	eliminar
+\.
+
+
+--
+-- Name: tbl_funciones_id_funcion_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_funciones_id_funcion_seq', 4, true);
+
+
+--
+-- Data for Name: tbl_imagen; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_imagen (id_imagen, id_solicitud, nombre_imagen, path_imagen) FROM stdin;
+182	76	IMG_0650 (480x640) (480x640).jpg	10324173171032417317/IMG_0650 (480x640) (480x640).jpg
+183	76	IMG_0693 (480x640).jpg	10324173171032417317/IMG_0693 (480x640).jpg
+184	76	IMG_1118 (480x640).jpg	10324173171032417317/IMG_1118 (480x640).jpg
+185	76	IMG_1174 (480x640).jpg	10324173171032417317/IMG_1174 (480x640).jpg
+186	77	tmpimage.jpg	jc79920961/tmpimage.jpg
+\.
+
+
+--
+-- Name: tbl_imagen_id_imagen_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_imagen_id_imagen_seq', 186, true);
+
+
+--
+-- Data for Name: tbl_patologia; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_patologia (id_patologia, descripcion_patologia, observaciones_patologia) FROM stdin;
+1	Monilia	\N
+2	Phytoptora	\N
+3	Escoba	\N
+4	Machete	\N
+5	Bubas	\N
+6	Carpintero	\N
+\.
+
+
+--
+-- Name: tbl_patologia_id_patologia_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_patologia_id_patologia_seq', 6, true);
+
+
+--
+-- Data for Name: tbl_respuesta_solicitud; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_respuesta_solicitud (id_respuesta_solicitud, id_solicitud, id_diagnostico, descripcion_respuesta, fecha_respuesta, fecha_solicitud) FROM stdin;
+\.
+
+
+--
+-- Name: tbl_respuesta_solicitud_id_respuesta_solicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_respuesta_solicitud_id_respuesta_solicitud_seq', 1, false);
+
+
+--
+-- Data for Name: tbl_rol; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_rol (id_rol, nombre_rol, descripcion, fecha_modificacion) FROM stdin;
+123	Operador	administrador de finca,\r\nFuncionario, Agricultor	2014-01-18 19:43:10.948+01
+115	Administrador	Administrador de sistemas	2014-01-18 19:43:42.719+01
+118	Consultor	Agrónomo,fitopatologo	2014-01-18 19:44:14.59+01
+124	testrol	testrol	2014-05-06 04:26:30.361+02
+\.
+
+
+--
+-- Name: tbl_rol_id_rol_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_rol_id_rol_seq', 124, true);
+
+
+--
+-- Data for Name: tbl_sintoma; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_sintoma (id_sintoma, descripcion_sintoma) FROM stdin;
+1	Pudrición de fruto
+2	Deformación de frutos
+3	Madurez Prematura
+4	Muerte de hojas
+5	Manchas en el tronco
+6	Muerte de frutos jovenes
+7	Muerte de cojines florales
+8	Manchas en el fruto
+9	Mancha café
+10	Polvo blanco
+11	Pudrición de ramas
+12	Pudrición del tronco
+13	Deformación de cojines florales
+14	Agujero en el fruto
+\.
+
+
+--
+-- Name: tbl_sintoma_id_sintoma_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_sintoma_id_sintoma_seq', 14, true);
+
+
+--
+-- Data for Name: tbl_sintoma_patologia; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_sintoma_patologia (id_sintoma_patologia, id_sintoma, id_patologia) FROM stdin;
+13	1	1
+14	2	1
+15	3	1
+16	6	1
+17	8	1
+18	9	1
+19	10	1
+20	1	2
+21	4	2
+22	5	2
+23	6	2
+24	7	2
+25	8	2
+26	9	2
+27	10	2
+28	11	2
+29	12	2
+30	1	3
+31	2	3
+32	3	3
+33	4	3
+34	6	3
+35	7	3
+36	8	3
+37	9	3
+38	1	4
+39	4	4
+40	11	4
+41	12	4
+42	2	5
+43	13	5
+44	1	6
+45	14	6
+\.
+
+
+--
+-- Name: tbl_sintoma_patologia_id_sintoma_patologia_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_sintoma_patologia_id_sintoma_patologia_seq', 45, true);
+
+
+--
+-- Data for Name: tbl_solicitante; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_solicitante (id_solicitante, nombre_solicitante, id_departamento, id_tipo_documento, numero_documento) FROM stdin;
+203	1032417317	2	1	1032417317
+204	jc	1	1	79920961
+\.
+
+
+--
+-- Name: tbl_solicitante_id_solicitante_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_solicitante_id_solicitante_seq', 204, true);
+
+
+--
+-- Data for Name: tbl_solicitud; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_solicitud (id_solicitud, id_cultivo, id_solicitante, id_vereda, id_tipo_solicitud, id_patologia, fecha_solicitud, id_etapa, id_fase, id_estado, serial, descripcion) FROM stdin;
+76	101	203	\N	\N	\N	11:41:39.033	\N	\N	1	20140524114176	Tienen muchos problemitas el cultivo me ayuda papis?
+77	102	204	\N	\N	\N	21:56:39.881	\N	\N	1	20140609215677	\N
+\.
+
+
+--
+-- Name: tbl_solicitud_id_solicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_solicitud_id_solicitud_seq', 77, true);
+
+
+--
+-- Data for Name: tbl_tecnica_cultivo; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_tecnica_cultivo (id_tecnica, nombre_tecnica) FROM stdin;
+1	Tecnica de mochado extructurado
+\.
+
+
+--
+-- Name: tbl_tecnica_cultivo_id_tecnica_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_tecnica_cultivo_id_tecnica_seq', 1, true);
+
+
+--
+-- Data for Name: tbl_tipo_contacto; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_tipo_contacto (id_tipo_contacto, descripcion, nombre_tipo) FROM stdin;
+1	Telefono Fijo	TF
+2	Telefono Movil	TM
+3	E-mail	EM
+\.
+
+
+--
+-- Name: tbl_tipo_contacto_id_tipo_contacto_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_tipo_contacto_id_tipo_contacto_seq', 3, true);
+
+
+--
+-- Data for Name: tbl_tipo_documento; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_tipo_documento (id_tipo_documento, descripcion_tipo, nombre_tipo) FROM stdin;
+3	Número de Identificación Tributaria	NIT
+4	Cédula de Extranjería	C.E
+2	Tarjeta de identidad	T.I
+1	Cédula de ciudadanía	C.C
+\.
+
+
+--
+-- Name: tbl_tipo_documento_id_tipo_documento_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_tipo_documento_id_tipo_documento_seq', 4, true);
+
+
+--
+-- Data for Name: tbl_tipo_solicitud; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_tipo_solicitud (id_tipo_solicitud, nombre_tipo) FROM stdin;
+\.
+
+
+--
+-- Name: tbl_tipo_solicitud_id_tipo_solicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_tipo_solicitud_id_tipo_solicitud_seq', 1, false);
+
+
+--
+-- Data for Name: tbl_usuario; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_usuario (id_usuario, nombre_usuario, fecha_ultima_actividad, cuenta, contrasena, fecha_registro) FROM stdin;
+96	jorge	\N	jorge2014	38ac176ce793c5d53b95be9ec7b9c32f	2014-01-18 19:44:50.67+01
+97	leidy	\N	leidy2013	b6bc5574fc6c0ceb391ff9429b4261	2014-01-18 19:45:43.672+01
+98	mauricio	\N	mauricio2013	b1f20cd35e84c9ed667059bdc7d0ff	2014-01-18 19:46:33.436+01
+99	jorge2	\N	jorge22014	58f38961ed05a825ef44853add08e35	2014-01-19 00:02:56.169+01
+\.
+
+
+--
+-- Name: tbl_usuario_id_usuario_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_usuario_id_usuario_seq', 100, true);
+
+
+--
+-- Data for Name: tbl_usuario_rol; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_usuario_rol (id_usuario_rol, id_rol, id_usuario) FROM stdin;
+39	118	96
+40	123	97
+41	115	98
+42	118	99
+\.
+
+
+--
+-- Name: tbl_usuario_rol_id_usuario_rol_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_usuario_rol_id_usuario_rol_seq', 43, true);
+
+
+--
+-- Data for Name: tbl_variedad; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_variedad (id_variedad, nombre_variedad) FROM stdin;
+1	A1
+\.
+
+
+--
+-- Name: tbl_variedad_id_variedad_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_variedad_id_variedad_seq', 1, true);
+
+
+--
+-- Data for Name: tbl_vereda; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_vereda (id_vereda, nombre_vereda, id_departamento) FROM stdin;
+\.
+
+
+--
+-- Name: tbl_vereda_id_vereda_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_vereda_id_vereda_seq', 1, false);
+
+
+--
+-- Name: tbl_asignacion_solicitud_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_asignacion_solicitud
+    ADD CONSTRAINT tbl_asignacion_solicitud_pkey PRIMARY KEY (id_asignacion_solicitud);
+
+
+--
+-- Name: tbl_ciudad_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_ciudad
+    ADD CONSTRAINT tbl_ciudad_pkey PRIMARY KEY (id_ciudad);
+
+
+--
+-- Name: tbl_clima_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_clima
+    ADD CONSTRAINT tbl_clima_pkey PRIMARY KEY (id_clima);
+
+
+--
+-- Name: tbl_contacto_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_contacto
+    ADD CONSTRAINT tbl_contacto_pkey PRIMARY KEY (id_contacto);
+
+
+--
+-- Name: tbl_cultivo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_cultivo
+    ADD CONSTRAINT tbl_cultivo_pkey PRIMARY KEY (id_cultivo);
+
+
+--
+-- Name: tbl_departamento_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_departamento
+    ADD CONSTRAINT tbl_departamento_pkey PRIMARY KEY (id_departamento);
+
+
+--
+-- Name: tbl_detalle_usuario_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_detalle_usuario
+    ADD CONSTRAINT tbl_detalle_usuario_pkey PRIMARY KEY (id_detalle_usuario);
+
+
+--
+-- Name: tbl_diagnostico_caracteristica_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_diagnostico_caracteristica
+    ADD CONSTRAINT tbl_diagnostico_caracteristica_pkey PRIMARY KEY (id_diagnostico_caracteristica);
+
+
+--
+-- Name: tbl_diagnostico_imagen_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_diagnostico_imagen
+    ADD CONSTRAINT tbl_diagnostico_imagen_pkey PRIMARY KEY (id_diagnostico_imagen);
+
+
+--
+-- Name: tbl_diagnostico_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_diagnostico
+    ADD CONSTRAINT tbl_diagnostico_pkey PRIMARY KEY (id_diagnostico);
+
+
+--
+-- Name: tbl_estado_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_estado
+    ADD CONSTRAINT tbl_estado_pkey PRIMARY KEY (id_estado);
+
+
+--
+-- Name: tbl_estado_produccion_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_estado_produccion
+    ADD CONSTRAINT tbl_estado_produccion_pkey PRIMARY KEY (id_estado_produccion);
+
+
+--
+-- Name: tbl_etapa_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_etapa
+    ADD CONSTRAINT tbl_etapa_pkey PRIMARY KEY (id_etapa);
+
+
+--
+-- Name: tbl_fase_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_fase
+    ADD CONSTRAINT tbl_fase_pkey PRIMARY KEY (id_fase);
+
+
+--
+-- Name: tbl_funcion_rol_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_funcion_rol
+    ADD CONSTRAINT tbl_funcion_rol_pkey PRIMARY KEY (id_funcion_rol);
+
+
+--
+-- Name: tbl_funciones_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_funciones
+    ADD CONSTRAINT tbl_funciones_pkey PRIMARY KEY (id_funcion);
+
+
+--
+-- Name: tbl_imagen_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_imagen
+    ADD CONSTRAINT tbl_imagen_pkey PRIMARY KEY (id_imagen);
+
+
+--
+-- Name: tbl_patologia_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_patologia
+    ADD CONSTRAINT tbl_patologia_pkey PRIMARY KEY (id_patologia);
+
+
+--
+-- Name: tbl_respuesta_solicitud_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_respuesta_solicitud
+    ADD CONSTRAINT tbl_respuesta_solicitud_pkey PRIMARY KEY (id_respuesta_solicitud);
+
+
+--
+-- Name: tbl_rol_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_rol
+    ADD CONSTRAINT tbl_rol_pkey PRIMARY KEY (id_rol);
+
+
+--
+-- Name: tbl_sintoma_patologia_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_sintoma_patologia
+    ADD CONSTRAINT tbl_sintoma_patologia_pkey PRIMARY KEY (id_sintoma_patologia);
+
+
+--
+-- Name: tbl_sintoma_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_sintoma
+    ADD CONSTRAINT tbl_sintoma_pkey PRIMARY KEY (id_sintoma);
+
+
+--
+-- Name: tbl_solicitante_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_solicitante
+    ADD CONSTRAINT tbl_solicitante_pkey PRIMARY KEY (id_solicitante);
+
+
+--
+-- Name: tbl_solicitud_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_solicitud
+    ADD CONSTRAINT tbl_solicitud_pkey PRIMARY KEY (id_solicitud);
+
+
+--
+-- Name: tbl_tecnica_cultivo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_tecnica_cultivo
+    ADD CONSTRAINT tbl_tecnica_cultivo_pkey PRIMARY KEY (id_tecnica);
+
+
+--
+-- Name: tbl_tipo_contacto_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_tipo_contacto
+    ADD CONSTRAINT tbl_tipo_contacto_pkey PRIMARY KEY (id_tipo_contacto);
+
+
+--
+-- Name: tbl_tipo_documento_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_tipo_documento
+    ADD CONSTRAINT tbl_tipo_documento_pkey PRIMARY KEY (id_tipo_documento);
+
+
+--
+-- Name: tbl_tipo_solicitud_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_tipo_solicitud
+    ADD CONSTRAINT tbl_tipo_solicitud_pkey PRIMARY KEY (id_tipo_solicitud);
+
+
+--
+-- Name: tbl_usuario_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_usuario
+    ADD CONSTRAINT tbl_usuario_pkey PRIMARY KEY (id_usuario);
+
+
+--
+-- Name: tbl_usuario_rol_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_usuario_rol
+    ADD CONSTRAINT tbl_usuario_rol_pkey PRIMARY KEY (id_usuario_rol);
+
+
+--
+-- Name: tbl_variedad_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_variedad
+    ADD CONSTRAINT tbl_variedad_pkey PRIMARY KEY (id_variedad);
+
+
+--
+-- Name: tbl_vereda_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_vereda
+    ADD CONSTRAINT tbl_vereda_pkey PRIMARY KEY (id_vereda);
+
+
+--
+-- Name: tbl_asignacion_solicitud_id_solicitud_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_asignacion_solicitud
+    ADD CONSTRAINT tbl_asignacion_solicitud_id_solicitud_fkey FOREIGN KEY (id_solicitud) REFERENCES tbl_solicitud(id_solicitud);
+
+
+--
+-- Name: tbl_asignacion_solicitud_id_usuario_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_asignacion_solicitud
+    ADD CONSTRAINT tbl_asignacion_solicitud_id_usuario_fkey FOREIGN KEY (id_usuario) REFERENCES tbl_usuario(id_usuario);
+
+
+--
+-- Name: tbl_ciudad_id_departamento_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_ciudad
+    ADD CONSTRAINT tbl_ciudad_id_departamento_fkey FOREIGN KEY (id_departamento) REFERENCES tbl_departamento(id_departamento);
+
+
+--
+-- Name: tbl_contacto_id_solicitante_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_contacto
+    ADD CONSTRAINT tbl_contacto_id_solicitante_fkey FOREIGN KEY (id_solicitante) REFERENCES tbl_solicitante(id_solicitante);
+
+
+--
+-- Name: tbl_contacto_id_tipo_contacto_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_contacto
+    ADD CONSTRAINT tbl_contacto_id_tipo_contacto_fkey FOREIGN KEY (id_tipo_contacto) REFERENCES tbl_tipo_contacto(id_tipo_contacto);
+
+
+--
+-- Name: tbl_cultivo_id_estado_produccion_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_cultivo
+    ADD CONSTRAINT tbl_cultivo_id_estado_produccion_fkey FOREIGN KEY (id_estado_produccion) REFERENCES tbl_estado_produccion(id_estado_produccion);
+
+
+--
+-- Name: tbl_cultivo_id_tecnica_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_cultivo
+    ADD CONSTRAINT tbl_cultivo_id_tecnica_fkey FOREIGN KEY (id_tecnica) REFERENCES tbl_tecnica_cultivo(id_tecnica);
+
+
+--
+-- Name: tbl_cultivo_id_variedad_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_cultivo
+    ADD CONSTRAINT tbl_cultivo_id_variedad_fkey FOREIGN KEY (id_variedad) REFERENCES tbl_variedad(id_variedad);
+
+
+--
+-- Name: tbl_detalle_usuario_id_ciudad_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_detalle_usuario
+    ADD CONSTRAINT tbl_detalle_usuario_id_ciudad_fkey FOREIGN KEY (id_ciudad) REFERENCES tbl_ciudad(id_ciudad);
+
+
+--
+-- Name: tbl_detalle_usuario_id_tipo_documento_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_detalle_usuario
+    ADD CONSTRAINT tbl_detalle_usuario_id_tipo_documento_fkey FOREIGN KEY (id_tipo_documento) REFERENCES tbl_tipo_documento(id_tipo_documento);
+
+
+--
+-- Name: tbl_detalle_usuario_id_usuario_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_detalle_usuario
+    ADD CONSTRAINT tbl_detalle_usuario_id_usuario_fkey FOREIGN KEY (id_usuario) REFERENCES tbl_usuario(id_usuario);
+
+
+--
+-- Name: tbl_diagnostico_caracteristica_id_diagnostico_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_diagnostico_caracteristica
+    ADD CONSTRAINT tbl_diagnostico_caracteristica_id_diagnostico_fkey FOREIGN KEY (id_diagnostico) REFERENCES tbl_diagnostico(id_diagnostico);
+
+
+--
+-- Name: tbl_diagnostico_caracteristica_id_diagnostico_relacionado_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_diagnostico_caracteristica
+    ADD CONSTRAINT tbl_diagnostico_caracteristica_id_diagnostico_relacionado_fkey FOREIGN KEY (id_diagnostico_relacionado) REFERENCES tbl_diagnostico(id_diagnostico);
+
+
+--
+-- Name: tbl_diagnostico_imagen_id_diagnostico_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_diagnostico_imagen
+    ADD CONSTRAINT tbl_diagnostico_imagen_id_diagnostico_fkey FOREIGN KEY (id_diagnostico) REFERENCES tbl_diagnostico(id_diagnostico);
+
+
+--
+-- Name: tbl_diagnostico_imagen_id_diagnostico_relacionado_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_diagnostico_imagen
+    ADD CONSTRAINT tbl_diagnostico_imagen_id_diagnostico_relacionado_fkey FOREIGN KEY (id_diagnostico_relacionado) REFERENCES tbl_diagnostico(id_diagnostico);
+
+
+--
+-- Name: tbl_funcion_rol_id_funcion_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_funcion_rol
+    ADD CONSTRAINT tbl_funcion_rol_id_funcion_fkey FOREIGN KEY (id_funcion) REFERENCES tbl_funciones(id_funcion);
+
+
+--
+-- Name: tbl_funcion_rol_id_rol_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_funcion_rol
+    ADD CONSTRAINT tbl_funcion_rol_id_rol_fkey FOREIGN KEY (id_rol) REFERENCES tbl_rol(id_rol);
+
+
+--
+-- Name: tbl_imagen_id_solicitud_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_imagen
+    ADD CONSTRAINT tbl_imagen_id_solicitud_fkey FOREIGN KEY (id_solicitud) REFERENCES tbl_solicitud(id_solicitud);
+
+
+--
+-- Name: tbl_respuesta_solicitud_id_diagnostico_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_respuesta_solicitud
+    ADD CONSTRAINT tbl_respuesta_solicitud_id_diagnostico_fkey FOREIGN KEY (id_diagnostico) REFERENCES tbl_diagnostico(id_diagnostico);
+
+
+--
+-- Name: tbl_respuesta_solicitud_id_solicitud_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_respuesta_solicitud
+    ADD CONSTRAINT tbl_respuesta_solicitud_id_solicitud_fkey FOREIGN KEY (id_solicitud) REFERENCES tbl_solicitud(id_solicitud);
+
+
+--
+-- Name: tbl_sintoma_patologia_id_patologia_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_sintoma_patologia
+    ADD CONSTRAINT tbl_sintoma_patologia_id_patologia_fkey FOREIGN KEY (id_patologia) REFERENCES tbl_patologia(id_patologia);
+
+
+--
+-- Name: tbl_sintoma_patologia_id_sintoma_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_sintoma_patologia
+    ADD CONSTRAINT tbl_sintoma_patologia_id_sintoma_fkey FOREIGN KEY (id_sintoma) REFERENCES tbl_sintoma(id_sintoma);
+
+
+--
+-- Name: tbl_solicitante_id_tipo_documento_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_solicitante
+    ADD CONSTRAINT tbl_solicitante_id_tipo_documento_fkey FOREIGN KEY (id_tipo_documento) REFERENCES tbl_tipo_documento(id_tipo_documento);
+
+
+--
+-- Name: tbl_solicitud_id_cultivo_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_solicitud
+    ADD CONSTRAINT tbl_solicitud_id_cultivo_fkey FOREIGN KEY (id_cultivo) REFERENCES tbl_cultivo(id_cultivo);
+
+
+--
+-- Name: tbl_solicitud_id_estado_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_solicitud
+    ADD CONSTRAINT tbl_solicitud_id_estado_fkey FOREIGN KEY (id_estado) REFERENCES tbl_estado(id_estado);
+
+
+--
+-- Name: tbl_solicitud_id_etapa_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_solicitud
+    ADD CONSTRAINT tbl_solicitud_id_etapa_fkey FOREIGN KEY (id_etapa) REFERENCES tbl_etapa(id_etapa);
+
+
+--
+-- Name: tbl_solicitud_id_fase_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_solicitud
+    ADD CONSTRAINT tbl_solicitud_id_fase_fkey FOREIGN KEY (id_fase) REFERENCES tbl_fase(id_fase);
+
+
+--
+-- Name: tbl_solicitud_id_patologia_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_solicitud
+    ADD CONSTRAINT tbl_solicitud_id_patologia_fkey FOREIGN KEY (id_patologia) REFERENCES tbl_patologia(id_patologia);
+
+
+--
+-- Name: tbl_solicitud_id_solicitante_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_solicitud
+    ADD CONSTRAINT tbl_solicitud_id_solicitante_fkey FOREIGN KEY (id_solicitante) REFERENCES tbl_solicitante(id_solicitante);
+
+
+--
+-- Name: tbl_solicitud_id_tipo_solicitud_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_solicitud
+    ADD CONSTRAINT tbl_solicitud_id_tipo_solicitud_fkey FOREIGN KEY (id_tipo_solicitud) REFERENCES tbl_tipo_solicitud(id_tipo_solicitud);
+
+
+--
+-- Name: tbl_solicitud_id_vereda_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_solicitud
+    ADD CONSTRAINT tbl_solicitud_id_vereda_fkey FOREIGN KEY (id_vereda) REFERENCES tbl_vereda(id_vereda);
+
+
+--
+-- Name: tbl_usuario_rol_id_rol_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_usuario_rol
+    ADD CONSTRAINT tbl_usuario_rol_id_rol_fkey FOREIGN KEY (id_rol) REFERENCES tbl_rol(id_rol);
+
+
+--
+-- Name: tbl_usuario_rol_id_usuario_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_usuario_rol
+    ADD CONSTRAINT tbl_usuario_rol_id_usuario_fkey FOREIGN KEY (id_usuario) REFERENCES tbl_usuario(id_usuario);
+
+
+--
+-- Name: tbl_vereda_id_departamento_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_vereda
+    ADD CONSTRAINT tbl_vereda_id_departamento_fkey FOREIGN KEY (id_departamento) REFERENCES tbl_departamento(id_departamento);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

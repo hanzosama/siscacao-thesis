@@ -146,6 +146,7 @@ public class SolicitudDaoImpl implements SolicitudDao {
             session.beginTransaction();
             solicitudModel = (TblSolicitud) session.createQuery(sql).uniqueResult();
             solicitudModel.setTblEstado((TblEstado)(session.createSQLQuery("select * from tbl_estado estado where id_estado=" + solicitudModel.getTblEstado().getIdEstado() + "").addEntity("estado", TblEstado.class).uniqueResult()));
+            solicitudModel.setTblSolicitante((TblSolicitante)(session.createSQLQuery("select * from tbl_solicitante solicitante where id_solicitante=" + solicitudModel.getTblSolicitante().getIdSolicitante() + "").addEntity("soliciante", TblSolicitante.class).uniqueResult()));
             session.beginTransaction().commit();
         } catch (Exception e) {
             session.beginTransaction().rollback();           
