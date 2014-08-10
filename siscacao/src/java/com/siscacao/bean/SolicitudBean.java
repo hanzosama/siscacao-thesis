@@ -4,11 +4,14 @@
  */
 package com.siscacao.bean;
 
+import com.siscacao.dao.PushDao;
+import com.siscacao.dao.PushDaoImpl;
 import com.siscacao.dao.SintomaDao;
 import com.siscacao.dao.SintomaDaoImpl;
 import com.siscacao.dao.SolicitudDao;
 import com.siscacao.dao.SolicitudDaoImpl;
 import com.siscacao.model.TblImagen;
+import com.siscacao.model.TblPushDevice;
 import com.siscacao.model.TblSintoma;
 import com.siscacao.model.TblSolicitud;
 import com.siscacao.util.ImageNetIA;
@@ -61,6 +64,9 @@ public class SolicitudBean implements Serializable {
     private PieChartModel pieResultSymptom;
     private List<TblSintoma> sintomas;
     private String[] selectedSintomas;
+    private PushServiceBean pushServiceBean;
+    private String message;
+    private PushDao pushDao;
 
     public TblImagen getSelectedImagen() {
         return selectedImagen;
@@ -72,15 +78,17 @@ public class SolicitudBean implements Serializable {
 
     public SolicitudBean() {
         solicitudDao = new SolicitudDaoImpl();
+        pushServiceBean = new PushServiceBean();
+        pushDao = new PushDaoImpl();
         FacesContext faceContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) faceContext.getExternalContext().getSession(true);
         Object id_usuario = session.getAttribute("id_usuario");
         solicitudes = solicitudDao.retrieveListSolicitudPendingForUser((Long) id_usuario);
         this.pieResult = new PieChartModel();
         this.pieResultSymptom = new PieChartModel();
-        this.selectedSintomas=null;    
+        this.selectedSintomas = null;
         pieResult.set("", null);
-        pieResultSymptom.set("",null);
+        pieResultSymptom.set("", null);
 
         sintomasDao = new SintomaDaoImpl();
         sintomas = sintomasDao.getAllSintomas();
@@ -135,15 +143,22 @@ public class SolicitudBean implements Serializable {
 
         PruebaSet.addRow(new DataSetRow(sintomas, new double[]{0, 0, 0, 0, 0, 0, 0}));
         Map<String, Double> symptom = this.symptomIA.getSymptom(PruebaSet);
-        
+
         for (Map.Entry<String, Double> entry : symptom.entrySet()) {
-                pieResultSymptom.set(entry.getKey(), entry.getValue());
-            }
+            pieResultSymptom.set(entry.getKey(), entry.getValue());
+        }
 
     }
 
+    public void enviarDiagnostico(ActionEvent actionEvent) {
+        TblPushDevice userPushDevice = pushDao.findPushByIdentification(this.selectedSolicitud.getTblSolicitante().getNumeroDocumento());
+        if (userPushDevice != null) {
+            pushServiceBean.doPushNotification(this.message, userPushDevice.getDeviceId());
+        }
+    }
+
     public String detalleSolicitud() {
-        this.selectedSintomas=null;
+        this.selectedSintomas = null;
         this.selectedImagen = null;
         this.newImageName = null;
         this.newImageName = null;
@@ -272,6 +287,12 @@ public class SolicitudBean implements Serializable {
     public PieChartModel getPieResultSymptom() {
         return pieResultSymptom;
     }
-    
-    
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

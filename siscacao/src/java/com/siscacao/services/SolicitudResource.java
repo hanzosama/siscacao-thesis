@@ -16,6 +16,8 @@ import com.siscacao.dao.EstadoProduccionDao;
 import com.siscacao.dao.EstadoProduccionDaoImpl;
 import com.siscacao.dao.ImagenDao;
 import com.siscacao.dao.ImagenDaoImpl;
+import com.siscacao.dao.PushDao;
+import com.siscacao.dao.PushDaoImpl;
 import com.siscacao.dao.SolicitudDao;
 import com.siscacao.dao.SolicitanteDao;
 import com.siscacao.dao.SolicitanteDaoImpl;
@@ -34,6 +36,7 @@ import com.siscacao.model.TblDepartamento;
 import com.siscacao.model.TblEstado;
 import com.siscacao.model.TblEstadoProduccion;
 import com.siscacao.model.TblImagen;
+import com.siscacao.model.TblPushDevice;
 import com.siscacao.model.TblSolicitante;
 import com.siscacao.model.TblSolicitud;
 import com.siscacao.model.TblTecnicaCultivo;
@@ -41,6 +44,7 @@ import com.siscacao.model.TblTipoDocumento;
 import com.siscacao.model.TblVariedad;
 import com.siscacao.objects.json.SolicitudJson;
 import com.siscacao.objects.json.SolicitudMovil;
+import com.siscacao.objects.json.pushJson;
 import com.siscacao.util.FileUploadController;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -110,6 +114,7 @@ public class SolicitudResource {
     private ImagenDao imagenDao;
     private String serial;
     private EstadoDao estadoDao;
+    private PushDao pushDao;
 
     /**
      * Creates a new instance of UsuarioResource
@@ -128,6 +133,7 @@ public class SolicitudResource {
         this.cultivoDao = new CultivoDaoImpl();
         this.imagenDao = new ImagenDaoImpl();
         this.estadoDao = new EstadoDaoImpl();
+        this.pushDao = new PushDaoImpl();
 
         this.listDepartamentos = new ArrayList<TblDepartamento>(departamentoDao.findAllDepartamento());
         this.listTblTipoDocumentos = new ArrayList<TblTipoDocumento>(tipoDocumentoDao.findAllTypeDocument());
@@ -237,6 +243,32 @@ public class SolicitudResource {
         solicitudJson.diagnostico="PENDIENTE";
         System.out.println(solicitudJson.estado);
         return solicitudJson;
+    }
+    
+    
+    /**
+     * Retrieves representation of an instance of
+     * com.siscacao.services.UsuarioResource
+     *
+     * @return an instance of java.lang.String
+     */
+    @POST
+    @Path("registro_push")
+    @Consumes("application/json")
+    @Produces("text/xml")
+    public String savePushDevice(final pushJson pusJson) {
+        String result = "-1";
+        System.out.println("RegisterDeviceID on server.."); 
+        if( pusJson.numeroDocumento!=null && !pusJson.equals("") && pusJson.pushDeviceId!=null && !pusJson.pushDeviceId.equals("")){
+            TblPushDevice pushDevice = new TblPushDevice();
+            pushDevice.setNumeroDocumento(pusJson.numeroDocumento);
+            pushDevice.setDeviceId(pusJson.pushDeviceId);
+            
+            pushDao.createPushDevice(pushDevice);
+            result="1";
+            System.out.println("RegisterDeviceID successfully"); 
+        }       
+        return result;               
     }
 
     private void saveCultivoSolicitante(final SolicitudMovil solicitudMovil) {

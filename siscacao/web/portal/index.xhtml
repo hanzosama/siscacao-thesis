@@ -13,15 +13,15 @@
                 <p:carousel  pageLinks="8" autoPlayInterval="4000" numVisible="1" effect="easeInStrong" circular="true" styleClass="conteiner"> 
                     <p:graphicImage value="#{appBean.baseURL}resources/gfx/slide-01.png" style="width: 1180px; height: 350px;">
                         <div class="mycarusel-caption">
-                            <h1>Mejore y aprenda para el futuro</h1>
-                            <p class="lead">Si tiene problemas con el cultivo,necesita ayuda de un profesional o consejos sobre nuevas tecnologias y procesos para mejorar sus practicas agricolas</p>
+                            <h1>Mejore sus cultivos y aprenda para el futuro</h1>
+                            <p class="lead">Si tiene problemas con  su cultivo de cacao, necesita ayuda de un profesional o consejos sobre nuevas tecnologías y procesos para mejorar sus prácticas agrícolas, regístrese en nuestro sistema.</p>
                             <p:button value="registrarme" href="#{appBean.baseURL}portal/usuarios/registro.jsf?faces-redirect=true"></p:button>
                         </div>                    
                     </p:graphicImage>
                     <p:graphicImage value="#{appBean.baseURL}resources/gfx/slide-02.png" style="width: 1180px; height: 350px;">
                         <div class="mycarusel-caption">
-                            <h1>Resultados y Cambios</h1>
-                            <p class="lead">Consulte los datos , el avance de la investigacion y los consejos ofrecidos por el procesional, para tratar sanar y mejorar su cultivo</p>
+                            <h1>Resultados, investigaciones y análisis</h1>
+                            <p class="lead">Consulte los datos, el avance de la investigación y los consejos ofrecidos por un procesional, para tratar, sanar y mejorar su cultivo.</p>
                             <h:form id="form_old_users">
                                 <p:commandButton value="#{msg.login}" oncomplete="dialogUsuarioRegister.show()"></p:commandButton>
                             </h:form>
@@ -36,12 +36,20 @@
                 </p:carousel>           
             </ui:define>
             <ui:define name="middle_content">
-                <p:layout  id="layout">  
-                    <p:layoutUnit position="west" size="200" header=" " resizable="true" collapsible="true">  
+                <p:layout  id="layout" style="min-width:400px;min-height:200px;" >  
+                    <p:layoutUnit position="west" size="400" header=" " resizable="true" collapsible="false"> 
+                        <p:media value="http://www.youtube.com/v/7HdYuk_u8_w" width="420" height="315" player="flash"/>
                     </p:layoutUnit>  
-                    <p:layoutUnit position="center">  
+                    <p:layoutUnit position="center" size="200" > 
+                        <p:feedReader value="http://tgs.freshpatents.com/Cacao-bx1.rss" var="feed" size="10"   >
+                            <a href="#{feed.link}"  style="font-weight: bold;">#{feed.title}</a>
+                            <h:outputText value="#{feed.description.value}" escape="false"/>
+                            <br/>
+                            <h:outputText value="#{feed.publishedDate}" escape="false"/>
+                            <p:separator />
+                        </p:feedReader>
                     </p:layoutUnit>  
-                    <p:layoutUnit position="east"  size="310" header="#{msg.hdlogin}" resizable="true" collapsible="true">    
+                    <p:layoutUnit position="east"  size="310" header="#{msg.hdlogin}" resizable="true" collapsible="false">    
                         <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();" >  
                             <p:dialog modal="true" widgetVar="statusDialog" header="#{msg.loading_session}"   
                                       draggable="false" closable="false">  
@@ -72,7 +80,7 @@
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">           
                             <h:outputText value="#{msg.number_document}" />  
                             <p:inputText value="#{solicitanteBean.solicitante.numeroDocumento}" required="true" requiredMessage="Es necesario el numero de documento" validatorMessage="Ingrese un numero de documento valido" placeholder="TI,CC,Codigo estudiantil ...">
-                               <f:validateLength minimum="2" maximum="18" />  
+                                <f:validateLength minimum="2" maximum="18" />  
                             </p:inputText>  
                             <f:facet name="footer">
                                 <p:separator/>
@@ -86,23 +94,24 @@
                     <h:form id="form_new_register">
                         <p:confirmDialog id="newRegisterDialog" message="Desea registrar sus datos y reportar su caso?"  severity="alert" widgetVar="dialogNewRegister" showEffect="fade" hideEffect="clip" >
                             <p:button id="comfirm" value="#{msg.yes}" href="#{appBean.baseURL}portal/usuarios/registro.jsf?faces-redirect=true"   icon="ui-icon-check" />
-                            <p:commandButton id="decline" value="#{msg.no}" onclick="dialogNewRegister.hide(); dialogUsuarioRegister.show();" icon="ui-icon-closethick" type="button"/>   
+                            <p:commandButton id="decline" value="#{msg.no}" onclick="dialogNewRegister.hide();
+                                    dialogUsuarioRegister.show();" icon="ui-icon-closethick" type="button"/>   
                         </p:confirmDialog>    
                     </h:form>
 
                 </h:form> 
                 <script type="text/javascript">
-                            //pendiente implementacion de callback
-                            function handleSubmitRequest(xhr, status, args) {
-                                if (args.validationFailed) {
-                                    dialogUsuarioRegister.show();
-                                    //dialog.effect("shake", {times: 3}, 100);
-                                } else if (args.loggedIn == false) {
-                                    dialogUsuarioRegister.hide();
-                                    dialogNewRegister.show();
-                                    //  dialog.show();                               
+                                //pendiente implementacion de callback
+                                function handleSubmitRequest(xhr, status, args) {
+                                    if (args.validationFailed) {
+                                        dialogUsuarioRegister.show();
+                                        //dialog.effect("shake", {times: 3}, 100);
+                                    } else if (args.loggedIn == false) {
+                                        dialogUsuarioRegister.hide();
+                                        dialogNewRegister.show();
+                                        //  dialog.show();                               
+                                    }
                                 }
-                            }
                 </script>
             </ui:define>
 

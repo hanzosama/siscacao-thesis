@@ -34,4 +34,5 @@
   <table-filter match-name="tbl_tipo_documento"/>
   <table-filter match-name="tbl_patologia"/>
   <table-filter match-name="tbl_tipo_contacto"/>
+  <table-filter match-name="tbl_push_device"/>
 </hibernate-reverse-engineering>

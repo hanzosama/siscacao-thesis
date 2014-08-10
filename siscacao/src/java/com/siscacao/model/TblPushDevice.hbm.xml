@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10/08/2014 12:03:48 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.siscacao.model.TblPushDevice" table="tbl_push_device" schema="public">
+        <id name="pushDeviceId" type="long">
+            <column name="push_device_id" />
+            <generator class="identity" />
+        </id>
+        <property name="numeroDocumento" type="string">
+            <column name="numero_documento" length="40" />
+        </property>
+        <property name="deviceId" type="string">
+            <column name="device_id" length="600" />
+        </property>
+    </class>
+</hibernate-mapping>

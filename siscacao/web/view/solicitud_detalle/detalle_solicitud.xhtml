@@ -6,7 +6,6 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-
     <body>
         <ui:composition template="./../solicitudesTemplate.xhtml">
             <ui:define name="content">
@@ -19,6 +18,17 @@
                 </p:ajaxStatus>
                 <h:form id="form"> 
                     <p:panelGrid id="dashboard" >
+                        <p:row>
+                            <p:column colspan="2">
+                                <p:menubar>  
+                                    <p:submenu label="Solicitud" icon="ui-icon-document">
+                                        <p:menuitem  value="Guardar" icon="ui-icon-disk"/>
+                                        <p:separator/>
+                                        <p:menuitem  value="Generar Diagnostico" icon="ui-icon-script" oncomplete="dialogDiagnostico.show()"/>
+                                    </p:submenu> 
+                                </p:menubar> 
+                            </p:column>
+                        </p:row>
                         <!-- Analisis por imagen -->
                         <p:row >
                             <p:column style="display: block;margin-left: auto;margin-right: auto;">
@@ -103,7 +113,22 @@
                             </p:column>
                         </p:row>
                     </p:panelGrid>  
+
                 </h:form>
+                <h:form id="enviar_diagnostico">
+                    <p:dialog header="Generar Diagnostico" widgetVar="dialogDiagnostico" resizable="false" id="dlgDiagnostico"  
+                              showEffect="fade" hideEffect="clip"  modal="true">              
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                            <h:outputText value="Mensaje:" />  
+                            <p:inputTextarea value="#{solicitudBean.message}" rendered="true" requiredMessage="Es necesario registrar el mensaje a enviar"/> 
+                            <f:facet name="footer">   
+                                <p:commandButton id="btnDiagAccept" update=":msgs" oncomplete="dialogDiagnostico.hide()" actionListener="#{solicitudBean.enviarDiagnostico}"  value="Enviar" icon="ui-icon-mail-closed" />  
+                                <p:commandButton id="btnDiagCancel" oncomplete="dialogDiagnostico.hide()"  title="#{msg.cancel}" value="#{msg.cancel}" icon="ui-icon-closethick"/>  
+                            </f:facet>
+                        </h:panelGrid> 
+                    </p:dialog>
+                </h:form>
+
             </ui:define>
         </ui:composition>
     </body>

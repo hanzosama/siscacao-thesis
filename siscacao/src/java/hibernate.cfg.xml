@@ -41,5 +41,6 @@
     <mapping resource="com/siscacao/model/TblVereda.hbm.xml"/>
     <mapping resource="com/siscacao/model/TblFuncionRol.hbm.xml"/>
     <mapping resource="com/siscacao/model/TblFunciones.hbm.xml"/>
+    <mapping resource="com/siscacao/model/TblPushDevice.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>
