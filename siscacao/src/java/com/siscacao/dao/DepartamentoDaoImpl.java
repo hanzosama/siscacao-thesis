@@ -5,12 +5,9 @@
 package com.siscacao.dao;
 
 import com.siscacao.model.TblDepartamento;
-import com.siscacao.model.TblUsuario;
 import com.siscacao.util.HibernateConnectUtil;
 import java.util.List;
-import org.hibernate.FetchMode;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
 
 /**
  *

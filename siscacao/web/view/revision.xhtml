@@ -36,7 +36,7 @@
                         <p:column headerText="Estado" filterBy="tblEstado.descripcionEstado" filterStyle="display:none;" style="width:24%">  
                             <h:outputText value="#{solicitud.tblEstado.descripcionEstado}" />  
                         </p:column> 
-                         <p:column style="width:15%">  
+                        <p:column style="width:15%">  
                             <p:commandButton id="btnUsuarioUpdate" action="#{solicitudBean.detalleSolicitud()}"   icon="ui-icon-search" title="ver detalle">  
                                 <f:setPropertyActionListener value="#{solicitud}" target="#{solicitudBean.selectedSolicitud}" />  
                             </p:commandButton>                       

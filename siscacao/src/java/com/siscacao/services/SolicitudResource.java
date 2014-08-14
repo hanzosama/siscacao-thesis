@@ -260,11 +260,15 @@ public class SolicitudResource {
         String result = "-1";
         System.out.println("RegisterDeviceID on server.."); 
         if( pusJson.numeroDocumento!=null && !pusJson.equals("") && pusJson.pushDeviceId!=null && !pusJson.pushDeviceId.equals("")){
-            TblPushDevice pushDevice = new TblPushDevice();
+            TblPushDevice pushDevice = pushDao.findPushByIdentification(pusJson.numeroDocumento);
+            if(pushDevice!=null){
+            pushDao.updateRol(pushDevice);
+            }else{
+            pushDevice = new TblPushDevice();
             pushDevice.setNumeroDocumento(pusJson.numeroDocumento);
-            pushDevice.setDeviceId(pusJson.pushDeviceId);
-            
+            pushDevice.setDeviceId(pusJson.pushDeviceId);            
             pushDao.createPushDevice(pushDevice);
+            }
             result="1";
             System.out.println("RegisterDeviceID successfully"); 
         }       

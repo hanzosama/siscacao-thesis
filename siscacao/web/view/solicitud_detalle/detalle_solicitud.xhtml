@@ -16,121 +16,127 @@
                         <p:graphicImage value="#{appBean.baseURL}resources/gfx/ajax-loader.gif" />
                     </p:dialog> 
                 </p:ajaxStatus>
-                <h:form id="form"> 
-                    <p:panelGrid id="dashboard" >
-                        <p:row>
-                            <p:column colspan="2">
-                                <p:menubar>  
-                                    <p:submenu label="Solicitud" icon="ui-icon-document">
-                                        <p:menuitem  value="Guardar" icon="ui-icon-disk"/>
-                                        <p:separator/>
-                                        <p:menuitem  value="Generar Diagnostico" icon="ui-icon-script" oncomplete="dialogDiagnostico.show()"/>
-                                    </p:submenu> 
-                                </p:menubar> 
-                            </p:column>
-                        </p:row>
-                        <!-- Analisis por imagen -->
-                        <p:row >
-                            <p:column style="display: block;margin-left: auto;margin-right: auto;">
-                                <p:panel header="Imagenes Cargadas por el Usuario" footer="Seleccione la imagen que desea analizar" style="height:350px;width:350px;"> 
-                                    <p:dataGrid id="availableFotos" value="#{solicitudBean.selectedImagenes}" var="fotos" columns="2"  >  
-                                        <p:column>  
-                                            <p:graphicImage id="fotos" value="/resources/user/#{fotos.pathImagen}" style="width: 130px;display: block;margin-left: auto;margin-right: auto;" />  
-                                            <p:commandLink id="view" update=":form:fotoDetail" title="Seleccionar">
-                                                <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0 auto;" /> 
-                                                <f:setPropertyActionListener value="#{fotos}" target="#{solicitudBean.selectedImagen}" />
-                                            </p:commandLink>
-                                        </p:column>  
-
-                                    </p:dataGrid> 
-                                </p:panel>
-                            </p:column>
-                            <p:column>
-                                <p:panel header="Imagen a analizar" id="image_analize" style="height:1000px;width:775px;">
-                                    <p:scrollPanel mode="native" style="height:950px;width:760px;">
-                                        <p:panelGrid id="fotoDetail"   style="width:760px;">
-                                            <p:row>
-                                                <p:column style="display: block;margin-left: auto;margin-right: auto;"  >
-                                                    <p:imageCropper id="selectedImage" image="/resources/#{solicitudBean.pathImage}" value="#{solicitudBean.croppedImage}"  maxSize="100,100" minSize="50,50" initialCoords="0,0,5,5"  />
-                                                </p:column>
-                                                <p:column style="width: 100px">
-                                                    <p:commandButton value="Recortar Imagen"  update="localCroppedImage,fotoDetail,:msgs" actionListener="#{solicitudBean.crop}"/>
-                                                </p:column> 
-                                            </p:row>
-                                            <p:row>
-                                                <p:column>
-                                                    <p:graphicImage id="localCroppedImage"   value="/resources/#{solicitudBean.newImageName}" />
-                                                </p:column>
-                                                <p:column>
-                                                    <p:commandButton value="Analizar Imagen"  update="fotoDetail,pieResult,:msgs" actionListener="#{solicitudBean.analizeImage}"/>
-                                                </p:column>
-                                            </p:row>    
-
-                                            <p:row>
-                                                <p:column colspan="2">
-                                                    <p:pieChart id="pieResult"  value="#{solicitudBean.pieResult}" legendPosition="w" fill="true" showDataLabels="true" diameter="200"  title="Resultado analisis"/> 
-                                                </p:column>
-                                            </p:row>
-                                        </p:panelGrid>
-                                    </p:scrollPanel>
-                                </p:panel>
-                            </p:column>
-                        </p:row>
-                        <!-- analisis por caracteristicas -->
-                        <p:row>
-                            <p:column  style="display: block;margin-left: auto;margin-right: auto;">
-                                <p:panel id="descripcionPanel" header="Caracteristicas y descripción del problema" style="margin-bottom:10px;">  
-                                    <p:panelGrid columns="2" >                                                                      
-                                        <h:outputLabel value="Descripción del problema:" for="descripcionProblema"/>
-                                        <p:inputTextarea id="descripcionProblema" rows="10" cols="20" disabled="true"   autoResize="false" value="#{solicitudBean.selectedSolicitud.descripcion}" />
-                                    </p:panelGrid>
-                                </p:panel>
-                            </p:column>   
-                            <p:column >
-                                <p:panel id="sintomasPanel" header="Sintomatologia relacionada">  
-                                    <p:panelGrid style="width:775px;" > 
-                                        <p:row>
-                                            <p:column>
-                                                <h:outputLabel for="menuSintomas" value="Sintomas comunes:" />
-                                            </p:column>
-                                            <p:column colspan="2">
-                                                <p:selectCheckboxMenu id="menuSintomas" value="#{solicitudBean.selectedSintomas}" label="Sintomas"
-                                                                      filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
-                                                    <f:selectItems value="#{solicitudBean.sintomas}" var="sintoma" itemDescription="#{sintoma.descripcionSintoma}" itemValue="#{sintoma.descripcionSintoma}" itemLabel="#{sintoma.descripcionSintoma}"/>
-                                                </p:selectCheckboxMenu>
-                                            </p:column>
-                                            <p:column>
-                                                <p:commandButton value="Analizar sintomas"  update="pieResultSymptom,:msgs" actionListener="#{solicitudBean.evaluateSintomas}"/>                                      
-                                            </p:column>
-                                        </p:row> 
-                                        <p:row>
-                                            <p:column colspan="4">   
-                                                <p:pieChart id="pieResultSymptom"  value="#{solicitudBean.pieResultSymptom}" legendPosition="w" fill="true" showDataLabels="true" diameter="200"  title="Resultado analisis"/> 
-                                            </p:column>
-                                        </p:row>
-                                    </p:panelGrid>
-                                </p:panel>
-                            </p:column>
-                        </p:row>
-                    </p:panelGrid>  
-
+                <h:form id="menu_solicitud">
+                    <p:menubar>  
+                        <p:submenu label="Solicitud" icon="ui-icon-document">
+                            <p:menuitem  value="Guardar" icon="ui-icon-disk" actionListener="#{solicitudBean.guardarDiagnostico}" update="@([id$=msModule])"/>
+                            <p:separator/>
+                            <p:menuitem  value="Generar Diagnostico" icon="ui-icon-script" oncomplete="dialogDiagnostico.show()"/>
+                        </p:submenu> 
+                    </p:menubar>  
                 </h:form>
-                <h:form id="enviar_diagnostico">
-                    <p:dialog header="Generar Diagnostico" widgetVar="dialogDiagnostico" resizable="false" id="dlgDiagnostico"  
-                              showEffect="fade" hideEffect="clip"  modal="true">              
-                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
-                            <h:outputText value="Mensaje:" />  
-                            <p:inputTextarea value="#{solicitudBean.message}" rendered="true" requiredMessage="Es necesario registrar el mensaje a enviar"/> 
-                            <f:facet name="footer">   
-                                <p:commandButton id="btnDiagAccept" update=":msgs" oncomplete="dialogDiagnostico.hide()" actionListener="#{solicitudBean.enviarDiagnostico}"  value="Enviar" icon="ui-icon-mail-closed" />  
-                                <p:commandButton id="btnDiagCancel" oncomplete="dialogDiagnostico.hide()"  title="#{msg.cancel}" value="#{msg.cancel}" icon="ui-icon-closethick"/>  
-                            </f:facet>
-                        </h:panelGrid> 
-                    </p:dialog>
-                </h:form>
+                <p:messages id="msModule" showDetail="true" autoUpdate="true" closable="true"/>
+                <p:tabView>
+                    
+                    <p:tab title="Análisis de imágenes">
+                        <h:form id="view_image">
+                            <p:panelGrid id="dashboard" >
+                                <p:row>
+                                    <p:column style="vertical-align: top">
+                                        <p:panel header="Imagenes Cargadas por el Usuario" footer="Seleccione la imagen que desea analizar" style="height:350px;width:320px;vertical-align: top" > 
+                                            <p:dataGrid id="availableFotos" value="#{solicitudBean.selectedImagenes}" var="fotos" columns="2">  
+                                                <p:column>  
+                                                    <p:graphicImage id="fotos" value="/resources/user/#{fotos.pathImagen}" style="width: 100px;margin-left: auto;margin-right: auto;" />  
+                                                    <p:commandLink id="view" update="@([id$=fotoDetail])" title="Seleccionar">
+                                                        <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0 auto;" /> 
+                                                        <f:setPropertyActionListener value="#{fotos}" target="#{solicitudBean.selectedImagen}" />
+                                                    </p:commandLink>
+                                                </p:column>  
+                                            </p:dataGrid> 
+                                        </p:panel>
+                                    </p:column>
+                                    <p:column>
+                                        <p:panel header="Imagen a analizar" id="image_analize" style="height:1000px;width:775px;">
+                                            <p:scrollPanel mode="native" style="height:950px;width:760px;">
+                                                <p:panelGrid id="fotoDetail"   style="width:760px;">
+                                                    <p:row>
+                                                        <p:column style="display: block;margin-left: auto;margin-right: auto;"  >
+                                                            <p:imageCropper id="selectedImage" image="/resources/#{solicitudBean.pathImage}" value="#{solicitudBean.croppedImage}"  maxSize="150,150" minSize="50,50" initialCoords="0,0,5,5"  />
+                                                        </p:column>
+                                                        <p:column style="width: 100px">
+                                                            <p:commandButton value="Recortar Imagen"  update="localCroppedImage,fotoDetail,:msgs" actionListener="#{solicitudBean.crop}"/>
+                                                        </p:column> 
+                                                    </p:row>
+                                                    <p:row>
+                                                        <p:column>
+                                                            <p:graphicImage id="localCroppedImage"   value="/resources/#{solicitudBean.newImageName}" />
+                                                        </p:column>
+                                                        <p:column>
+                                                            <p:commandButton value="Analizar Imagen"  update="fotoDetail,pieResult,:msgs" actionListener="#{solicitudBean.analizeImage}"/>
+                                                        </p:column>
+                                                    </p:row>    
 
+                                                    <p:row>
+                                                        <p:column colspan="2">
+                                                            <p:pieChart id="pieResult"  value="#{solicitudBean.pieResult}" legendPosition="w" fill="true" showDataLabels="true" diameter="200"  title="Resultado analisis"/> 
+                                                        </p:column>
+                                                    </p:row>
+                                                </p:panelGrid>
+                                            </p:scrollPanel>
+                                        </p:panel>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </h:form>
+                    </p:tab>
+                    <p:tab title="Análisis de características">
+                        <h:form id="form_characteristcis">
+                            <p:panelGrid id="characteristcis_board">
+                                <!-- analisis por caracteristicas -->
+                                <p:row>
+                                    <p:column  style="display: block;margin-left: auto;margin-right: auto;">
+                                        <p:panel id="descripcionPanel" header="Caracteristicas y descripción del problema" style="margin-bottom:10px;">  
+                                            <p:panelGrid columns="2" >                                                                      
+                                                <h:outputLabel value="Descripción del problema:" for="descripcionProblema"/>
+                                                <p:inputTextarea id="descripcionProblema" rows="10" cols="20" disabled="true"   autoResize="false" value="#{solicitudBean.selectedSolicitud.descripcion}" />
+                                            </p:panelGrid>
+                                        </p:panel>
+                                    </p:column>   
+                                    <p:column >
+                                        <p:panel id="sintomasPanel" header="Sintomatologia relacionada">  
+                                            <p:panelGrid style="width:750px;" > 
+                                                <p:row>
+                                                    <p:column>
+                                                        <h:outputLabel for="menuSintomas" value="Sintomas comunes:" />
+                                                    </p:column>
+                                                    <p:column colspan="2">
+                                                        <p:selectCheckboxMenu id="menuSintomas" value="#{solicitudBean.selectedSintomas}" label="Sintomas"
+                                                                              filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
+                                                            <f:selectItems value="#{solicitudBean.sintomas}" var="sintoma" itemDescription="#{sintoma.descripcionSintoma}" itemValue="#{sintoma.descripcionSintoma}" itemLabel="#{sintoma.descripcionSintoma}"/>
+                                                        </p:selectCheckboxMenu>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <p:commandButton value="Analizar sintomas"  update="pieResultSymptom,:msgs" actionListener="#{solicitudBean.evaluateSintomas}"/>                                      
+                                                    </p:column>
+                                                </p:row> 
+                                                <p:row>
+                                                    <p:column colspan="4">   
+                                                        <p:pieChart id="pieResultSymptom"  value="#{solicitudBean.pieResultSymptom}" legendPosition="w" fill="true" showDataLabels="true" diameter="200"  title="Resultado analisis"/> 
+                                                    </p:column>
+                                                </p:row>
+                                            </p:panelGrid>
+                                        </p:panel>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid> 
+                        </h:form>  
+                    </p:tab>
+                    <p:tab title="Generar Diagnostico" disabled="true">
+                        <h:form id="enviar_diagnostico">
+                            <p:panel  widgetVar="dialogDiagnostico" id="dlgDiagnostico">              
+                                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                                    <h:outputText value="Mensaje:" />  
+                                    <p:inputTextarea value="#{solicitudBean.message}" rendered="true" requiredMessage="Es necesario registrar el mensaje a enviar"/> 
+                                    <f:facet name="footer">   
+                                        <p:commandButton id="btnDiagAccept" update=":msgs" oncomplete="dialogDiagnostico.hide()" actionListener="#{solicitudBean.enviarDiagnostico}"  value="Enviar" icon="ui-icon-mail-closed" />  
+                                        <p:commandButton id="btnDiagCancel" oncomplete="dialogDiagnostico.hide()"  title="#{msg.cancel}" value="#{msg.cancel}" icon="ui-icon-closethick"/>  
+                                    </f:facet>
+                                </h:panelGrid> 
+                            </p:panel>
+                        </h:form>
+                    </p:tab>
+                </p:tabView>     
             </ui:define>
         </ui:composition>
     </body>
-
 </html>

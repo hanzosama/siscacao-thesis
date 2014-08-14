@@ -66,4 +66,23 @@ public class PushDaoImpl implements PushDao {
         }
         return result;
     }
+
+    @Override
+    public boolean updateRol(TblPushDevice pushDevice) {
+        
+         boolean result;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        try {
+            session.beginTransaction();
+            session.update(pushDevice);
+            session.beginTransaction().commit();
+            result = true;
+        } catch (Exception e) {
+            result = false;
+            session.beginTransaction().rollback();
+        }
+        return result;
+    }
+    
+    
 }

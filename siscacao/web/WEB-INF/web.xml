@@ -50,9 +50,9 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
-     <session-config>
+    <session-config>
         <session-timeout>
-         20
+            20
         </session-timeout>
     </session-config> 
     <welcome-file-list>
@@ -62,9 +62,16 @@
         <param-name>primefaces.THEME</param-name>
         <param-value>start</param-value>
     </context-param>
-    <listener>
-		<listener-class>
-			org.quartz.ee.servlet.QuartzInitializerListener
-		</listener-class>
-	</listener>
+    
+       <listener>
+        <listener-class>
+            org.quartz.ee.servlet.QuartzInitializerListener
+        </listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>log4j.properties</param-value>
+    </context-param>
+    
 </web-app>

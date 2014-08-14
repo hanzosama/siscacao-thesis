@@ -15,4 +15,5 @@ public interface PushDao {
     public TblPushDevice findPushByIdentification(String identification);
     public boolean createPushDevice(TblPushDevice pushDevice);
     public boolean deletePushDevice(Long id);
+    public boolean updateRol(TblPushDevice pushDevice);
 }
