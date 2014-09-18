@@ -89,7 +89,7 @@ public class SolicitudDaoImpl implements SolicitudDao {
             session.beginTransaction();
             listUsersModel = (List<TblSolicitud>) session.createSQLQuery(sql).addEntity("solicitud", TblSolicitud.class).list();
             for (TblSolicitud sol : listUsersModel) {
-                Set<TblImagen> tblImagens = new HashSet<TblImagen>(session.createQuery("from TblImagen where tblSolicitud=" + sol.getIdSolicitud() + "").list());
+                Set<TblImagen> tblImagens = new HashSet<TblImagen>(session.createQuery("from TblImagen where tblSolicitud=" + sol.getIdSolicitud() + " and not ( nombreImagen like '%crop%')").list());
                 sol.setTblImagens(tblImagens);
                 sol.setTblSolicitante((TblSolicitante) (session.createSQLQuery("select * from tbl_solicitante  solicitante left join tbl_solicitud solicitud on solicitud.id_solicitante=solicitante.id_solicitante\n"
                         + "where solicitud.id_solicitud=" + sol.getIdSolicitud() + "").addEntity("solicitante", TblSolicitante.class).uniqueResult()));

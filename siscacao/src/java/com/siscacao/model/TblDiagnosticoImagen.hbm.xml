@@ -8,6 +8,12 @@
             <column name="id_diagnostico_imagen" />
             <generator class="identity" />
         </id>
+        <property name="mapPie" type="string">
+            <column name="map_pie" length="500" />
+        </property>
+         <property name="idImagen" type="long">
+            <column name="id_imagen" default="0"/>
+        </property>
         <many-to-one name="tblDiagnosticoByIdDiagnostico" class="com.siscacao.model.TblDiagnostico" fetch="select">
             <column name="id_diagnostico" />
         </many-to-one>

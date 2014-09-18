@@ -14,5 +14,8 @@
         <many-to-one name="tblDiagnosticoByIdDiagnosticoRelacionado" class="com.siscacao.model.TblDiagnostico" fetch="select">
             <column name="id_diagnostico_relacionado" />
         </many-to-one>
+        <property name="mapPie" type="string">
+            <column name="map_pie" length="500" />
+        </property>
     </class>
 </hibernate-mapping>

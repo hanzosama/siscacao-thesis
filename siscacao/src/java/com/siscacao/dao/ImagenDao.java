@@ -13,4 +13,5 @@ import com.siscacao.model.TblImagen;
 public interface ImagenDao {
 public boolean createImagen(TblImagen imagen);
 public boolean updateImagen(TblImagen imagen);
+public TblImagen getImageById(Long id);
 }

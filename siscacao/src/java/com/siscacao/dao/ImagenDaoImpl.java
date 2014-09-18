@@ -12,11 +12,11 @@ import org.hibernate.Session;
  *
  * @author Hanzo
  */
-public class ImagenDaoImpl implements ImagenDao{
+public class ImagenDaoImpl implements ImagenDao {
 
     @Override
     public boolean createImagen(TblImagen imagen) {
- boolean result;
+        boolean result;
         Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
         try {
             session.beginTransaction();
@@ -47,5 +47,20 @@ public class ImagenDaoImpl implements ImagenDao{
         }
         return result;
     }
-    
+
+    @Override
+    public TblImagen getImageById(Long id) {
+
+        TblImagen imagen = null;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        String sql = "FROM TblImagen WHERE idImagen = " + id + "";
+        try {
+            session.beginTransaction();
+            imagen = (TblImagen) session.createQuery(sql).uniqueResult();
+            session.beginTransaction().commit();
+        } catch (Exception e) {
+            session.beginTransaction().rollback();
+        }
+        return imagen;
+    }
 }

@@ -4,12 +4,18 @@
  */
 package com.siscacao.bean;
 
+import com.siscacao.dao.DiagnosticoDao;
+import com.siscacao.dao.DiagnosticoDaoImpl;
+import com.siscacao.dao.ImagenDao;
+import com.siscacao.dao.ImagenDaoImpl;
 import com.siscacao.dao.PushDao;
 import com.siscacao.dao.PushDaoImpl;
 import com.siscacao.dao.SintomaDao;
 import com.siscacao.dao.SintomaDaoImpl;
 import com.siscacao.dao.SolicitudDao;
 import com.siscacao.dao.SolicitudDaoImpl;
+import com.siscacao.model.TblDiagnostico;
+import com.siscacao.model.TblDiagnosticoImagen;
 import com.siscacao.model.TblImagen;
 import com.siscacao.model.TblPushDevice;
 import com.siscacao.model.TblSintoma;
@@ -22,8 +28,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -33,6 +41,11 @@ import javax.imageio.stream.FileImageOutputStream;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.neuroph.core.learning.DataSet;
 import org.neuroph.core.learning.DataSetRow;
 import org.primefaces.model.CroppedImage;
@@ -59,6 +72,8 @@ public class SolicitudBean implements Serializable {
     private String pathImage;
     private CroppedImage croppedImage;
     private String newImageName;
+    public String newImageNameForSave;
+    private String newImageNameWithoutPath;
     private PieChartModel pieResultImage;
     private PieChartModel pieResultSymptom;
     private List<TblSintoma> sintomas;
@@ -66,6 +81,12 @@ public class SolicitudBean implements Serializable {
     private PushServiceBean pushServiceBean;
     private String message;
     private PushDao pushDao;
+    private ImagenDao imagenDao;
+    private DiagnosticoDao diagnosticoDao;
+    private TblDiagnostico tblDiagnosticoById;
+    private TblDiagnosticoImagen tblDiagnosticoImagenByGeneralDiagnotico;
+    private ObjectMapper mapper = new ObjectMapper();
+    private TblImagen cropImage;
 
     public SolicitudBean() {
         solicitudDao = new SolicitudDaoImpl();
@@ -78,6 +99,8 @@ public class SolicitudBean implements Serializable {
         pieResultSymptom.set("", null);
         sintomasDao = new SintomaDaoImpl();
         sintomas = sintomasDao.getAllSintomas();
+        this.imagenDao = new ImagenDaoImpl();
+        this.diagnosticoDao = new DiagnosticoDaoImpl();
     }
 
     public List<TblSolicitud> getSolicitudes() {
@@ -132,6 +155,14 @@ public class SolicitudBean implements Serializable {
         this.newImageName = newImageName;
     }
 
+    public String getNewImageNameWithoutPath() {
+        return newImageNameWithoutPath;
+    }
+
+    public void setNewImageNameWithoutPath(String newImageNameWithoutPath) {
+        this.newImageNameWithoutPath = newImageNameWithoutPath;
+    }
+
     public PieChartModel getPieResult() {
         return pieResultImage;
     }
@@ -176,7 +207,7 @@ public class SolicitudBean implements Serializable {
 
         PruebaSet.addRow(new DataSetRow(sintomas, new double[]{0, 0, 0, 0, 0, 0, 0}));
         Map<String, Double> symptom = this.symptomIA.getSymptom(PruebaSet);
-
+        pieResultSymptom.clear();
         for (Map.Entry<String, Double> entry : symptom.entrySet()) {
             pieResultSymptom.set(entry.getKey(), entry.getValue());
         }
@@ -199,6 +230,26 @@ public class SolicitudBean implements Serializable {
         this.pieResultImage.set("", null);
         this.pieResultSymptom.clear();
         this.pieResultSymptom.set("", null);
+
+        //load data from data base
+        tblDiagnosticoById = diagnosticoDao.getTblDiagnosticoById(this.selectedSolicitud.getIdDiagnostico());
+        tblDiagnosticoImagenByGeneralDiagnotico = diagnosticoDao.getTblDiagnosticoImagenByGeneralDiagnotico(tblDiagnosticoById);
+        if (tblDiagnosticoImagenByGeneralDiagnotico != null) {
+            logger.info("Diagnostico image  saved.." + tblDiagnosticoImagenByGeneralDiagnotico.getIdImagen());
+            String mapPie = tblDiagnosticoImagenByGeneralDiagnotico.getMapPie();
+            Map<String, Number> map = new HashMap<String, Number>();
+            try {
+                map = mapper.readValue(mapPie, new TypeReference<HashMap<String, Number>>() {
+                });
+            } catch (IOException ex) {
+                logger.error(ex);
+            }
+            this.pieResultImage.setData(map);
+            cropImage = imagenDao.getImageById(tblDiagnosticoImagenByGeneralDiagnotico.getIdImagen());
+
+            this.newImageName = "user/" + this.selectedSolicitud.getTblSolicitante().getNombreSolicitante().trim().toLowerCase().replace(" ", "") + this.selectedSolicitud.getTblSolicitante().getNumeroDocumento() + File.separator + cropImage.getNombreImagen();
+        }
+        //end of load data
         return "solicitud_detalle/detalle_solicitud.jsf?faces-redirect=true";
     }
 
@@ -240,6 +291,8 @@ public class SolicitudBean implements Serializable {
         Date dateCrope = new Date();
 
         setNewImageName(selectedImagen.getNombreImagen() + dateCrope.getTime() + "_crop.jpg");
+        newImageNameForSave = this.selectedSolicitud.getTblSolicitante().getNombreSolicitante().trim().toLowerCase().replace(" ", "") + this.selectedSolicitud.getTblSolicitante().getNumeroDocumento() + File.separator + getNewImageName();
+        setNewImageNameWithoutPath(selectedImagen.getNombreImagen() + dateCrope.getTime() + "_crop.jpg");
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         String newFileName = servletContext.getRealPath("") + File.separator + "resources/user/" + this.selectedSolicitud.getTblSolicitante().getNombreSolicitante().trim().toLowerCase().replace(" ", "") + this.selectedSolicitud.getTblSolicitante().getNumeroDocumento() + File.separator + getNewImageName();
 
@@ -266,10 +319,71 @@ public class SolicitudBean implements Serializable {
     public void guardarDiagnostico(ActionEvent actionEvent) {
         String msg;
         FacesMessage message;
+        boolean isPieEmpty = false;
+        Map<String, Number> dataImage = this.pieResultImage.getData();
+        Map<String, Number> dataSymptom = this.pieResultSymptom.getData();
+        if (dataImage.size() == 1 && dataSymptom.size() == 1) {
+            if (dataImage.containsKey("") && dataSymptom.containsKey("")) {
+                isPieEmpty = true;
+            }
+        }
+        if (this.newImageName == null || this.newImageName.equals("gfx/Imagen-animada-Lupa-10.png") || isPieEmpty) {
 
-        msg = "No ha generado ningun tipo de diagnostico para guardar";
-        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "Por favor seleccione un tipo de diagnostico y genere un analisis");
-        FacesContext.getCurrentInstance().addMessage(msg, message);
+            msg = "No ha generado ningun tipo de diagnostico para guardar";
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, "Por favor seleccione un tipo de diagnostico y genere un analisis");
+            FacesContext.getCurrentInstance().addMessage(msg, message);
+
+        }
+
+        //guardar diagnostico imagen
+        logger.info("values on data pie image: " + dataImage.toString());
+        if (!dataImage.containsKey("")) {
+            saveImageDiag();
+        }
+    }
+
+    private void saveImageDiag() {
+        String json = "";
+        if (cropImage == null && tblDiagnosticoImagenByGeneralDiagnotico == null) {
+            cropImage = new TblImagen();
+            cropImage.setPathImagen(newImageNameForSave);
+            cropImage.setNombreImagen(this.newImageNameWithoutPath);
+            cropImage.setTblSolicitud(this.selectedSolicitud);
+            logger.info("Saving image...");
+            imagenDao.createImagen(cropImage);
+
+            //save image and pie map relation;
+            TblDiagnostico diagnostico = new TblDiagnostico();
+            diagnosticoDao.createDiagnosticoGeneral(diagnostico);
+            this.selectedSolicitud.setIdDiagnostico(diagnostico.getIdDiagnostico());
+            solicitudDao.updateSolicitud(selectedSolicitud);
+
+            try {
+                json = mapper.writeValueAsString(this.pieResultImage.getData());
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(SolicitudBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            TblDiagnosticoImagen diagnosticoImagen = new TblDiagnosticoImagen();
+            diagnosticoImagen.setIdImagen(cropImage.getIdImagen());
+            diagnosticoImagen.setMapPie(json);
+            diagnosticoImagen.setTblDiagnosticoByIdDiagnostico(diagnostico);
+            diagnosticoDao.createDiagnosticoImagen(diagnosticoImagen);
+        } else { //update proccess        
+            cropImage.setPathImagen(newImageNameForSave);
+            cropImage.setNombreImagen(this.newImageNameWithoutPath);
+            logger.info("Saving image...");
+            imagenDao.updateImagen(cropImage);
+
+
+            try {
+                json = mapper.writeValueAsString(this.pieResultImage.getData());
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(SolicitudBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            tblDiagnosticoImagenByGeneralDiagnotico.setMapPie(json);
+            diagnosticoDao.updateDiagnosticoImage(tblDiagnosticoImagenByGeneralDiagnotico);
+        }
 
     }
 
@@ -288,6 +402,7 @@ public class SolicitudBean implements Serializable {
         imageNetIA = new ImageNetIA();
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         try {
+            pieResultImage.clear();
             Map<String, Double> imageDiag = imageNetIA.getImageDiag(servletContext.getRealPath("") + File.separator + "resources/" + this.newImageName);
             for (Map.Entry<String, Double> entry : imageDiag.entrySet()) {
                 pieResultImage.set(entry.getKey(), entry.getValue());

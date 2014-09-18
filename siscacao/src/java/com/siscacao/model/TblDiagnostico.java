@@ -27,6 +27,7 @@ public class TblDiagnostico  implements java.io.Serializable {
      private Set tblDiagnosticoCaracteristicasForIdDiagnosticoRelacionado = new HashSet(0);
      private Set tblDiagnosticoImagensForIdDiagnosticoRelacionado = new HashSet(0);
      private Set tblDiagnosticoImagensForIdDiagnostico = new HashSet(0);
+     private Long idPatologia;
 
     public TblDiagnostico() {
     }
@@ -35,7 +36,7 @@ public class TblDiagnostico  implements java.io.Serializable {
     public TblDiagnostico(Long idDiagnostico) {
         this.idDiagnostico = idDiagnostico;
     }
-    public TblDiagnostico(Long idDiagnostico, String nombreDiagnostico, String descripcionDiagnostico, Set tblRespuestaSolicituds, Set tblDiagnosticoCaracteristicasForIdDiagnostico, Set tblDiagnosticoCaracteristicasForIdDiagnosticoRelacionado, Set tblDiagnosticoImagensForIdDiagnosticoRelacionado, Set tblDiagnosticoImagensForIdDiagnostico) {
+    public TblDiagnostico(Long idDiagnostico, String nombreDiagnostico, String descripcionDiagnostico, Set tblRespuestaSolicituds, Set tblDiagnosticoCaracteristicasForIdDiagnostico, Set tblDiagnosticoCaracteristicasForIdDiagnosticoRelacionado, Set tblDiagnosticoImagensForIdDiagnosticoRelacionado, Set tblDiagnosticoImagensForIdDiagnostico,Long idPatologia) {
        this.idDiagnostico = idDiagnostico;
        this.nombreDiagnostico = nombreDiagnostico;
        this.descripcionDiagnostico = descripcionDiagnostico;
@@ -44,6 +45,7 @@ public class TblDiagnostico  implements java.io.Serializable {
        this.tblDiagnosticoCaracteristicasForIdDiagnosticoRelacionado = tblDiagnosticoCaracteristicasForIdDiagnosticoRelacionado;
        this.tblDiagnosticoImagensForIdDiagnosticoRelacionado = tblDiagnosticoImagensForIdDiagnosticoRelacionado;
        this.tblDiagnosticoImagensForIdDiagnostico = tblDiagnosticoImagensForIdDiagnostico;
+       this.idPatologia = idPatologia;
     }
    
     public Long getIdDiagnostico() {
@@ -103,7 +105,13 @@ public class TblDiagnostico  implements java.io.Serializable {
         this.tblDiagnosticoImagensForIdDiagnostico = tblDiagnosticoImagensForIdDiagnostico;
     }
 
+    public Long getIdPatologia() {
+        return idPatologia;
+    }
 
+    public void setIdPatologia(Long idPatologia) {
+        this.idPatologia = idPatologia;
+    }
 
 
 }

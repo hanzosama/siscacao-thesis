@@ -44,5 +44,8 @@
             </key>
             <one-to-many class="com.siscacao.model.TblDiagnosticoImagen" />
         </set>
+        <property name="idPatologia" type="long">
+            <column name="id_patologia" default="0"/>
+        </property>
     </class>
 </hibernate-mapping>

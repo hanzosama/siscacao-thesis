@@ -137,6 +137,14 @@
                     </p:tab>
                 </p:tabView>     
             </ui:define>
+                    <script type="text/javascript">
+                    function handleSubmitRequest(xhr, status, args) {
+                        if (args.serial != null) {
+                            $('[id="form_result:serialResult"]').text(args.serial);
+                            dialogResult.show();
+                        }
+                    }
+                </script>
         </ui:composition>
     </body>
 </html>

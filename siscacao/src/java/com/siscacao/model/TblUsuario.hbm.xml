@@ -23,7 +23,7 @@
         <property name="fechaRegistro" type="timestamp">
             <column name="fecha_registro" length="21" />
         </property>
-        <set name="tblAsignacionSolicituds" inverse="true">
+        <set name="tblAsignacionSolicituds" inverse="true" cascade="all">
             <key>
                 <column name="id_usuario" />
             </key>
@@ -35,7 +35,7 @@
             </key>
             <one-to-many class="com.siscacao.model.TblUsuarioRol" />
         </set>
-        <set name="tblDetalleUsuarios" inverse="true">
+        <set name="tblDetalleUsuarios" inverse="true" cascade="all">
             <key>
                 <column name="id_usuario" />
             </key>

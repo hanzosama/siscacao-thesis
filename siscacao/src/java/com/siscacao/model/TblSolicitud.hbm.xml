@@ -20,9 +20,6 @@
         <many-to-one name="tblSolicitante" class="com.siscacao.model.TblSolicitante" fetch="select">
             <column name="id_solicitante" />
         </many-to-one>
-        <many-to-one name="tblPatologia" class="com.siscacao.model.TblPatologia" fetch="select">
-            <column name="id_patologia" />
-        </many-to-one>
         <many-to-one name="tblEstado" class="com.siscacao.model.TblEstado" fetch="select">
             <column name="id_estado" />
         </many-to-one>
@@ -32,6 +29,9 @@
         <many-to-one name="tblFase" class="com.siscacao.model.TblFase" fetch="select">
             <column name="id_fase" />
         </many-to-one>
+        <property name="idDiagnostico" type="long">
+            <column name="id_diagnostico" default="0"/>
+        </property>
         <property name="fechaSolicitud" type="time">
             <column name="fecha_solicitud" length="15" not-null="true" />
         </property>

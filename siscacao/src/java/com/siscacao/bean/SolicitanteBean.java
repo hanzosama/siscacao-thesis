@@ -84,6 +84,7 @@ public class SolicitanteBean implements Serializable {
     private TipoDocumentoDao tipoDocumentoDao;
     private String telefonoFijo;
     private String telefonoMovil;
+    private String email;
     private String folderName = "";
     private Long selectedClima;
     private List<TblClima> listClima;
@@ -198,6 +199,16 @@ public class SolicitanteBean implements Serializable {
         this.telefonoMovil = telefonoMovil;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    
+
     public Long getSelectedClima() {
         return selectedClima;
     }
@@ -283,6 +294,10 @@ public class SolicitanteBean implements Serializable {
         TblContacto contactoMovil = new TblContacto();
         contactoMovil.setContacto(telefonoMovil);
         contactoMovil.setTblTipoContacto(tipoContactoDao.findTipoContactoId("TM"));
+        
+        TblContacto contactoEmail = new TblContacto();
+        contactoEmail.setContacto(telefonoMovil);
+        contactoEmail.setTblTipoContacto(tipoContactoDao.findTipoContactoId("EM"));
 
         this.solicitante.setIdDepartamento(this.selectedDepartamento);
         for (TblTipoDocumento tpdoc : this.listTblTipoDocumentos) {
@@ -297,9 +312,11 @@ public class SolicitanteBean implements Serializable {
 
         contactoFijo.setTblSolicitante(solicitante);
         contactoMovil.setTblSolicitante(solicitante);
+        contactoEmail.setTblSolicitante(solicitante);
 
         contactoDao.createContacto(contactoMovil);
         contactoDao.createContacto(contactoFijo);
+        contactoDao.createContacto(contactoEmail);
 
         //Guarda Información del cultivo
 

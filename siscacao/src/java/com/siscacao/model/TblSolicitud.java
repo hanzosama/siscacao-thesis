@@ -25,7 +25,6 @@ public class TblSolicitud  implements java.io.Serializable {
      private TblTipoSolicitud tblTipoSolicitud;
      private TblCultivo tblCultivo;
      private TblSolicitante tblSolicitante;
-     private TblPatologia tblPatologia;
      private TblEstado tblEstado;
      private TblVereda tblVereda;
      private TblFase tblFase;
@@ -36,6 +35,7 @@ public class TblSolicitud  implements java.io.Serializable {
      private String serial;
      
      private String descripcion;
+     private Long idDiagnostico;
 
     public TblSolicitud() {
     }
@@ -44,21 +44,22 @@ public class TblSolicitud  implements java.io.Serializable {
         this.idSolicitud = idSolicitud;
         this.fechaSolicitud = fechaSolicitud;
     }
-    public TblSolicitud(Long idSolicitud, TblEtapa tblEtapa, TblTipoSolicitud tblTipoSolicitud, TblCultivo tblCultivo, TblSolicitante tblSolicitante, TblPatologia tblPatologia, TblEstado tblEstado, TblVereda tblVereda, TblFase tblFase, Date fechaSolicitud, Set tblImagens, Set tblRespuestaSolicituds, Set tblAsignacionSolicituds) {
-       this.idSolicitud = idSolicitud;
-       this.tblEtapa = tblEtapa;
-       this.tblTipoSolicitud = tblTipoSolicitud;
-       this.tblCultivo = tblCultivo;
-       this.tblSolicitante = tblSolicitante;
-       this.tblPatologia = tblPatologia;
-       this.tblEstado = tblEstado;
-       this.tblVereda = tblVereda;
-       this.tblFase = tblFase;
-       this.fechaSolicitud = fechaSolicitud;
-       this.tblImagens = tblImagens;
-       this.tblRespuestaSolicituds = tblRespuestaSolicituds;
-       this.tblAsignacionSolicituds = tblAsignacionSolicituds;
+
+    public TblSolicitud(Long idSolicitud, TblEtapa tblEtapa, TblTipoSolicitud tblTipoSolicitud, TblCultivo tblCultivo, TblSolicitante tblSolicitante, TblEstado tblEstado, TblVereda tblVereda, TblFase tblFase, Date fechaSolicitud, String serial, String descripcion, Long idDiagnostico) {
+        this.idSolicitud = idSolicitud;
+        this.tblEtapa = tblEtapa;
+        this.tblTipoSolicitud = tblTipoSolicitud;
+        this.tblCultivo = tblCultivo;
+        this.tblSolicitante = tblSolicitante;
+        this.tblEstado = tblEstado;
+        this.tblVereda = tblVereda;
+        this.tblFase = tblFase;
+        this.fechaSolicitud = fechaSolicitud;
+        this.serial = serial;
+        this.descripcion = descripcion;
+        this.idDiagnostico = idDiagnostico;
     }
+
    
     public Long getIdSolicitud() {
         return this.idSolicitud;
@@ -94,13 +95,6 @@ public class TblSolicitud  implements java.io.Serializable {
     
     public void setTblSolicitante(TblSolicitante tblSolicitante) {
         this.tblSolicitante = tblSolicitante;
-    }
-    public TblPatologia getTblPatologia() {
-        return this.tblPatologia;
-    }
-    
-    public void setTblPatologia(TblPatologia tblPatologia) {
-        this.tblPatologia = tblPatologia;
     }
     public TblEstado getTblEstado() {
         return this.tblEstado;
@@ -167,7 +161,15 @@ public class TblSolicitud  implements java.io.Serializable {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-    
+
+    public Long getIdDiagnostico() {
+        return idDiagnostico;
+    }
+
+    public void setIdDiagnostico(Long idDiagnostico) {
+        this.idDiagnostico = idDiagnostico;
+    }
+       
 }
 
 
