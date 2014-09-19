@@ -19,8 +19,11 @@ public interface DiagnosticoDao {
     
     public TblDiagnosticoImagen getTblDiagnosticoImagenByGeneralDiagnotico(TblDiagnostico diagnostico);
     
+    public TblDiagnosticoCaracteristica getTblDiagnosticoCaracteristicaByGeneralDiagnotico(TblDiagnostico diagnostico);
+    
     public TblDiagnostico getTblDiagnosticoById(Long id);
     
     public boolean createDiagnosticoSintoma(TblDiagnosticoCaracteristica diagnosticoCaracteristica);
+    public boolean updateDiagnosticoImage(TblDiagnosticoCaracteristica caracteristica);
     public boolean createDiagnosticoGeneral(TblDiagnostico diagnostico);
 }

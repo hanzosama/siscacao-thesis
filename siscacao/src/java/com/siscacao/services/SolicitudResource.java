@@ -337,6 +337,7 @@ public class SolicitudResource {
         this.tblSolicitud.setTblSolicitante(solicitante);
         this.tblSolicitud.setTblCultivo(cultivo);
         this.tblSolicitud.setTblEstado(estado);
+        this.tblSolicitud.setDescripcion(solicitudMovil.descripcion);
         serial = currentDate.toString();
         serial = serial.replace("-", "");
         serial = serial.replace(":", "");

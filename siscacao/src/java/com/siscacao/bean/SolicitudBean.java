@@ -15,6 +15,7 @@ import com.siscacao.dao.SintomaDaoImpl;
 import com.siscacao.dao.SolicitudDao;
 import com.siscacao.dao.SolicitudDaoImpl;
 import com.siscacao.model.TblDiagnostico;
+import com.siscacao.model.TblDiagnosticoCaracteristica;
 import com.siscacao.model.TblDiagnosticoImagen;
 import com.siscacao.model.TblImagen;
 import com.siscacao.model.TblPushDevice;
@@ -40,6 +41,7 @@ import javax.faces.event.ActionEvent;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
+import org.apache.catalina.tribes.util.Arrays;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
@@ -87,6 +89,7 @@ public class SolicitudBean implements Serializable {
     private TblDiagnosticoImagen tblDiagnosticoImagenByGeneralDiagnotico;
     private ObjectMapper mapper = new ObjectMapper();
     private TblImagen cropImage;
+    private TblDiagnosticoCaracteristica tblDiagnosticoCaracteristicaByGeneralDiagnotico;
 
     public SolicitudBean() {
         solicitudDao = new SolicitudDaoImpl();
@@ -191,6 +194,28 @@ public class SolicitudBean implements Serializable {
         this.croppedImage = croppedImage;
     }
 
+    public List<TblImagen> getSelectedImagenes() {
+        this.selectedImagenes = new ArrayList<TblImagen>(this.selectedSolicitud.getTblImagens());
+        return selectedImagenes;
+    }
+
+    public void setSelectedImagenes(List<TblImagen> selectedImagenes) {
+        this.selectedImagenes = selectedImagenes;
+    }
+
+    public String getPathImage() {
+        if (selectedImagen == null) {
+            pathImage = "gfx/Imagen-animada-Lupa-10.png";
+        } else {
+            pathImage = "user/" + selectedImagen.getPathImagen();
+        }
+
+        if (this.newImageName == null) {
+            this.newImageName = "gfx/Imagen-animada-Lupa-10.png";
+        }
+        return pathImage;
+    }
+
     public void evaluateSintomas(ActionEvent actionEvent) {
         DataSet PruebaSet = new DataSet(14, 7);
         this.symptomIA = new SymptomIA();
@@ -198,6 +223,7 @@ public class SolicitudBean implements Serializable {
 
         for (TblSintoma sintoma : this.sintomas) {
             for (int i = 0; i < this.selectedSintomas.length; i++) {
+                logger.info("Selected Sympton: " + this.selectedSintomas[i]);
                 if (sintoma.getDescripcionSintoma().equals(this.selectedSintomas[i])) {
                     sintomas[sintoma.getIdSintoma().intValue() - 1] = (double) 1;
                 }
@@ -230,6 +256,14 @@ public class SolicitudBean implements Serializable {
         this.pieResultImage.set("", null);
         this.pieResultSymptom.clear();
         this.pieResultSymptom.set("", null);
+        this.tblDiagnosticoById = null;
+        this.tblDiagnosticoImagenByGeneralDiagnotico = null;
+        this.tblDiagnosticoCaracteristicaByGeneralDiagnotico = null;
+        this.cropImage = null;
+
+        this.newImageName = null;
+        this.newImageNameForSave = null;
+        this.newImageNameWithoutPath = null;
 
         //load data from data base
         tblDiagnosticoById = diagnosticoDao.getTblDiagnosticoById(this.selectedSolicitud.getIdDiagnostico());
@@ -249,30 +283,29 @@ public class SolicitudBean implements Serializable {
 
             this.newImageName = "user/" + this.selectedSolicitud.getTblSolicitante().getNombreSolicitante().trim().toLowerCase().replace(" ", "") + this.selectedSolicitud.getTblSolicitante().getNumeroDocumento() + File.separator + cropImage.getNombreImagen();
         }
+        //load data for Symp
+        tblDiagnosticoCaracteristicaByGeneralDiagnotico = diagnosticoDao.getTblDiagnosticoCaracteristicaByGeneralDiagnotico(tblDiagnosticoById);
+
+        if (tblDiagnosticoCaracteristicaByGeneralDiagnotico != null) {
+            String mapPie = tblDiagnosticoCaracteristicaByGeneralDiagnotico.getMapPie();
+            Map<String, Number> map = new HashMap<String, Number>();
+            try {
+                map = mapper.readValue(mapPie, new TypeReference<HashMap<String, Number>>() {
+                });
+            } catch (IOException ex) {
+                logger.error(ex);
+            }
+            this.pieResultSymptom.setData(map);
+
+            this.selectedSintomas = tblDiagnosticoCaracteristicaByGeneralDiagnotico.getMapSintoma().replace("{", "").replace("}", "").split(",");
+            for (int i = 0; i < this.selectedSintomas.length; i++) {
+                this.selectedSintomas[i] = this.selectedSintomas[i].trim();
+
+            }
+            logger.info("Saving Symptom: " + Arrays.toString(selectedSintomas));
+        }
         //end of load data
         return "solicitud_detalle/detalle_solicitud.jsf?faces-redirect=true";
-    }
-
-    public List<TblImagen> getSelectedImagenes() {
-        this.selectedImagenes = new ArrayList<TblImagen>(this.selectedSolicitud.getTblImagens());
-        return selectedImagenes;
-    }
-
-    public void setSelectedImagenes(List<TblImagen> selectedImagenes) {
-        this.selectedImagenes = selectedImagenes;
-    }
-
-    public String getPathImage() {
-        if (selectedImagen == null) {
-            pathImage = "gfx/Imagen-animada-Lupa-10.png";
-        } else {
-            pathImage = "user/" + selectedImagen.getPathImagen();
-        }
-
-        if (this.newImageName == null) {
-            this.newImageName = "gfx/Imagen-animada-Lupa-10.png";
-        }
-        return pathImage;
     }
 
     public void crop(ActionEvent actionEvent) {
@@ -327,10 +360,10 @@ public class SolicitudBean implements Serializable {
                 isPieEmpty = true;
             }
         }
-        if (this.newImageName == null || this.newImageName.equals("gfx/Imagen-animada-Lupa-10.png") || isPieEmpty) {
+        if (isPieEmpty) {
 
             msg = "No ha generado ningun tipo de diagnostico para guardar";
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, "Por favor seleccione un tipo de diagnostico y genere un analisis");
+            message = new FacesMessage(FacesMessage.SEVERITY_WARN, msg, "Por favor seleccione un tipo de diagnostico y genere un analisis");
             FacesContext.getCurrentInstance().addMessage(msg, message);
 
         }
@@ -340,6 +373,17 @@ public class SolicitudBean implements Serializable {
         if (!dataImage.containsKey("")) {
             saveImageDiag();
         }
+        if (!dataSymptom.containsKey("")) {
+            saveSymptomDiag();
+        }
+
+
+        msg = "Diagnosticos guardados exitosamente";
+        message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, "Se han almacenado los reportes y datos generados");
+        FacesContext.getCurrentInstance().addMessage(msg, message);
+
+
+
     }
 
     private void saveImageDiag() {
@@ -353,38 +397,74 @@ public class SolicitudBean implements Serializable {
             imagenDao.createImagen(cropImage);
 
             //save image and pie map relation;
-            TblDiagnostico diagnostico = new TblDiagnostico();
-            diagnosticoDao.createDiagnosticoGeneral(diagnostico);
-            this.selectedSolicitud.setIdDiagnostico(diagnostico.getIdDiagnostico());
+            tblDiagnosticoById = new TblDiagnostico();
+            diagnosticoDao.createDiagnosticoGeneral(tblDiagnosticoById);
+            this.selectedSolicitud.setIdDiagnostico(tblDiagnosticoById.getIdDiagnostico());
             solicitudDao.updateSolicitud(selectedSolicitud);
 
             try {
                 json = mapper.writeValueAsString(this.pieResultImage.getData());
             } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(SolicitudBean.class.getName()).log(Level.SEVERE, null, ex);
+                logger.info(SolicitudBean.class.getName());
             }
             TblDiagnosticoImagen diagnosticoImagen = new TblDiagnosticoImagen();
             diagnosticoImagen.setIdImagen(cropImage.getIdImagen());
             diagnosticoImagen.setMapPie(json);
-            diagnosticoImagen.setTblDiagnosticoByIdDiagnostico(diagnostico);
+            diagnosticoImagen.setTblDiagnosticoByIdDiagnostico(tblDiagnosticoById);
             diagnosticoDao.createDiagnosticoImagen(diagnosticoImagen);
-        } else { //update proccess        
-            cropImage.setPathImagen(newImageNameForSave);
-            cropImage.setNombreImagen(this.newImageNameWithoutPath);
-            logger.info("Saving image...");
-            imagenDao.updateImagen(cropImage);
+        } else { //update proccess  
+            if (newImageNameForSave != null && newImageNameWithoutPath != null) {
+                cropImage.setPathImagen(newImageNameForSave);
+                cropImage.setNombreImagen(this.newImageNameWithoutPath);
+                logger.info("Saving image...");
+                imagenDao.updateImagen(cropImage);
+            }
 
 
             try {
                 json = mapper.writeValueAsString(this.pieResultImage.getData());
             } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(SolicitudBean.class.getName()).log(Level.SEVERE, null, ex);
+                logger.info(SolicitudBean.class.getName());
             }
 
             tblDiagnosticoImagenByGeneralDiagnotico.setMapPie(json);
             diagnosticoDao.updateDiagnosticoImage(tblDiagnosticoImagenByGeneralDiagnotico);
         }
 
+    }
+
+    private void saveSymptomDiag() {
+        String json = "";
+
+        if (tblDiagnosticoCaracteristicaByGeneralDiagnotico == null) {
+            if (tblDiagnosticoById == null) {
+                tblDiagnosticoById = new TblDiagnostico();
+                diagnosticoDao.createDiagnosticoGeneral(tblDiagnosticoById);
+                this.selectedSolicitud.setIdDiagnostico(tblDiagnosticoById.getIdDiagnostico());
+                solicitudDao.updateSolicitud(selectedSolicitud);
+            }
+
+            try {
+                json = mapper.writeValueAsString(this.pieResultSymptom.getData());
+            } catch (IOException ex) {
+                logger.info(SolicitudBean.class.getName());
+            }
+            TblDiagnosticoCaracteristica caracteristica = new TblDiagnosticoCaracteristica();
+            caracteristica.setMapPie(json);
+            caracteristica.setMapSintoma(Arrays.toString(selectedSintomas));
+            caracteristica.setTblDiagnosticoByIdDiagnostico(tblDiagnosticoById);
+            diagnosticoDao.createDiagnosticoSintoma(caracteristica);
+        } else {
+            //update process            
+            try {
+                json = mapper.writeValueAsString(this.pieResultSymptom.getData());
+            } catch (IOException ex) {
+                logger.info(SolicitudBean.class.getName());
+            }
+            this.tblDiagnosticoCaracteristicaByGeneralDiagnotico.setMapSintoma(json);
+            this.tblDiagnosticoCaracteristicaByGeneralDiagnotico.setMapSintoma(Arrays.toString(selectedSintomas));
+            diagnosticoDao.updateDiagnosticoImage(tblDiagnosticoCaracteristicaByGeneralDiagnotico);
+        }
     }
 
     public void analizeImage(ActionEvent actionEvent) {

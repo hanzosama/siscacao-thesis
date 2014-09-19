@@ -23,7 +23,9 @@ public class SolicitudMovil {
     @XmlElement public String idClima; 
     @XmlElement public String idVariedad; 
     @XmlElement public String idEstadoCultivo;
-    @XmlElement public String imagenSolicitud;    
+    @XmlElement public String imagenSolicitud; 
+    @XmlElement public String descripcion; 
+    
 
     @Override
     public String toString() {

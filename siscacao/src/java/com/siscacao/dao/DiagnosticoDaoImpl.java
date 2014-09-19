@@ -69,8 +69,8 @@ public class DiagnosticoDaoImpl implements DiagnosticoDao {
 
     @Override
     public TblDiagnosticoImagen getTblDiagnosticoImagenByGeneralDiagnotico(TblDiagnostico diagnostico) {
-       TblDiagnosticoImagen diagnosticoImagen=null;  
-     Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        TblDiagnosticoImagen diagnosticoImagen = null;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
         String sql = "FROM TblDiagnosticoImagen WHERE tblDiagnosticoByIdDiagnostico = ?";
         try {
             session.beginTransaction();
@@ -78,25 +78,41 @@ public class DiagnosticoDaoImpl implements DiagnosticoDao {
             session.beginTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
-            session.beginTransaction().rollback();            
+            session.beginTransaction().rollback();
         }
-        return diagnosticoImagen;   
+        return diagnosticoImagen;
+    }
+
+    @Override
+    public TblDiagnosticoCaracteristica getTblDiagnosticoCaracteristicaByGeneralDiagnotico(TblDiagnostico diagnostico) {
+        TblDiagnosticoCaracteristica caracteristica = null;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        String sql = "FROM TblDiagnosticoCaracteristica WHERE tblDiagnosticoByIdDiagnostico = ?";
+        try {
+            session.beginTransaction();
+            caracteristica = (TblDiagnosticoCaracteristica) session.createQuery(sql).setEntity(0, diagnostico).uniqueResult();
+            session.beginTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.beginTransaction().rollback();
+        }
+        return caracteristica;
     }
 
     @Override
     public TblDiagnostico getTblDiagnosticoById(Long id) {
-        
-        TblDiagnostico diagnostico=null;  
-     Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+
+        TblDiagnostico diagnostico = null;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
         String sql = "FROM TblDiagnostico WHERE idDiagnostico = " + id + "";
         try {
             session.beginTransaction();
             diagnostico = (TblDiagnostico) session.createQuery(sql).uniqueResult();
             session.beginTransaction().commit();
         } catch (Exception e) {
-            session.beginTransaction().rollback();            
+            session.beginTransaction().rollback();
         }
-        return diagnostico;   
+        return diagnostico;
     }
 
     @Override
@@ -115,7 +131,21 @@ public class DiagnosticoDaoImpl implements DiagnosticoDao {
         }
         return result;
     }
-    
-    
-    
+
+    @Override
+    public boolean updateDiagnosticoImage(TblDiagnosticoCaracteristica caracteristica) {
+        boolean result;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        try {
+            session.beginTransaction();
+            session.update(caracteristica);
+            session.beginTransaction().commit();
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = false;
+            session.beginTransaction().rollback();
+        }
+        return result;
+    }
 }

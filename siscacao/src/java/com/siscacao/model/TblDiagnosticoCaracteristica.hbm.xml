@@ -17,5 +17,8 @@
         <property name="mapPie" type="string">
             <column name="map_pie" length="500" />
         </property>
+        <property name="mapSintoma" type="string">
+            <column name="map_sintoma" length="500" />
+        </property>
     </class>
 </hibernate-mapping>

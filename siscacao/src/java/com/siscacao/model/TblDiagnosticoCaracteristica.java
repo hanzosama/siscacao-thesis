@@ -20,6 +20,7 @@ public class TblDiagnosticoCaracteristica implements java.io.Serializable {
     private TblDiagnostico tblDiagnosticoByIdDiagnostico;
     private TblDiagnostico tblDiagnosticoByIdDiagnosticoRelacionado;
     private String mapPie;
+    private String mapSintoma;
 
     public TblDiagnosticoCaracteristica() {
     }
@@ -65,6 +66,15 @@ public class TblDiagnosticoCaracteristica implements java.io.Serializable {
     public void setMapPie(String mapPie) {
         this.mapPie = mapPie;
     }
+
+    public String getMapSintoma() {
+        return mapSintoma;
+    }
+
+    public void setMapSintoma(String mapSintoma) {
+        this.mapSintoma = mapSintoma;
+    }
+    
     
     
 }

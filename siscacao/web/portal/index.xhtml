@@ -37,8 +37,8 @@
             </ui:define>
             <ui:define name="middle_content">
                 <p:layout  id="layout" style="min-width:400px;min-height:200px;" >  
-                    <p:layoutUnit position="west" size="400" header=" " resizable="true" collapsible="false"> 
-                        <p:media value="http://www.youtube.com/v/7HdYuk_u8_w" width="420" height="315" player="flash"/>
+                    <p:layoutUnit position="west" size="360" header=" " resizable="true" collapsible="false"> 
+                        <p:media value="http://www.youtube.com/v/7HdYuk_u8_w" width="350" height="200" player="flash"/>
                     </p:layoutUnit>  
                     <p:layoutUnit position="center" size="200" > 
                         <p:feedReader value="http://tgs.freshpatents.com/Cacao-bx1.rss" var="feed" size="10"   >
@@ -49,7 +49,7 @@
                             <p:separator />
                         </p:feedReader>
                     </p:layoutUnit>  
-                    <p:layoutUnit position="east"  size="310" header="#{msg.hdlogin}" resizable="true" collapsible="false">    
+                    <p:layoutUnit position="east"  size="350" header="#{msg.hdlogin}" resizable="true" collapsible="false">    
                         <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();" >  
                             <p:dialog modal="true" widgetVar="statusDialog" header="#{msg.loading_session}"   
                                       draggable="false" closable="false">  
