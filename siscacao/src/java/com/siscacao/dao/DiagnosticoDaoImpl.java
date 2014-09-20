@@ -7,7 +7,9 @@ package com.siscacao.dao;
 import com.siscacao.model.TblDiagnostico;
 import com.siscacao.model.TblDiagnosticoCaracteristica;
 import com.siscacao.model.TblDiagnosticoImagen;
+import com.siscacao.model.TblPatologia;
 import com.siscacao.util.HibernateConnectUtil;
+import java.util.List;
 import org.hibernate.Session;
 
 /**
@@ -148,4 +150,20 @@ public class DiagnosticoDaoImpl implements DiagnosticoDao {
         }
         return result;
     }
+
+    @Override
+    public List<TblPatologia> getAllPatolgias() {
+      List<TblPatologia> patologias = null;
+      Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        String sql = "FROM TblPatologia";
+        try {
+            session.beginTransaction();
+           // listUsersModel = (List<TblUsuario>)session.createQuery(sql).list();
+            patologias = (List<TblPatologia>)session.createCriteria(TblPatologia.class).list();
+            session.beginTransaction().commit();
+        } catch (Exception e) {
+            session.beginTransaction().rollback();
+        }
+      return patologias;  
+    }        
 }

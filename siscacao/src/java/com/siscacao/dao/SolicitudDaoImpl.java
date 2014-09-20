@@ -84,7 +84,7 @@ public class SolicitudDaoImpl implements SolicitudDao {
         String sql = "select * from tbl_solicitud solicitud \n"
                 + "left join tbl_asignacion_solicitud asignacion on asignacion.id_solicitud=solicitud.id_solicitud\n"
                 + "left join tbl_estado estado on estado.id_estado= solicitud.id_estado\n"
-                + "where solicitud.id_estado=1 and asignacion.id_usuario=" + id_user + "";
+                + "where (solicitud.id_estado=1 or solicitud.id_estado=2 ) and asignacion.id_usuario=" + id_user + "";
         try {
             session.beginTransaction();
             listUsersModel = (List<TblSolicitud>) session.createSQLQuery(sql).addEntity("solicitud", TblSolicitud.class).list();

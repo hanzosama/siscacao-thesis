@@ -7,6 +7,8 @@ package com.siscacao.dao;
 import com.siscacao.model.TblDiagnostico;
 import com.siscacao.model.TblDiagnosticoCaracteristica;
 import com.siscacao.model.TblDiagnosticoImagen;
+import com.siscacao.model.TblPatologia;
+import java.util.List;
 
 /**
  *
@@ -26,4 +28,6 @@ public interface DiagnosticoDao {
     public boolean createDiagnosticoSintoma(TblDiagnosticoCaracteristica diagnosticoCaracteristica);
     public boolean updateDiagnosticoImage(TblDiagnosticoCaracteristica caracteristica);
     public boolean createDiagnosticoGeneral(TblDiagnostico diagnostico);
+    
+    public List<TblPatologia> getAllPatolgias();
 }

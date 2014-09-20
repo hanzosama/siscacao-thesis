@@ -14,4 +14,5 @@ import java.util.List;
 public interface EstadoDao {
     public List<TblEstado> findAllEstados();
     public TblEstado findEstadoById(Long id);
+    public TblEstado findEstadoByName(String name);
 }

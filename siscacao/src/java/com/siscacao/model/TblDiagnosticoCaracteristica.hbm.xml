@@ -20,5 +20,11 @@
         <property name="mapSintoma" type="string">
             <column name="map_sintoma" length="500" />
         </property>
+        <property name="idPatogologia" type="long">
+            <column name="id_patologia" default="0"/>
+        </property>
+        <property name="maxValue" type="double">
+            <column name="max_value" default="0"/>
+        </property>
     </class>
 </hibernate-mapping>

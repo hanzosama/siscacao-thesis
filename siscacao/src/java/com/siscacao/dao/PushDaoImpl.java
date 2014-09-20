@@ -20,12 +20,13 @@ public class PushDaoImpl implements PushDao {
         TblPushDevice pushDevice = null;
         Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
         //String sql = "FROM TblRol";
-        String sql = "FROM TblPushDevice  WHERE  numero_documento ='" + identification + "'";
+        String sql = "FROM TblPushDevice  WHERE  numero_documento ='"+identification+"' ";
         try {
             session.beginTransaction();
             pushDevice = (TblPushDevice) session.createQuery(sql).uniqueResult();
             session.beginTransaction().commit();
         } catch (Exception e) {
+            e.printStackTrace();
             session.beginTransaction().rollback();
         }
         return pushDevice;

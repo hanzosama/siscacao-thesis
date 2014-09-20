@@ -21,6 +21,8 @@ public class TblDiagnosticoImagen implements java.io.Serializable {
     private TblDiagnostico tblDiagnosticoByIdDiagnosticoRelacionado;
     private String mapPie;
     private Long idImagen;
+    private Long idPatogologia;
+    private Double maxValue;
 
     public TblDiagnosticoImagen() {
     }
@@ -74,4 +76,21 @@ public class TblDiagnosticoImagen implements java.io.Serializable {
     public void setIdImagen(Long idImagen) {
         this.idImagen = idImagen;
     }
+
+    public Long getIdPatogologia() {
+        return idPatogologia;
+    }
+
+    public void setIdPatogologia(Long idPatogologia) {
+        this.idPatogologia = idPatogologia;
+    }
+
+    public Double getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(Double maxValue) {
+        this.maxValue = maxValue;
+    }
+    
 }

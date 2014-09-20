@@ -6,6 +6,8 @@ package com.siscacao.bean;
 
 import com.siscacao.dao.DiagnosticoDao;
 import com.siscacao.dao.DiagnosticoDaoImpl;
+import com.siscacao.dao.EstadoDao;
+import com.siscacao.dao.EstadoDaoImpl;
 import com.siscacao.dao.ImagenDao;
 import com.siscacao.dao.ImagenDaoImpl;
 import com.siscacao.dao.PushDao;
@@ -17,7 +19,9 @@ import com.siscacao.dao.SolicitudDaoImpl;
 import com.siscacao.model.TblDiagnostico;
 import com.siscacao.model.TblDiagnosticoCaracteristica;
 import com.siscacao.model.TblDiagnosticoImagen;
+import com.siscacao.model.TblEstado;
 import com.siscacao.model.TblImagen;
+import com.siscacao.model.TblPatologia;
 import com.siscacao.model.TblPushDevice;
 import com.siscacao.model.TblSintoma;
 import com.siscacao.model.TblSolicitud;
@@ -51,6 +55,8 @@ import org.codehaus.jackson.type.TypeReference;
 import org.neuroph.core.learning.DataSet;
 import org.neuroph.core.learning.DataSetRow;
 import org.primefaces.model.CroppedImage;
+import org.primefaces.model.chart.CartesianChartModel;
+import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.PieChartModel;
 
 /**
@@ -78,6 +84,7 @@ public class SolicitudBean implements Serializable {
     private String newImageNameWithoutPath;
     private PieChartModel pieResultImage;
     private PieChartModel pieResultSymptom;
+    private CartesianChartModel cartesianChartModel;
     private List<TblSintoma> sintomas;
     private String[] selectedSintomas;
     private PushServiceBean pushServiceBean;
@@ -90,13 +97,38 @@ public class SolicitudBean implements Serializable {
     private ObjectMapper mapper = new ObjectMapper();
     private TblImagen cropImage;
     private TblDiagnosticoCaracteristica tblDiagnosticoCaracteristicaByGeneralDiagnotico;
-
+    private boolean isSaving;
+    private List<TblPatologia> patologias;
+    private EstadoDao estadoDao;
     public SolicitudBean() {
         solicitudDao = new SolicitudDaoImpl();
         pushServiceBean = new PushServiceBean();
+        estadoDao = new EstadoDaoImpl();
         pushDao = new PushDaoImpl();
         this.pieResultImage = new PieChartModel();
         this.pieResultSymptom = new PieChartModel();
+        cartesianChartModel = new CartesianChartModel();
+        ChartSeries image = new ChartSeries();
+        image.setLabel("Imagen");
+        image.set("Monilia", 0);
+        image.set("Phytoptora", 0);
+        image.set("Escoba de Bruja", 0);
+        image.set("Machete", 0);
+        image.set("Bubas", 0);
+        image.set("Carpintero", 0);
+        image.set("Sanas", 0);
+        ChartSeries symptom = new ChartSeries();
+        symptom.setLabel("Sintomas");
+        symptom.set("Monilia", 0);
+        symptom.set("Phytoptora", 0);
+        symptom.set("Escoba de Bruja", 0);
+        symptom.set("Machete", 0);
+        symptom.set("Bubas", 0);
+        symptom.set("Carpintero", 0);
+        symptom.set("Sanas", 0);
+        cartesianChartModel.addSeries(image);
+        cartesianChartModel.addSeries(symptom);
+
         this.selectedSintomas = null;
         pieResultImage.set("", null);
         pieResultSymptom.set("", null);
@@ -112,6 +144,10 @@ public class SolicitudBean implements Serializable {
         Object id_usuario = session.getAttribute("id_usuario");
         solicitudes = solicitudDao.retrieveListSolicitudPendingForUser((Long) id_usuario);
         return solicitudes;
+    }
+
+    public boolean isIsSaving() {
+        return isSaving;
     }
 
     public List<TblSolicitud> getFilteredSolicitudes() {
@@ -172,6 +208,10 @@ public class SolicitudBean implements Serializable {
 
     public PieChartModel getPieResultSymptom() {
         return pieResultSymptom;
+    }
+
+    public CartesianChartModel getCartesianChartModel() {
+        return cartesianChartModel;
     }
 
     public String getMessage() {
@@ -255,6 +295,28 @@ public class SolicitudBean implements Serializable {
         this.pieResultImage.clear();
         this.pieResultImage.set("", null);
         this.pieResultSymptom.clear();
+        this.cartesianChartModel.clear();
+        ChartSeries image = new ChartSeries();
+        image.setLabel("Imagen");
+        image.set("Monilia", 0);
+        image.set("Phytoptora", 0);
+        image.set("Escoba de Bruja", 0);
+        image.set("Machete", 0);
+        image.set("Bubas", 0);
+        image.set("Carpintero", 0);
+        image.set("Sanas", 0);
+        ChartSeries symptom = new ChartSeries();
+        symptom.setLabel("Sintomas");
+        symptom.set("Monilia", 0);
+        symptom.set("Phytoptora", 0);
+        symptom.set("Escoba de Bruja", 0);
+        symptom.set("Machete", 0);
+        symptom.set("Bubas", 0);
+        symptom.set("Carpintero", 0);
+        symptom.set("Sanas", 0);
+        cartesianChartModel.addSeries(image);
+        cartesianChartModel.addSeries(symptom);
+        
         this.pieResultSymptom.set("", null);
         this.tblDiagnosticoById = null;
         this.tblDiagnosticoImagenByGeneralDiagnotico = null;
@@ -264,6 +326,8 @@ public class SolicitudBean implements Serializable {
         this.newImageName = null;
         this.newImageNameForSave = null;
         this.newImageNameWithoutPath = null;
+        this.isSaving = false;
+        this.patologias = null;
 
         //load data from data base
         tblDiagnosticoById = diagnosticoDao.getTblDiagnosticoById(this.selectedSolicitud.getIdDiagnostico());
@@ -279,8 +343,12 @@ public class SolicitudBean implements Serializable {
                 logger.error(ex);
             }
             this.pieResultImage.setData(map);
+            for (Map.Entry<String, Number> entry : this.pieResultImage.getData().entrySet()) {
+                    Double parcentage = ((Double) entry.getValue()) * 100;
+                    image.set(entry.getKey().trim(), parcentage);
+                }
             cropImage = imagenDao.getImageById(tblDiagnosticoImagenByGeneralDiagnotico.getIdImagen());
-
+            this.isSaving = true;
             this.newImageName = "user/" + this.selectedSolicitud.getTblSolicitante().getNombreSolicitante().trim().toLowerCase().replace(" ", "") + this.selectedSolicitud.getTblSolicitante().getNumeroDocumento() + File.separator + cropImage.getNombreImagen();
         }
         //load data for Symp
@@ -296,14 +364,19 @@ public class SolicitudBean implements Serializable {
                 logger.error(ex);
             }
             this.pieResultSymptom.setData(map);
-
+             for (Map.Entry<String, Number> entry : this.pieResultSymptom.getData().entrySet()) {
+                    Double parcentage = ((Double) entry.getValue()) * 100;
+                    symptom.set(entry.getKey().trim(), parcentage);
+                }
             this.selectedSintomas = tblDiagnosticoCaracteristicaByGeneralDiagnotico.getMapSintoma().replace("{", "").replace("}", "").split(",");
             for (int i = 0; i < this.selectedSintomas.length; i++) {
                 this.selectedSintomas[i] = this.selectedSintomas[i].trim();
 
             }
             logger.info("Saving Symptom: " + Arrays.toString(selectedSintomas));
+            this.isSaving = false;
         }
+        this.patologias = diagnosticoDao.getAllPatolgias();
         //end of load data
         return "solicitud_detalle/detalle_solicitud.jsf?faces-redirect=true";
     }
@@ -370,13 +443,15 @@ public class SolicitudBean implements Serializable {
 
         //guardar diagnostico imagen
         logger.info("values on data pie image: " + dataImage.toString());
+        this.cartesianChartModel.clear();
+        this.selectedSolicitud.setTblEstado(estadoDao.findEstadoByName("ASIGNADO"));
         if (!dataImage.containsKey("")) {
             saveImageDiag();
         }
         if (!dataSymptom.containsKey("")) {
             saveSymptomDiag();
         }
-
+        solicitudDao.updateSolicitud(selectedSolicitud);
 
         msg = "Diagnosticos guardados exitosamente";
         message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, "Se han almacenado los reportes y datos generados");
@@ -388,6 +463,16 @@ public class SolicitudBean implements Serializable {
 
     private void saveImageDiag() {
         String json = "";
+        ChartSeries image = new ChartSeries();
+        image.setLabel("Imagen");
+        image.set("Monilia", 0);
+        image.set("Phytoptora", 0);
+        image.set("Escoba de Bruja", 0);
+        image.set("Machete", 0);
+        image.set("Bubas", 0);
+        image.set("Carpintero", 0);
+        image.set("Sanas", 0);
+
         if (cropImage == null && tblDiagnosticoImagenByGeneralDiagnotico == null) {
             cropImage = new TblImagen();
             cropImage.setPathImagen(newImageNameForSave);
@@ -405,12 +490,24 @@ public class SolicitudBean implements Serializable {
             try {
                 json = mapper.writeValueAsString(this.pieResultImage.getData());
             } catch (IOException ex) {
-                logger.info(SolicitudBean.class.getName());
+                logger.info(ex);
             }
+            Map.Entry<String, Number> maxValuesImage = getMaxValuesImage(this.pieResultImage.getData());
+            logger.info("Max value and Symptom :" + maxValuesImage.getKey() + " = " + maxValuesImage.getValue());
+
             TblDiagnosticoImagen diagnosticoImagen = new TblDiagnosticoImagen();
             diagnosticoImagen.setIdImagen(cropImage.getIdImagen());
             diagnosticoImagen.setMapPie(json);
             diagnosticoImagen.setTblDiagnosticoByIdDiagnostico(tblDiagnosticoById);
+            if (maxValuesImage != null) {
+                logger.info("Max value and Symptom :" + maxValuesImage.getKey() + " = " + maxValuesImage.getValue());
+                diagnosticoImagen.setIdPatogologia(getIdPatologia(maxValuesImage.getKey()));
+                diagnosticoImagen.setMaxValue((Double) maxValuesImage.getValue());
+                for (Map.Entry<String, Number> entry : this.pieResultImage.getData().entrySet()) {
+                    Double parcentage = ((Double) entry.getValue()) * 100;
+                    image.set(entry.getKey(), parcentage);
+                }
+            }
             diagnosticoDao.createDiagnosticoImagen(diagnosticoImagen);
         } else { //update proccess  
             if (newImageNameForSave != null && newImageNameWithoutPath != null) {
@@ -424,18 +521,36 @@ public class SolicitudBean implements Serializable {
             try {
                 json = mapper.writeValueAsString(this.pieResultImage.getData());
             } catch (IOException ex) {
-                logger.info(SolicitudBean.class.getName());
+                logger.info(ex);
             }
-
+            Map.Entry<String, Number> maxValuesImage = getMaxValuesImage(this.pieResultImage.getData());
+            if (maxValuesImage != null) {
+                logger.info("Max value and Symptom :" + maxValuesImage.getKey() + " = " + maxValuesImage.getValue());
+                this.tblDiagnosticoImagenByGeneralDiagnotico.setIdPatogologia(getIdPatologia(maxValuesImage.getKey()));
+                this.tblDiagnosticoImagenByGeneralDiagnotico.setMaxValue((Double) maxValuesImage.getValue());
+                for (Map.Entry<String, Number> entry : this.pieResultImage.getData().entrySet()) {
+                    Double parcentage = ((Double) entry.getValue()) * 100;
+                    image.set(entry.getKey(), parcentage);
+                }
+            }
             tblDiagnosticoImagenByGeneralDiagnotico.setMapPie(json);
             diagnosticoDao.updateDiagnosticoImage(tblDiagnosticoImagenByGeneralDiagnotico);
         }
 
+        cartesianChartModel.addSeries(image);
     }
 
     private void saveSymptomDiag() {
         String json = "";
-
+        ChartSeries symptom = new ChartSeries();
+        symptom.setLabel("Sintomas");
+        symptom.set("Monilia", 0);
+        symptom.set("Phytoptora", 0);
+        symptom.set("Escoba de Bruja", 0);
+        symptom.set("Machete", 0);
+        symptom.set("Bubas", 0);
+        symptom.set("Carpintero", 0);
+        symptom.set("Sanas", 0);
         if (tblDiagnosticoCaracteristicaByGeneralDiagnotico == null) {
             if (tblDiagnosticoById == null) {
                 tblDiagnosticoById = new TblDiagnostico();
@@ -447,24 +562,70 @@ public class SolicitudBean implements Serializable {
             try {
                 json = mapper.writeValueAsString(this.pieResultSymptom.getData());
             } catch (IOException ex) {
-                logger.info(SolicitudBean.class.getName());
+                logger.info(ex);
             }
+            Map.Entry<String, Number> maxValuesSymptom = getMaxValuesImage(this.pieResultSymptom.getData());
+
             TblDiagnosticoCaracteristica caracteristica = new TblDiagnosticoCaracteristica();
             caracteristica.setMapPie(json);
             caracteristica.setMapSintoma(Arrays.toString(selectedSintomas));
             caracteristica.setTblDiagnosticoByIdDiagnostico(tblDiagnosticoById);
+            if (maxValuesSymptom != null) {
+                logger.info("Max value and Symptom :" + maxValuesSymptom.getKey() + " = " + maxValuesSymptom.getValue());
+                caracteristica.setIdPatogologia(getIdPatologia(maxValuesSymptom.getKey()));
+                caracteristica.setMaxValue((Double) maxValuesSymptom.getValue());
+                for (Map.Entry<String, Number> entry : this.pieResultSymptom.getData().entrySet()) {
+                    Double parcentage = ((Double) entry.getValue()) * 100;
+                    symptom.set(entry.getKey(), parcentage);
+                }
+            }
             diagnosticoDao.createDiagnosticoSintoma(caracteristica);
         } else {
             //update process            
             try {
                 json = mapper.writeValueAsString(this.pieResultSymptom.getData());
             } catch (IOException ex) {
-                logger.info(SolicitudBean.class.getName());
+                logger.info(ex);
             }
-            this.tblDiagnosticoCaracteristicaByGeneralDiagnotico.setMapSintoma(json);
+            Map.Entry<String, Number> maxValuesSymptom = getMaxValuesImage(this.pieResultSymptom.getData());
+            if (maxValuesSymptom != null) {
+                logger.info("Max value and Symptom :" + maxValuesSymptom.getKey() + " = " + maxValuesSymptom.getValue());
+                this.tblDiagnosticoCaracteristicaByGeneralDiagnotico.setIdPatogologia(getIdPatologia(maxValuesSymptom.getKey()));
+                this.tblDiagnosticoCaracteristicaByGeneralDiagnotico.setMaxValue((Double) maxValuesSymptom.getValue());
+
+                for (Map.Entry<String, Number> entry : this.pieResultSymptom.getData().entrySet()) {
+                    Double parcentage = ((Double) entry.getValue()) * 100;
+                    symptom.set(entry.getKey(), parcentage);
+                }
+
+            }
+            this.tblDiagnosticoCaracteristicaByGeneralDiagnotico.setMapPie(json);
             this.tblDiagnosticoCaracteristicaByGeneralDiagnotico.setMapSintoma(Arrays.toString(selectedSintomas));
             diagnosticoDao.updateDiagnosticoImage(tblDiagnosticoCaracteristicaByGeneralDiagnotico);
         }
+        this.cartesianChartModel.addSeries(symptom);
+    }
+
+    public Map.Entry<String, Number> getMaxValuesImage(Map<String, Number> pieData) {
+
+        Map.Entry<String, Number> maxEntry = null;
+
+        for (Map.Entry<String, Number> entry : pieData.entrySet()) {
+            if (maxEntry == null || ((Double) entry.getValue() > (Double) maxEntry.getValue())) {
+                maxEntry = entry;
+            }
+        }
+        return maxEntry;
+    }
+
+    public Long getIdPatologia(String name) {
+
+        for (TblPatologia patologia : this.patologias) {
+            if (patologia.getDescripcionPatologia().trim().equals(name.trim())) {
+                return patologia.getIdPatologia();
+            }
+        }
+        return null;
     }
 
     public void analizeImage(ActionEvent actionEvent) {

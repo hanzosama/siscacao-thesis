@@ -19,7 +19,7 @@
                 <h:form id="menu_solicitud">
                     <p:menubar>  
                         <p:submenu label="Solicitud" icon="ui-icon-document">
-                            <p:menuitem  value="Guardar" icon="ui-icon-disk" actionListener="#{solicitudBean.guardarDiagnostico}" update="@([id$=msModule])"/>
+                            <p:menuitem  value="Guardar" icon="ui-icon-disk" actionListener="#{solicitudBean.guardarDiagnostico}" update=":msModule, @([id$=barChartFinalResult])"/>
                             <p:separator/>
                             <p:menuitem  value="Generar Diagnostico" icon="ui-icon-script" oncomplete="dialogDiagnostico.show()"/>
                         </p:submenu> 
@@ -27,7 +27,7 @@
                 </h:form>
                 <p:messages id="msModule" showDetail="true" autoUpdate="true" closable="true"/>
                 <p:tabView>
-                    
+
                     <p:tab title="Análisis de imágenes">
                         <h:form id="view_image">
                             <p:panelGrid id="dashboard" >
@@ -121,30 +121,30 @@
                             </p:panelGrid> 
                         </h:form>  
                     </p:tab>
-                    <p:tab title="Generar Diagnostico" disabled="true">
+                    <p:tab title="Generar Respuesta" disabled="#{solicitudBean.isSaving}">
                         <h:form id="enviar_diagnostico">
-                            <p:panel  widgetVar="dialogDiagnostico" id="dlgDiagnostico">              
-                                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
-                                    <h:outputText value="Mensaje:" />  
-                                    <p:inputTextarea value="#{solicitudBean.message}" rendered="true" requiredMessage="Es necesario registrar el mensaje a enviar"/> 
-                                    <f:facet name="footer">   
-                                        <p:commandButton id="btnDiagAccept" update=":msgs" oncomplete="dialogDiagnostico.hide()" actionListener="#{solicitudBean.enviarDiagnostico}"  value="Enviar" icon="ui-icon-mail-closed" />  
-                                        <p:commandButton id="btnDiagCancel" oncomplete="dialogDiagnostico.hide()"  title="#{msg.cancel}" value="#{msg.cancel}" icon="ui-icon-closethick"/>  
-                                    </f:facet>
-                                </h:panelGrid> 
-                            </p:panel>
+                            <p:barChart id="barChartFinalResult" value="#{solicitudBean.cartesianChartModel}" legendPosition="ne"  />
+                            <br/>
+                            <p:editor id="editor" widgetVar="editorWidget" value="#{solicitudBean.message}" width="800" />
+                            <h:panelGrid columns="2" style="margin-top: 10px">
+                                <p:commandButton value="Guardar" update="display" oncomplete="PF('dlg').show()" actionListener="#{solicitudBean.enviarDiagnostico}" icon="ui-icon-disk" />
+                                <p:commandButton value="limpiar" type="button" onclick="PF('editorWidget').clear();" icon="ui-icon-close" />
+                            </h:panelGrid>
+                            <p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
+                                <h:outputText id="display" value="#{solicitudBean.message}" escape="false" />
+                            </p:dialog>
                         </h:form>
                     </p:tab>
                 </p:tabView>     
             </ui:define>
-                    <script type="text/javascript">
-                    function handleSubmitRequest(xhr, status, args) {
-                        if (args.serial != null) {
-                            $('[id="form_result:serialResult"]').text(args.serial);
-                            dialogResult.show();
-                        }
-                    }
-                </script>
+            <script type="text/javascript">
+                                    function handleSubmitRequest(xhr, status, args) {
+                                        if (args.serial != null) {
+                                            $('[id="form_result:serialResult"]').text(args.serial);
+                                            dialogResult.show();
+                                        }
+                                    }
+            </script>
         </ui:composition>
     </body>
 </html>

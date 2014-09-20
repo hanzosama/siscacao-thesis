@@ -45,6 +45,23 @@ public class EstadoDaoImpl implements EstadoDao{
         }
         return estadoModel;
     }
+
+    @Override
+    public TblEstado findEstadoByName(String name) {
+     TblEstado estadoModel = null;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        String sql = "FROM TblEstado WHERE descripcionEstado ='" + name + "'";
+        try {
+            session.beginTransaction();
+            estadoModel = (TblEstado) session.createQuery(sql).uniqueResult();
+            session.beginTransaction().commit();
+        } catch (Exception e) {
+            session.beginTransaction().rollback();
+        }
+        return estadoModel;
+    }
+    
+    
     
     
     
