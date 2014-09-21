@@ -8,6 +8,7 @@ import com.siscacao.model.TblDiagnostico;
 import com.siscacao.model.TblDiagnosticoCaracteristica;
 import com.siscacao.model.TblDiagnosticoImagen;
 import com.siscacao.model.TblPatologia;
+import com.siscacao.model.TblRespuestaSolicitud;
 import com.siscacao.util.HibernateConnectUtil;
 import java.util.List;
 import org.hibernate.Session;
@@ -153,17 +154,84 @@ public class DiagnosticoDaoImpl implements DiagnosticoDao {
 
     @Override
     public List<TblPatologia> getAllPatolgias() {
-      List<TblPatologia> patologias = null;
-      Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        List<TblPatologia> patologias = null;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
         String sql = "FROM TblPatologia";
         try {
             session.beginTransaction();
-           // listUsersModel = (List<TblUsuario>)session.createQuery(sql).list();
-            patologias = (List<TblPatologia>)session.createCriteria(TblPatologia.class).list();
+            // listUsersModel = (List<TblUsuario>)session.createQuery(sql).list();
+            patologias = (List<TblPatologia>) session.createCriteria(TblPatologia.class).list();
             session.beginTransaction().commit();
         } catch (Exception e) {
             session.beginTransaction().rollback();
         }
-      return patologias;  
-    }        
+        return patologias;
+    }
+
+    @Override
+    public boolean updateDiagnosticoGeneral(TblDiagnostico diagnostico) {
+        boolean result;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        try {
+            session.beginTransaction();
+            session.update(diagnostico);
+            session.beginTransaction().commit();
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = false;
+            session.beginTransaction().rollback();
+        }
+        return result;
+
+    }
+
+    @Override
+    public boolean createRespuestaSolicitud(TblRespuestaSolicitud respuestaSolicitud) {
+        boolean result;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        try {
+            session.beginTransaction();
+            session.save(respuestaSolicitud);
+            session.beginTransaction().commit();
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = false;
+            session.beginTransaction().rollback();
+        }
+        return result;
+    }
+
+    @Override
+    public TblRespuestaSolicitud GetRespuestaSolicitudByIdSolicitud(Long id) {
+        TblRespuestaSolicitud respuestaSolicitud = null;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        String sql = "FROM TblRespuestaSolicitud WHERE tblSolicitud.idSolicitud = " + id + "";
+        try {
+            session.beginTransaction();
+            respuestaSolicitud = (TblRespuestaSolicitud) session.createQuery(sql).uniqueResult();
+            session.beginTransaction().commit();
+        } catch (Exception e) {
+            session.beginTransaction().rollback();
+        }
+        return respuestaSolicitud;
+    }
+
+    @Override
+    public boolean updateResRespuestaSolicitud(TblRespuestaSolicitud respuestaSolicitud) {
+        boolean result;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        try {
+            session.beginTransaction();
+            session.update(respuestaSolicitud);
+            session.beginTransaction().commit();
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = false;
+            session.beginTransaction().rollback();
+        }
+        return result;
+    }
 }

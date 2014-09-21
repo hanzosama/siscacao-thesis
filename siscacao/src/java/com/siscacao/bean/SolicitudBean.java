@@ -4,6 +4,8 @@
  */
 package com.siscacao.bean;
 
+import com.siscacao.dao.ContactoDao;
+import com.siscacao.dao.ContactoDaoImpl;
 import com.siscacao.dao.DiagnosticoDao;
 import com.siscacao.dao.DiagnosticoDaoImpl;
 import com.siscacao.dao.EstadoDao;
@@ -16,27 +18,29 @@ import com.siscacao.dao.SintomaDao;
 import com.siscacao.dao.SintomaDaoImpl;
 import com.siscacao.dao.SolicitudDao;
 import com.siscacao.dao.SolicitudDaoImpl;
+import com.siscacao.model.TblContacto;
 import com.siscacao.model.TblDiagnostico;
 import com.siscacao.model.TblDiagnosticoCaracteristica;
 import com.siscacao.model.TblDiagnosticoImagen;
-import com.siscacao.model.TblEstado;
 import com.siscacao.model.TblImagen;
 import com.siscacao.model.TblPatologia;
 import com.siscacao.model.TblPushDevice;
+import com.siscacao.model.TblRespuestaSolicitud;
 import com.siscacao.model.TblSintoma;
 import com.siscacao.model.TblSolicitud;
 import com.siscacao.util.ImageNetIA;
+import com.siscacao.util.SendMailSSL;
 import com.siscacao.util.SymptomIA;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -47,9 +51,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import org.apache.catalina.tribes.util.Arrays;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.neuroph.core.learning.DataSet;
@@ -98,16 +99,28 @@ public class SolicitudBean implements Serializable {
     private TblImagen cropImage;
     private TblDiagnosticoCaracteristica tblDiagnosticoCaracteristicaByGeneralDiagnotico;
     private boolean isSaving;
+    private boolean isSavingResponse;
     private List<TblPatologia> patologias;
+    private Long selectedPatologia;
     private EstadoDao estadoDao;
+    private TblRespuestaSolicitud respuestaSolicitud;
+    private TblPushDevice userPushDevice;
+    private ContactoDao contactoDao;
+    private TblContacto usuarioEmail;
+    private SendMailSSL sendMailSSL;
+    private String telefonoFijo;
+    private String telefonoMovil;
+
     public SolicitudBean() {
         solicitudDao = new SolicitudDaoImpl();
         pushServiceBean = new PushServiceBean();
         estadoDao = new EstadoDaoImpl();
         pushDao = new PushDaoImpl();
+        contactoDao = new ContactoDaoImpl();
         this.pieResultImage = new PieChartModel();
         this.pieResultSymptom = new PieChartModel();
         cartesianChartModel = new CartesianChartModel();
+        this.sendMailSSL = new SendMailSSL();
         ChartSeries image = new ChartSeries();
         image.setLabel("Imagen");
         image.set("Monilia", 0);
@@ -243,6 +256,69 @@ public class SolicitudBean implements Serializable {
         this.selectedImagenes = selectedImagenes;
     }
 
+    public List<TblPatologia> getPatologias() {
+        return patologias;
+    }
+
+    public void setPatologias(List<TblPatologia> patologias) {
+        this.patologias = patologias;
+    }
+
+    public Long getSelectedPatologia() {
+        return selectedPatologia;
+    }
+
+    public void setSelectedPatologia(Long selectedPatologia) {
+        this.selectedPatologia = selectedPatologia;
+    }
+
+    public boolean isIsSavingResponse() {
+        return isSavingResponse;
+    }
+
+    public String getTelefonoFijo() {
+        return telefonoFijo;
+    }
+
+    public String getTelefonoMovil() {
+        return telefonoMovil;
+    }
+
+    public void setTelefonoFijo(String telefonoFijo) {
+        this.telefonoFijo = telefonoFijo;
+    }
+
+    public void setTelefonoMovil(String telefonoMovil) {
+        this.telefonoMovil = telefonoMovil;
+    }
+    
+
+    public boolean isIsSavingResponseAndHaveMedia() {
+        if (!isSavingResponse) {
+            List<TblContacto> usuarioContactos = this.contactoDao.findAllContactosByClientId(this.selectedSolicitud.getTblSolicitante().getIdSolicitante());
+            usuarioEmail = null;
+            if (usuarioContactos != null) {
+                for (TblContacto contacto : usuarioContactos) {
+                    if (contacto.getTblTipoContacto().getNombreTipo().equals("EM")) {
+                        this.usuarioEmail = contacto;
+                    }
+                    if (contacto.getTblTipoContacto().getNombreTipo().equals("TF")) {
+                        this.telefonoFijo = contacto.getContacto();
+                    }
+                    if (contacto.getTblTipoContacto().getNombreTipo().equals("TM")) {
+                        this.telefonoMovil = contacto.getContacto();
+                    }
+                }
+            }
+            /* if (userPushDevice != null || usuarioEmail != null) {
+             return false;
+             }
+             */
+            return false;
+        }
+        return true;
+    }
+
     public String getPathImage() {
         if (selectedImagen == null) {
             pathImage = "gfx/Imagen-animada-Lupa-10.png";
@@ -280,13 +356,6 @@ public class SolicitudBean implements Serializable {
 
     }
 
-    public void enviarDiagnostico(ActionEvent actionEvent) {
-        TblPushDevice userPushDevice = pushDao.findPushByIdentification(this.selectedSolicitud.getTblSolicitante().getNumeroDocumento());
-        if (userPushDevice != null) {
-            pushServiceBean.doPushNotification(this.message, userPushDevice.getDeviceId());
-        }
-    }
-
     public String detalleSolicitud() {
         this.selectedSintomas = null;
         this.selectedImagen = null;
@@ -316,21 +385,55 @@ public class SolicitudBean implements Serializable {
         symptom.set("Sanas", 0);
         cartesianChartModel.addSeries(image);
         cartesianChartModel.addSeries(symptom);
-        
+
         this.pieResultSymptom.set("", null);
         this.tblDiagnosticoById = null;
         this.tblDiagnosticoImagenByGeneralDiagnotico = null;
         this.tblDiagnosticoCaracteristicaByGeneralDiagnotico = null;
+        this.respuestaSolicitud = null;
+        this.selectedPatologia = null;
         this.cropImage = null;
 
         this.newImageName = null;
         this.newImageNameForSave = null;
         this.newImageNameWithoutPath = null;
-        this.isSaving = false;
+        this.isSaving = true;
+        this.isSavingResponse = true;
         this.patologias = null;
+        this.userPushDevice = null;
+        this.usuarioEmail = null;
+        this.telefonoFijo = "";
+        this.telefonoMovil = "";
+
+        this.message = "<div style=\"font-weight: normal;\"><span style=\"background-color: rgb(255, 255, 255); font-family: Arial;\"><span style=\"font-weight: bold;\">Estimado/a :&nbsp;</span><span style=\"font-weight: bold; font-size: 10pt;\">$NOMBRE_SOLICITANTE</span></span></div><div style=\"font-weight: normal;\"><span style=\"background-color: rgb(255, 255, 255); font-family: Arial;\"><span style=\"font-weight: bold; font-size: 10pt;\"><br></span></span></div><div style=\"font-weight: normal;\"><span style=\"background-color: rgb(255, 255, 255); font-family: Arial;\"><span style=\"font-weight: bold; font-size: 10pt;\">Resultados:</span></span></div><div style=\"font-weight: normal;\"><span style=\"background-color: rgb(255, 255, 255); font-family: Arial;\"><span style=\"font-weight: bold; font-size: 10pt;\"><br></span></span></div><div style=\"font-weight: normal;\"><span style=\"font-family: Arial;\"><span style=\"font-weight: bold;\">La enfermedad relacionada con su cultivo es</span>&nbsp;:&nbsp;<span style=\"font-weight: bold;\">$PATOLOGIA</span></span></div><div><span style=\"font-family: Arial;\"><span style=\"font-weight: bold;\"><br></span></span></div><div style=\"font-weight: normal;\"><span style=\"background-color: rgb(255, 255, 255); font-family: Arial;\"><span style=\"font-weight: bold; font-size: 10pt;\"><br></span></span></div><div style=\"font-weight: normal;\"><span style=\"background-color: rgb(255, 255, 255); font-family: Arial;\"><span style=\"font-weight: bold; font-size: 10pt;\">Observaciones:</span></span></div><div style=\"font-weight: normal;\"><span style=\"font-weight: bold; font-family: Arial;\"><br></span></div><div><span style=\"font-family: Arial; font-weight: bold;\"><br></span></div><div><span style=\"font-family: Arial; font-weight: bold;\">Este mensaje ha sido generado por siscacao.com , para consultar mas detalles sobre sus resultados, no olvide visitar nuestro sitio web.<br></span><span style=\"font-weight: normal; font-family: Arial;\"><span style=\"font-weight: bold;\">&nbsp; </span></span><div style=\"font-weight: normal; font-family: Arial, Verdana;\"><br></div></div>";
 
         //load data from data base
+        
+         List<TblContacto> usuarioContactos = this.contactoDao.findAllContactosByClientId(this.selectedSolicitud.getTblSolicitante().getIdSolicitante());
+            if (usuarioContactos != null) {
+                for (TblContacto contacto : usuarioContactos) {
+                    if (contacto.getTblTipoContacto().getNombreTipo().equals("EM")) {
+                        this.usuarioEmail = contacto;
+                    }
+                    if (contacto.getTblTipoContacto().getNombreTipo().equals("TF")) {
+                        this.telefonoFijo = contacto.getContacto();
+                    }
+                    if (contacto.getTblTipoContacto().getNombreTipo().equals("TM")) {
+                        this.telefonoMovil = contacto.getContacto();
+                    }
+                }
+            }
+            
+        userPushDevice = pushDao.findPushByIdentification(this.selectedSolicitud.getTblSolicitante().getNumeroDocumento());
+
         tblDiagnosticoById = diagnosticoDao.getTblDiagnosticoById(this.selectedSolicitud.getIdDiagnostico());
+        respuestaSolicitud = diagnosticoDao.GetRespuestaSolicitudByIdSolicitud(this.selectedSolicitud.getIdSolicitud());
+        if (respuestaSolicitud != null) {
+            this.selectedPatologia = this.tblDiagnosticoById.getIdPatologia();
+            this.message = this.tblDiagnosticoById.getDescripcionDiagnostico();
+            this.isSavingResponse = false;
+        }
+
         tblDiagnosticoImagenByGeneralDiagnotico = diagnosticoDao.getTblDiagnosticoImagenByGeneralDiagnotico(tblDiagnosticoById);
         if (tblDiagnosticoImagenByGeneralDiagnotico != null) {
             logger.info("Diagnostico image  saved.." + tblDiagnosticoImagenByGeneralDiagnotico.getIdImagen());
@@ -344,11 +447,11 @@ public class SolicitudBean implements Serializable {
             }
             this.pieResultImage.setData(map);
             for (Map.Entry<String, Number> entry : this.pieResultImage.getData().entrySet()) {
-                    Double parcentage = ((Double) entry.getValue()) * 100;
-                    image.set(entry.getKey().trim(), parcentage);
-                }
+                Double parcentage = ((Double) entry.getValue()) * 100;
+                image.set(entry.getKey().trim(), parcentage);
+            }
             cropImage = imagenDao.getImageById(tblDiagnosticoImagenByGeneralDiagnotico.getIdImagen());
-            this.isSaving = true;
+            this.isSaving = false;
             this.newImageName = "user/" + this.selectedSolicitud.getTblSolicitante().getNombreSolicitante().trim().toLowerCase().replace(" ", "") + this.selectedSolicitud.getTblSolicitante().getNumeroDocumento() + File.separator + cropImage.getNombreImagen();
         }
         //load data for Symp
@@ -364,10 +467,10 @@ public class SolicitudBean implements Serializable {
                 logger.error(ex);
             }
             this.pieResultSymptom.setData(map);
-             for (Map.Entry<String, Number> entry : this.pieResultSymptom.getData().entrySet()) {
-                    Double parcentage = ((Double) entry.getValue()) * 100;
-                    symptom.set(entry.getKey().trim(), parcentage);
-                }
+            for (Map.Entry<String, Number> entry : this.pieResultSymptom.getData().entrySet()) {
+                Double parcentage = ((Double) entry.getValue()) * 100;
+                symptom.set(entry.getKey().trim(), parcentage);
+            }
             this.selectedSintomas = tblDiagnosticoCaracteristicaByGeneralDiagnotico.getMapSintoma().replace("{", "").replace("}", "").split(",");
             for (int i = 0; i < this.selectedSintomas.length; i++) {
                 this.selectedSintomas[i] = this.selectedSintomas[i].trim();
@@ -658,5 +761,86 @@ public class SolicitudBean implements Serializable {
             logger.warn("Sleep for analize image erro: " + ex);
         }
 
+    }
+
+    public void enviarDiagnostico(ActionEvent actionEvent) {
+        validateMessage();
+        String msg = "";
+        FacesMessage facesMessage;
+        String msgToclient = this.message.replace("$PATOLOGIA", getNamePatologia(this.selectedPatologia)).replace("$NOMBRE_SOLICITANTE", this.selectedSolicitud.getTblSolicitante().getNombreSolicitante());
+        if (userPushDevice != null) {
+            pushServiceBean.doPushNotification(msgToclient, userPushDevice.getDeviceId());
+        }
+        if (usuarioEmail != null) {
+            this.sendMailSSL.sendEmail(this.usuarioEmail.getContacto(), "Resultados de la solicitud: " + this.selectedSolicitud.getSerial() + "", msgToclient);
+        }
+        if (userPushDevice != null || usuarioEmail != null) {
+            msg = " Mensaje de respuesta enviado correctamente al solicitante: " + this.selectedSolicitud.getTblSolicitante().getNombreSolicitante();
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
+        } else {
+            msg = "Este usuario debe ser contactado directamente para dar respuesta al caso";
+            facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, msg, null);
+        }
+
+        FacesContext.getCurrentInstance().addMessage(msg, facesMessage);
+    }
+
+    public void guardarRespuesta(ActionEvent actionEvent) {
+        String msg, detail = null;
+        FacesMessage message;
+        validateMessage();
+        this.tblDiagnosticoById.setDescripcionDiagnostico(this.message);
+        this.tblDiagnosticoById.setIdPatologia(selectedPatologia);
+        this.diagnosticoDao.updateDiagnosticoGeneral(tblDiagnosticoById);
+        if (this.respuestaSolicitud == null) {
+            respuestaSolicitud = new TblRespuestaSolicitud();
+            respuestaSolicitud.setTblDiagnostico(this.tblDiagnosticoById);
+            respuestaSolicitud.setTblSolicitud(selectedSolicitud);
+            respuestaSolicitud.setDescripcionRespuesta(this.message);
+            respuestaSolicitud.setFechaRespuesta(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
+            this.diagnosticoDao.createRespuestaSolicitud(respuestaSolicitud);
+        } else {
+            respuestaSolicitud.setTblDiagnostico(this.tblDiagnosticoById);
+            respuestaSolicitud.setTblSolicitud(selectedSolicitud);
+            respuestaSolicitud.setDescripcionRespuesta(this.message);
+            respuestaSolicitud.setFechaRespuesta(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
+            this.diagnosticoDao.updateResRespuestaSolicitud(respuestaSolicitud);
+        }
+
+        this.selectedSolicitud.setTblEstado(estadoDao.findEstadoByName("CERRADO"));
+        solicitudDao.updateSolicitud(selectedSolicitud);
+
+        msg = "La respuesta de esta solicitud ha sido generada existosamente";
+
+        if (this.userPushDevice == null && this.usuarioEmail == null) {
+            detail = "Este usuario debe ser contactado directamente para dar respuesta al caso";
+        }
+        message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, detail);
+        FacesContext.getCurrentInstance().addMessage(msg, message);
+    }
+
+    private String getNamePatologia(Long id) {
+        for (TblPatologia patologia : this.patologias) {
+            if (patologia.getIdPatologia().equals(id)) {
+                return patologia.getDescripcionPatologia();
+            }
+        }
+        return "$PATOLOGIA";
+    }
+
+    private void validateMessage() {
+        String msg;
+        FacesMessage message;
+        if (!this.message.contains("$PATOLOGIA")) {
+            msg = "La respuesta debe contener el parametro $PATOLOGIA, para hacer referencia al resultado final del analisis";
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
+            FacesContext.getCurrentInstance().addMessage(msg, message);
+        }
+
+        if (!this.message.contains("$NOMBRE_SOLICITANTE")) {
+            msg = "La respuesta debe contener el parametro $NOMBRE_SOLICITANTE, para hacer referencia al usuario que reporto el caso";
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
+            FacesContext.getCurrentInstance().addMessage(msg, message);
+        }
     }
 }

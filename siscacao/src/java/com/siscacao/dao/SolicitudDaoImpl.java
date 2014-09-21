@@ -84,7 +84,7 @@ public class SolicitudDaoImpl implements SolicitudDao {
         String sql = "select * from tbl_solicitud solicitud \n"
                 + "left join tbl_asignacion_solicitud asignacion on asignacion.id_solicitud=solicitud.id_solicitud\n"
                 + "left join tbl_estado estado on estado.id_estado= solicitud.id_estado\n"
-                + "where (solicitud.id_estado=1 or solicitud.id_estado=2 ) and asignacion.id_usuario=" + id_user + "";
+                + "where (solicitud.id_estado=1 or solicitud.id_estado=2 or solicitud.id_estado=3 ) and asignacion.id_usuario=" + id_user + " ORDER BY estado.id_estado DESC";
         try {
             session.beginTransaction();
             listUsersModel = (List<TblSolicitud>) session.createSQLQuery(sql).addEntity("solicitud", TblSolicitud.class).list();
@@ -129,6 +129,7 @@ public class SolicitudDaoImpl implements SolicitudDao {
             session.beginTransaction();
             solicitudModel = (TblSolicitud) session.createQuery(sql).uniqueResult();
             solicitudModel.setTblEstado((TblEstado)(session.createSQLQuery("select * from tbl_estado estado where id_estado=" + solicitudModel.getTblEstado().getIdEstado() + "").addEntity("estado", TblEstado.class).uniqueResult()));
+            solicitudModel.setTblSolicitante((TblSolicitante)(session.createSQLQuery("select * from tbl_solicitante solicitante where id_solicitante=" + solicitudModel.getTblSolicitante().getIdSolicitante() + "").addEntity("soliciante", TblSolicitante.class).uniqueResult()));
             session.beginTransaction().commit();
         } catch (Exception e) {
             session.beginTransaction().rollback();            

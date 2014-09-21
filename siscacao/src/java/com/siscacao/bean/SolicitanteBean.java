@@ -296,7 +296,7 @@ public class SolicitanteBean implements Serializable {
         contactoMovil.setTblTipoContacto(tipoContactoDao.findTipoContactoId("TM"));
         
         TblContacto contactoEmail = new TblContacto();
-        contactoEmail.setContacto(telefonoMovil);
+        contactoEmail.setContacto(email);
         contactoEmail.setTblTipoContacto(tipoContactoDao.findTipoContactoId("EM"));
 
         this.solicitante.setIdDepartamento(this.selectedDepartamento);

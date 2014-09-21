@@ -25,7 +25,7 @@
                         </p:submenu> 
                     </p:menubar>  
                 </h:form>
-                <p:messages id="msModule" showDetail="true" autoUpdate="true" closable="true"/>
+                <p:messages id="msModule" showDetail="true" autoUpdate="false" closable="true"/>
                 <p:tabView>
 
                     <p:tab title="Análisis de imágenes">
@@ -122,28 +122,45 @@
                         </h:form>  
                     </p:tab>
                     <p:tab title="Generar Respuesta" disabled="#{solicitudBean.isSaving}">
-                        <h:form id="enviar_diagnostico">
+                        <h:form id="enviar_diagnostico" >
                             <p:barChart id="barChartFinalResult" value="#{solicitudBean.cartesianChartModel}" legendPosition="ne"  />
                             <br/>
-                            <p:editor id="editor" widgetVar="editorWidget" value="#{solicitudBean.message}" width="800" />
+                            <p:messages id="msRespuesta"  showDetail="false" autoUpdate="true"  closable="true"/>
+                            <br/>                            
                             <h:panelGrid columns="2" style="margin-top: 10px">
-                                <p:commandButton value="Guardar" update="display" oncomplete="PF('dlg').show()" actionListener="#{solicitudBean.enviarDiagnostico}" icon="ui-icon-disk" />
-                                <p:commandButton value="limpiar" type="button" onclick="PF('editorWidget').clear();" icon="ui-icon-close" />
+                                <h:outputLabel value="Enfermedad:" />
+                                <p:selectOneMenu id="selectPatology" value="#{solicitudBean.selectedPatologia}" required="true" requiredMessage="Es necesario seleccionar una de las enfermedades para generar una respuesta"  >  
+                                    <f:selectItem itemLabel="Seleccione" itemValue=""  />  
+                                    <f:selectItems value="#{solicitudBean.patologias}" var="patology" itemLabel="#{patology.descripcionPatologia}" itemValue="#{patology.idPatologia}" />
+                                </p:selectOneMenu>
                             </h:panelGrid>
-                            <p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
-                                <h:outputText id="display" value="#{solicitudBean.message}" escape="false" />
-                            </p:dialog>
+                            <br/>  
+                            <h:panelGrid columns="2" style="margin-top: 10px">
+                                <p:editor id="editor" widgetVar="editorWidget" value="#{solicitudBean.message}" width="700"  />
+                                <h:panelGrid columns="2" >
+                                    <p:outputLabel><b>Datos de Contacto:</b></p:outputLabel>       
+                                    <p:outputLabel>#{solicitudBean.selectedSolicitud.tblSolicitante.nombreSolicitante}</p:outputLabel>       
+                                    <p:outputLabel><b>Telefono Fijo:</b></p:outputLabel>       
+                                    <p:outputLabel>#{solicitudBean.telefonoFijo}</p:outputLabel>       
+                                    <p:outputLabel><b>Telefono movil:</b></p:outputLabel>       
+                                    <p:outputLabel>#{solicitudBean.telefonoMovil}</p:outputLabel>       
+                                </h:panelGrid>
+                            </h:panelGrid>  
+                            <h:panelGrid columns="2" style="margin-top: 10px">                         
+                                <p:commandButton value="Guardar" update="@([id$=sendMSG])"  actionListener="#{solicitudBean.guardarRespuesta}" icon="ui-icon-disk"/>
+                                <p:commandButton value="Enviar respuesta"  id="sendMSG" actionListener="#{solicitudBean.enviarDiagnostico}" icon="ui-icon-mail-closed" disabled="#{solicitudBean.isIsSavingResponseAndHaveMedia()}" />
+                            </h:panelGrid>
                         </h:form>
                     </p:tab>
                 </p:tabView>     
             </ui:define>
             <script type="text/javascript">
-                                    function handleSubmitRequest(xhr, status, args) {
-                                        if (args.serial != null) {
-                                            $('[id="form_result:serialResult"]').text(args.serial);
-                                            dialogResult.show();
-                                        }
-                                    }
+                function handleSubmitRequest(xhr, status, args) {
+                    if (args.serial != null) {
+                        $('[id="form_result:serialResult"]').text(args.serial);
+                        dialogResult.show();
+                    }
+                }
             </script>
         </ui:composition>
     </body>

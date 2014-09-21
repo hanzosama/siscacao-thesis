@@ -12,7 +12,7 @@ import java.util.List;
  * @author Hanzo
  */
 public interface ContactoDao {
-    public List<TblContacto> findAllContactosByClientId();
+    public List<TblContacto> findAllContactosByClientId(Long id);
     public boolean createContacto(TblContacto contacto);
     public boolean updateContacto(TblContacto contacto);
 }

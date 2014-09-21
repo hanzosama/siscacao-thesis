@@ -10,6 +10,8 @@ import com.siscacao.dao.CultivoDao;
 import com.siscacao.dao.CultivoDaoImpl;
 import com.siscacao.dao.DepartamentoDao;
 import com.siscacao.dao.DepartamentoDaoImpl;
+import com.siscacao.dao.DiagnosticoDao;
+import com.siscacao.dao.DiagnosticoDaoImpl;
 import com.siscacao.dao.EstadoDao;
 import com.siscacao.dao.EstadoDaoImpl;
 import com.siscacao.dao.EstadoProduccionDao;
@@ -33,10 +35,13 @@ import com.siscacao.model.TblClima;
 import com.siscacao.model.TblContacto;
 import com.siscacao.model.TblCultivo;
 import com.siscacao.model.TblDepartamento;
+import com.siscacao.model.TblDiagnostico;
 import com.siscacao.model.TblEstado;
 import com.siscacao.model.TblEstadoProduccion;
 import com.siscacao.model.TblImagen;
+import com.siscacao.model.TblPatologia;
 import com.siscacao.model.TblPushDevice;
+import com.siscacao.model.TblRespuestaSolicitud;
 import com.siscacao.model.TblSolicitante;
 import com.siscacao.model.TblSolicitud;
 import com.siscacao.model.TblTecnicaCultivo;
@@ -115,6 +120,7 @@ public class SolicitudResource {
     private String serial;
     private EstadoDao estadoDao;
     private PushDao pushDao;
+    private DiagnosticoDao diagnosticoDao;
 
     /**
      * Creates a new instance of UsuarioResource
@@ -134,6 +140,7 @@ public class SolicitudResource {
         this.imagenDao = new ImagenDaoImpl();
         this.estadoDao = new EstadoDaoImpl();
         this.pushDao = new PushDaoImpl();
+        this.diagnosticoDao = new DiagnosticoDaoImpl();
 
         this.listDepartamentos = new ArrayList<TblDepartamento>(departamentoDao.findAllDepartamento());
         this.listTblTipoDocumentos = new ArrayList<TblTipoDocumento>(tipoDocumentoDao.findAllTypeDocument());
@@ -156,6 +163,8 @@ public class SolicitudResource {
     @Produces("application/json")
     public SolicitudJson getSolicitud(final SolicitudJson solicitudJson) {
         String result = "-1";
+        String namePatologia = "PENDIENTE";
+        String recomendaciones = "PENDIENTE";
         SolicitudJson returnSolicitudJson = new SolicitudJson();
         this.solicitante = new TblSolicitante();
         this.solicitud = new TblSolicitud();
@@ -163,11 +172,19 @@ public class SolicitudResource {
             this.solicitud.setSerial(solicitudJson.numeroSolicitud);
             this.solicitud = solicitudDao.findSolicitudBySerial(solicitud);
             if (this.solicitud != null && !this.solicitud.getIdSolicitud().toString().isEmpty()) {
-                solicitudJson.nombreSolicitante=this.solicitud.getTblSolicitante().getNombreSolicitante();
-                solicitudJson.estado= this.solicitud.getTblEstado().getDescripcionEstado();
-                solicitudJson.numeroDocumento=this.solicitud.getTblSolicitante().getNumeroDocumento();
-                solicitudJson.diagnostico="PENDIENTE";
-                solicitudJson.recomendaciones="PENDIENTE";
+                solicitudJson.nombreSolicitante = this.solicitud.getTblSolicitante().getNombreSolicitante().trim();
+                solicitudJson.estado = this.solicitud.getTblEstado().getDescripcionEstado();
+                solicitudJson.numeroDocumento = this.solicitud.getTblSolicitante().getNumeroDocumento();
+                TblDiagnostico tblDiagnosticoById = this.diagnosticoDao.getTblDiagnosticoById(this.solicitud.getIdDiagnostico());
+                TblRespuestaSolicitud GetRespuestaSolicitudByIdSolicitud = this.diagnosticoDao.GetRespuestaSolicitudByIdSolicitud(this.solicitud.getIdSolicitud());
+                if (tblDiagnosticoById != null) {
+                    namePatologia = getNamePatologia(tblDiagnosticoById.getIdPatologia());
+                }
+                if (GetRespuestaSolicitudByIdSolicitud != null) {
+                    recomendaciones = GetRespuestaSolicitudByIdSolicitud.getDescripcionRespuesta();
+                }
+                solicitudJson.diagnostico = namePatologia;
+                solicitudJson.recomendaciones = recomendaciones;
                 return solicitudJson;
             }
         } else if (!solicitudJson.numeroDocumento.isEmpty()) {
@@ -177,11 +194,21 @@ public class SolicitudResource {
                 this.solicitud = solicitudDao.findSolicitudByIdSolicitante(solicitante);
             }
             if (this.solicitud != null && solicitud.getIdSolicitud() != null && !this.solicitud.getIdSolicitud().toString().isEmpty()) {
-                solicitudJson.nombreSolicitante=this.solicitud.getTblSolicitante().getNombreSolicitante();
-                solicitudJson.estado= this.solicitud.getTblEstado().getDescripcionEstado();
-                solicitudJson.numeroDocumento=this.solicitud.getTblSolicitante().getNumeroDocumento();
-                solicitudJson.diagnostico="PENDIENTE";
-                solicitudJson.recomendaciones="PENDIENTE";
+                solicitudJson.nombreSolicitante = this.solicitud.getTblSolicitante().getNombreSolicitante().trim();
+                solicitudJson.estado = this.solicitud.getTblEstado().getDescripcionEstado();
+                solicitudJson.numeroDocumento = this.solicitud.getTblSolicitante().getNumeroDocumento();
+                solicitudJson.numeroSolicitud = this.solicitud.getSerial();
+
+                TblDiagnostico tblDiagnosticoById = this.diagnosticoDao.getTblDiagnosticoById(this.solicitud.getIdDiagnostico());
+                TblRespuestaSolicitud GetRespuestaSolicitudByIdSolicitud = this.diagnosticoDao.GetRespuestaSolicitudByIdSolicitud(this.solicitud.getIdSolicitud());
+                if (tblDiagnosticoById != null) {
+                    namePatologia = getNamePatologia(tblDiagnosticoById.getIdPatologia());
+                }
+                if (GetRespuestaSolicitudByIdSolicitud != null) {
+                    recomendaciones = GetRespuestaSolicitudByIdSolicitud.getDescripcionRespuesta();
+                }
+                solicitudJson.diagnostico = namePatologia;
+                solicitudJson.recomendaciones = recomendaciones;
                 return solicitudJson;
             }
         }
@@ -194,12 +221,12 @@ public class SolicitudResource {
     @Produces("application/json")
     public SolicitudJson resgistrarSolicitud(final SolicitudMovil solicitudMovil) {
         String result = "1";
-        System.out.println(" Datos" +solicitudMovil.toString());
-        
+        System.out.println(" Datos" + solicitudMovil.toString());
+
         this.solicitante = new TblSolicitante();
         this.solicitante.setNombreSolicitante(solicitudMovil.nombreSolicitante);
         this.solicitante.setNumeroDocumento(solicitudMovil.numeroDocumento);
-        
+
         TblContacto contactoFijo = new TblContacto();
         contactoFijo.setContacto(solicitudMovil.telefonoFijo);
         contactoFijo.setTblTipoContacto(tipoContactoDao.findTipoContactoId("TF"));
@@ -233,19 +260,18 @@ public class SolicitudResource {
         saveImage(solicitudMovil);
         createSolicitud(solicitudMovil);
         createImagesSolicitud();
-        
+
         SolicitudJson solicitudJson = new SolicitudJson();
-        solicitudJson.nombreSolicitante=solicitudMovil.nombreSolicitante;
-        solicitudJson.numeroDocumento=solicitudMovil.numeroDocumento;
-        solicitudJson.numeroSolicitud=serial;
-        solicitudJson.estado=this.estadoDao.findEstadoById(Long.valueOf(1)).getDescripcionEstado();
-        solicitudJson.recomendaciones="PENDIENTE";
-        solicitudJson.diagnostico="PENDIENTE";
+        solicitudJson.nombreSolicitante = solicitudMovil.nombreSolicitante;
+        solicitudJson.numeroDocumento = solicitudMovil.numeroDocumento;
+        solicitudJson.numeroSolicitud = serial;
+        solicitudJson.estado = this.estadoDao.findEstadoById(Long.valueOf(1)).getDescripcionEstado();
+        solicitudJson.recomendaciones = "PENDIENTE";
+        solicitudJson.diagnostico = "PENDIENTE";
         System.out.println(solicitudJson.estado);
         return solicitudJson;
     }
-    
-    
+
     /**
      * Retrieves representation of an instance of
      * com.siscacao.services.UsuarioResource
@@ -258,21 +284,21 @@ public class SolicitudResource {
     @Produces("text/xml")
     public String savePushDevice(final pushJson pusJson) {
         String result = "-1";
-        System.out.println("RegisterDeviceID on server.."); 
-        if( pusJson.numeroDocumento!=null && !pusJson.equals("") && pusJson.pushDeviceId!=null && !pusJson.pushDeviceId.equals("")){
+        System.out.println("RegisterDeviceID on server..");
+        if (pusJson.numeroDocumento != null && !pusJson.equals("") && pusJson.pushDeviceId != null && !pusJson.pushDeviceId.equals("")) {
             TblPushDevice pushDevice = pushDao.findPushByIdentification(pusJson.numeroDocumento);
-            if(pushDevice!=null){
-            pushDao.updateRol(pushDevice);
-            }else{
-            pushDevice = new TblPushDevice();
-            pushDevice.setNumeroDocumento(pusJson.numeroDocumento);
-            pushDevice.setDeviceId(pusJson.pushDeviceId);            
-            pushDao.createPushDevice(pushDevice);
+            if (pushDevice != null) {
+                pushDao.updateRol(pushDevice);
+            } else {
+                pushDevice = new TblPushDevice();
+                pushDevice.setNumeroDocumento(pusJson.numeroDocumento);
+                pushDevice.setDeviceId(pusJson.pushDeviceId);
+                pushDao.createPushDevice(pushDevice);
             }
-            result="1";
-            System.out.println("RegisterDeviceID successfully"); 
-        }       
-        return result;               
+            result = "1";
+            System.out.println("RegisterDeviceID successfully");
+        }
+        return result;
     }
 
     private void saveCultivoSolicitante(final SolicitudMovil solicitudMovil) {
@@ -348,9 +374,8 @@ public class SolicitudResource {
         this.tblSolicitud.setSerial(serial);
         solicitudDao.updateSolicitud(tblSolicitud);
     }
-    
-    
-      public void createImagesSolicitud() {
+
+    public void createImagesSolicitud() {
         if (!folderName.equals("") && folderName != null) {
             File f = new File(context.getRealPath("resources/" + "/user/" + folderName));
             if (f.exists()) {
@@ -369,5 +394,15 @@ public class SolicitudResource {
                 System.out.println("No existe ese directorio");
             }
         }
+    }
+
+    private String getNamePatologia(Long id) {
+        List<TblPatologia> allPatolgias = this.diagnosticoDao.getAllPatolgias();
+        for (TblPatologia patologia : allPatolgias) {
+            if (patologia.getIdPatologia().equals(id)) {
+                return patologia.getDescripcionPatologia();
+            }
+        }
+        return "PENDIENTE";
     }
 }

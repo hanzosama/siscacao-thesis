@@ -11,8 +11,8 @@
         <property name="nombreDiagnostico" type="string">
             <column name="nombre_diagnostico" length="6" />
         </property>
-        <property name="descripcionDiagnostico" type="string">
-            <column name="descripcion_diagnostico" length="512" />
+        <property name="descripcionDiagnostico" type="text">
+            <column name="descripcion_diagnostico" />
         </property>
         <set name="tblRespuestaSolicituds" inverse="true">
             <key>

@@ -284,7 +284,8 @@ ALTER SEQUENCE tbl_detalle_usuario_id_detalle_usuario_seq OWNED BY tbl_detalle_u
 CREATE TABLE tbl_diagnostico (
     id_diagnostico integer NOT NULL,
     nombre_diagnostico character varying(6),
-    descripcion_diagnostico character varying(512)
+    descripcion_diagnostico text,
+    id_patologia integer
 );
 
 
@@ -297,7 +298,11 @@ ALTER TABLE public.tbl_diagnostico OWNER TO postgres;
 CREATE TABLE tbl_diagnostico_caracteristica (
     id_diagnostico_caracteristica integer NOT NULL,
     id_diagnostico integer,
-    id_diagnostico_relacionado integer
+    id_diagnostico_relacionado integer,
+    map_pie character varying(500),
+    map_sintoma character varying(500),
+    id_patologia integer,
+    max_value double precision
 );
 
 
@@ -352,7 +357,11 @@ ALTER SEQUENCE tbl_diagnostico_id_diagnostico_seq OWNED BY tbl_diagnostico.id_di
 CREATE TABLE tbl_diagnostico_imagen (
     id_diagnostico_imagen integer NOT NULL,
     id_diagnostico integer,
-    id_diagnostico_relacionado integer
+    id_diagnostico_relacionado integer,
+    id_imagen integer,
+    map_pie character varying(500),
+    id_patologia integer,
+    max_value double precision
 );
 
 
@@ -648,6 +657,40 @@ ALTER SEQUENCE tbl_patologia_id_patologia_seq OWNED BY tbl_patologia.id_patologi
 
 
 --
+-- Name: tbl_push_device; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tbl_push_device (
+    numero_documento character varying(40),
+    device_id character varying(600),
+    push_device_id integer NOT NULL
+);
+
+
+ALTER TABLE public.tbl_push_device OWNER TO postgres;
+
+--
+-- Name: tbl_push_device_push_device_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE tbl_push_device_push_device_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tbl_push_device_push_device_id_seq OWNER TO postgres;
+
+--
+-- Name: tbl_push_device_push_device_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE tbl_push_device_push_device_id_seq OWNED BY tbl_push_device.push_device_id;
+
+
+--
 -- Name: tbl_respuesta_solicitud; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -655,9 +698,8 @@ CREATE TABLE tbl_respuesta_solicitud (
     id_respuesta_solicitud integer NOT NULL,
     id_solicitud integer,
     id_diagnostico integer,
-    descripcion_respuesta character varying(512),
-    fecha_respuesta time without time zone,
-    fecha_solicitud time without time zone
+    descripcion_respuesta text,
+    fecha_respuesta time without time zone
 );
 
 
@@ -832,13 +874,13 @@ CREATE TABLE tbl_solicitud (
     id_solicitante integer,
     id_vereda integer,
     id_tipo_solicitud integer,
-    id_patologia integer,
     fecha_solicitud time without time zone NOT NULL,
     id_etapa integer,
     id_fase integer,
     id_estado integer,
     serial character varying(100),
-    descripcion character varying(600)
+    descripcion character varying(600),
+    id_diagnostico integer
 );
 
 
@@ -1264,6 +1306,13 @@ ALTER TABLE ONLY tbl_patologia ALTER COLUMN id_patologia SET DEFAULT nextval('tb
 
 
 --
+-- Name: push_device_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY tbl_push_device ALTER COLUMN push_device_id SET DEFAULT nextval('tbl_push_device_push_device_id_seq'::regclass);
+
+
+--
 -- Name: id_respuesta_solicitud; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1366,8 +1415,6 @@ ALTER TABLE ONLY tbl_vereda ALTER COLUMN id_vereda SET DEFAULT nextval('tbl_vere
 --
 
 COPY tbl_asignacion_solicitud (id_asignacion_solicitud, id_usuario, id_solicitud) FROM stdin;
-58	99	76
-59	96	77
 \.
 
 
@@ -1375,7 +1422,7 @@ COPY tbl_asignacion_solicitud (id_asignacion_solicitud, id_usuario, id_solicitud
 -- Name: tbl_asignacion_solicitud_id_asignacion_solicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_asignacion_solicitud_id_asignacion_solicitud_seq', 59, true);
+SELECT pg_catalog.setval('tbl_asignacion_solicitud_id_asignacion_solicitud_seq', 108, true);
 
 
 --
@@ -2546,10 +2593,6 @@ SELECT pg_catalog.setval('tbl_clima_id_clima_seq', 10, true);
 --
 
 COPY tbl_contacto (id_contacto, id_solicitante, contacto, id_tipo_contacto) FROM stdin;
-269	203	(121) 212-2212	2
-270	203	121212	1
-271	204	320234759	2
-272	204	3754534	1
 \.
 
 
@@ -2557,7 +2600,7 @@ COPY tbl_contacto (id_contacto, id_solicitante, contacto, id_tipo_contacto) FROM
 -- Name: tbl_contacto_id_contacto_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_contacto_id_contacto_seq', 272, true);
+SELECT pg_catalog.setval('tbl_contacto_id_contacto_seq', 374, true);
 
 
 --
@@ -2603,6 +2646,54 @@ COPY tbl_cultivo (id_cultivo, nombre_cultivo, extension_cultivo, id_variedad, id
 100	gffvg	8886	1	2	1	\N	\N
 101	cultivo	12121	1	3	1	1	1212
 102	la sabana	\N	1	1	1	\N	\N
+103	el rosak	450	1	2	1	\N	\N
+104	el rosal	235	1	4	1	\N	\N
+105	bdbvvd	956665	1	3	1	\N	\N
+106	hdbvvd	949885	1	4	1	\N	\N
+107	bdbvvd	98885	1	3	1	\N	\N
+108	bdvvvr	29992	1	3	1	\N	\N
+109	hxbbvd	5085	1	3	1	\N	\N
+110	xxvvg	88666	1	2	1	\N	\N
+111	fjcg	5896	1	3	1	\N	\N
+112	dhcvh	95885	1	3	1	\N	\N
+113	dhfg	855	1	2	1	\N	\N
+114	gdgf	55888	1	4	1	\N	\N
+115	csgg	588	1	2	1	\N	\N
+116	bfvg	8566	1	3	1	\N	\N
+117	cdhc	8888	1	2	1	\N	\N
+118	gfhg	9888	1	3	1	\N	\N
+119	el lago	254	1	4	1	\N	\N
+120	la promesa	45	1	3	1	\N	\N
+121	 vvccccf	988888	1	3	1	\N	\N
+122	gfff	8888	1	2	1	\N	\N
+123	el polo	2553	1	3	1	\N	\N
+124	asda	1232	1	4	1	1	12
+125	1231	12312	1	2	1	1	23123
+126	1212121	1212	1	2	1	1	1212
+127	12312	1312312	1	3	1	1	12312
+128	1212	121	1	2	1	1	12121
+129	123	1231	1	2	1	1	12312
+130	1212	1212	1	2	1	1	1212
+131	12312	12312	1	3	1	1	123123
+132	1212	121212	1	3	1	1	1212
+133	132	23	1	1	1	1	1212
+134	2312	12312	1	2	1	1	21312
+135	21313	123123	1	3	1	1	123123
+136	1231	23123	1	3	1	1	2313
+137	213123	123123	1	2	1	1	213123
+138	12312	12312	1	1	1	1	1231231
+139	la sabana	\N	1	1	1	\N	\N
+140	sdasd	asdsad	1	3	1	1	asdas
+141	Cacao1		\N	0	\N	\N	
+142	el paraiso	5000	1	4	1	\N	\N
+143	el paraiso	526	1	3	1	\N	\N
+144	asdasdsa	sadad	\N	0	\N	\N	
+145	asd	asdas	\N	0	\N	\N	
+146	wewe	wewewe	\N	0	\N	\N	
+147	asdasd		\N	0	\N	\N	
+148	hhgfgg	89886	1	2	1	\N	\N
+149	hdbbvx	899995	1	2	1	\N	\N
+150	nsnshd	7172	1	3	1	\N	\N
 \.
 
 
@@ -2610,7 +2701,7 @@ COPY tbl_cultivo (id_cultivo, nombre_cultivo, extension_cultivo, id_variedad, id
 -- Name: tbl_cultivo_id_cultivo_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_cultivo_id_cultivo_seq', 102, true);
+SELECT pg_catalog.setval('tbl_cultivo_id_cultivo_seq', 150, true);
 
 
 --
@@ -2680,7 +2771,7 @@ SELECT pg_catalog.setval('tbl_detalle_usuario_id_detalle_usuario_seq', 1, false)
 -- Data for Name: tbl_diagnostico; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY tbl_diagnostico (id_diagnostico, nombre_diagnostico, descripcion_diagnostico) FROM stdin;
+COPY tbl_diagnostico (id_diagnostico, nombre_diagnostico, descripcion_diagnostico, id_patologia) FROM stdin;
 \.
 
 
@@ -2688,14 +2779,14 @@ COPY tbl_diagnostico (id_diagnostico, nombre_diagnostico, descripcion_diagnostic
 -- Name: tbl_diagnostico_caracteristic_id_diagnostico_caracteristica_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_diagnostico_caracteristic_id_diagnostico_caracteristica_seq', 1, false);
+SELECT pg_catalog.setval('tbl_diagnostico_caracteristic_id_diagnostico_caracteristica_seq', 12, true);
 
 
 --
 -- Data for Name: tbl_diagnostico_caracteristica; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY tbl_diagnostico_caracteristica (id_diagnostico_caracteristica, id_diagnostico, id_diagnostico_relacionado) FROM stdin;
+COPY tbl_diagnostico_caracteristica (id_diagnostico_caracteristica, id_diagnostico, id_diagnostico_relacionado, map_pie, map_sintoma, id_patologia, max_value) FROM stdin;
 \.
 
 
@@ -2703,14 +2794,14 @@ COPY tbl_diagnostico_caracteristica (id_diagnostico_caracteristica, id_diagnosti
 -- Name: tbl_diagnostico_id_diagnostico_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_diagnostico_id_diagnostico_seq', 1, false);
+SELECT pg_catalog.setval('tbl_diagnostico_id_diagnostico_seq', 17, true);
 
 
 --
 -- Data for Name: tbl_diagnostico_imagen; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY tbl_diagnostico_imagen (id_diagnostico_imagen, id_diagnostico, id_diagnostico_relacionado) FROM stdin;
+COPY tbl_diagnostico_imagen (id_diagnostico_imagen, id_diagnostico, id_diagnostico_relacionado, id_imagen, map_pie, id_patologia, max_value) FROM stdin;
 \.
 
 
@@ -2718,7 +2809,7 @@ COPY tbl_diagnostico_imagen (id_diagnostico_imagen, id_diagnostico, id_diagnosti
 -- Name: tbl_diagnostico_imagen_id_diagnostico_imagen_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_diagnostico_imagen_id_diagnostico_imagen_seq', 1, false);
+SELECT pg_catalog.setval('tbl_diagnostico_imagen_id_diagnostico_imagen_seq', 16, true);
 
 
 --
@@ -2809,10 +2900,6 @@ COPY tbl_funcion_rol (id_funcion_rol, id_rol, id_funcion) FROM stdin;
 3253	123	3
 3254	118	2
 3255	118	1
-3256	124	1
-3257	124	2
-3258	124	3
-3259	124	4
 \.
 
 
@@ -2847,11 +2934,6 @@ SELECT pg_catalog.setval('tbl_funciones_id_funcion_seq', 4, true);
 --
 
 COPY tbl_imagen (id_imagen, id_solicitud, nombre_imagen, path_imagen) FROM stdin;
-182	76	IMG_0650 (480x640) (480x640).jpg	10324173171032417317/IMG_0650 (480x640) (480x640).jpg
-183	76	IMG_0693 (480x640).jpg	10324173171032417317/IMG_0693 (480x640).jpg
-184	76	IMG_1118 (480x640).jpg	10324173171032417317/IMG_1118 (480x640).jpg
-185	76	IMG_1174 (480x640).jpg	10324173171032417317/IMG_1174 (480x640).jpg
-186	77	tmpimage.jpg	jc79920961/tmpimage.jpg
 \.
 
 
@@ -2859,7 +2941,7 @@ COPY tbl_imagen (id_imagen, id_solicitud, nombre_imagen, path_imagen) FROM stdin
 -- Name: tbl_imagen_id_imagen_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_imagen_id_imagen_seq', 186, true);
+SELECT pg_catalog.setval('tbl_imagen_id_imagen_seq', 297, true);
 
 
 --
@@ -2869,10 +2951,11 @@ SELECT pg_catalog.setval('tbl_imagen_id_imagen_seq', 186, true);
 COPY tbl_patologia (id_patologia, descripcion_patologia, observaciones_patologia) FROM stdin;
 1	Monilia	\N
 2	Phytoptora	\N
-3	Escoba	\N
 4	Machete	\N
 5	Bubas	\N
 6	Carpintero	\N
+3	Escoba de Bruja	\N
+7	Sanas	\N
 \.
 
 
@@ -2880,14 +2963,29 @@ COPY tbl_patologia (id_patologia, descripcion_patologia, observaciones_patologia
 -- Name: tbl_patologia_id_patologia_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_patologia_id_patologia_seq', 6, true);
+SELECT pg_catalog.setval('tbl_patologia_id_patologia_seq', 7, true);
+
+
+--
+-- Data for Name: tbl_push_device; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY tbl_push_device (numero_documento, device_id, push_device_id) FROM stdin;
+\.
+
+
+--
+-- Name: tbl_push_device_push_device_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tbl_push_device_push_device_id_seq', 15, true);
 
 
 --
 -- Data for Name: tbl_respuesta_solicitud; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY tbl_respuesta_solicitud (id_respuesta_solicitud, id_solicitud, id_diagnostico, descripcion_respuesta, fecha_respuesta, fecha_solicitud) FROM stdin;
+COPY tbl_respuesta_solicitud (id_respuesta_solicitud, id_solicitud, id_diagnostico, descripcion_respuesta, fecha_respuesta) FROM stdin;
 \.
 
 
@@ -2895,7 +2993,7 @@ COPY tbl_respuesta_solicitud (id_respuesta_solicitud, id_solicitud, id_diagnosti
 -- Name: tbl_respuesta_solicitud_id_respuesta_solicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_respuesta_solicitud_id_respuesta_solicitud_seq', 1, false);
+SELECT pg_catalog.setval('tbl_respuesta_solicitud_id_respuesta_solicitud_seq', 5, true);
 
 
 --
@@ -2906,7 +3004,6 @@ COPY tbl_rol (id_rol, nombre_rol, descripcion, fecha_modificacion) FROM stdin;
 123	Operador	administrador de finca,\r\nFuncionario, Agricultor	2014-01-18 19:43:10.948+01
 115	Administrador	Administrador de sistemas	2014-01-18 19:43:42.719+01
 118	Consultor	Agrónomo,fitopatologo	2014-01-18 19:44:14.59+01
-124	testrol	testrol	2014-05-06 04:26:30.361+02
 \.
 
 
@@ -2999,8 +3096,6 @@ SELECT pg_catalog.setval('tbl_sintoma_patologia_id_sintoma_patologia_seq', 45, t
 --
 
 COPY tbl_solicitante (id_solicitante, nombre_solicitante, id_departamento, id_tipo_documento, numero_documento) FROM stdin;
-203	1032417317	2	1	1032417317
-204	jc	1	1	79920961
 \.
 
 
@@ -3008,16 +3103,14 @@ COPY tbl_solicitante (id_solicitante, nombre_solicitante, id_departamento, id_ti
 -- Name: tbl_solicitante_id_solicitante_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_solicitante_id_solicitante_seq', 204, true);
+SELECT pg_catalog.setval('tbl_solicitante_id_solicitante_seq', 252, true);
 
 
 --
 -- Data for Name: tbl_solicitud; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY tbl_solicitud (id_solicitud, id_cultivo, id_solicitante, id_vereda, id_tipo_solicitud, id_patologia, fecha_solicitud, id_etapa, id_fase, id_estado, serial, descripcion) FROM stdin;
-76	101	203	\N	\N	\N	11:41:39.033	\N	\N	1	20140524114176	Tienen muchos problemitas el cultivo me ayuda papis?
-77	102	204	\N	\N	\N	21:56:39.881	\N	\N	1	20140609215677	\N
+COPY tbl_solicitud (id_solicitud, id_cultivo, id_solicitante, id_vereda, id_tipo_solicitud, fecha_solicitud, id_etapa, id_fase, id_estado, serial, descripcion, id_diagnostico) FROM stdin;
 \.
 
 
@@ -3025,7 +3118,7 @@ COPY tbl_solicitud (id_solicitud, id_cultivo, id_solicitante, id_vereda, id_tipo
 -- Name: tbl_solicitud_id_solicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_solicitud_id_solicitud_seq', 77, true);
+SELECT pg_catalog.setval('tbl_solicitud_id_solicitud_seq', 125, true);
 
 
 --
@@ -3068,9 +3161,9 @@ SELECT pg_catalog.setval('tbl_tipo_contacto_id_tipo_contacto_seq', 3, true);
 
 COPY tbl_tipo_documento (id_tipo_documento, descripcion_tipo, nombre_tipo) FROM stdin;
 3	Número de Identificación Tributaria	NIT
+1	Cédula de ciudadanía	C.C
 4	Cédula de Extranjería	C.E
 2	Tarjeta de identidad	T.I
-1	Cédula de ciudadanía	C.C
 \.
 
 
@@ -3104,7 +3197,6 @@ COPY tbl_usuario (id_usuario, nombre_usuario, fecha_ultima_actividad, cuenta, co
 96	jorge	\N	jorge2014	38ac176ce793c5d53b95be9ec7b9c32f	2014-01-18 19:44:50.67+01
 97	leidy	\N	leidy2013	b6bc5574fc6c0ceb391ff9429b4261	2014-01-18 19:45:43.672+01
 98	mauricio	\N	mauricio2013	b1f20cd35e84c9ed667059bdc7d0ff	2014-01-18 19:46:33.436+01
-99	jorge2	\N	jorge22014	58f38961ed05a825ef44853add08e35	2014-01-19 00:02:56.169+01
 \.
 
 
@@ -3123,7 +3215,6 @@ COPY tbl_usuario_rol (id_usuario_rol, id_rol, id_usuario) FROM stdin;
 39	118	96
 40	123	97
 41	115	98
-42	118	99
 \.
 
 
@@ -3307,6 +3398,14 @@ ALTER TABLE ONLY tbl_imagen
 
 ALTER TABLE ONLY tbl_patologia
     ADD CONSTRAINT tbl_patologia_pkey PRIMARY KEY (id_patologia);
+
+
+--
+-- Name: tbl_push_device_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tbl_push_device
+    ADD CONSTRAINT tbl_push_device_pkey PRIMARY KEY (push_device_id);
 
 
 --
@@ -3635,14 +3734,6 @@ ALTER TABLE ONLY tbl_solicitud
 
 ALTER TABLE ONLY tbl_solicitud
     ADD CONSTRAINT tbl_solicitud_id_fase_fkey FOREIGN KEY (id_fase) REFERENCES tbl_fase(id_fase);
-
-
---
--- Name: tbl_solicitud_id_patologia_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY tbl_solicitud
-    ADD CONSTRAINT tbl_solicitud_id_patologia_fkey FOREIGN KEY (id_patologia) REFERENCES tbl_patologia(id_patologia);
 
 
 --

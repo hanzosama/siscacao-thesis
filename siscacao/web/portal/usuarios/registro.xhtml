@@ -56,7 +56,7 @@
                                     <p:inputMask id="idContactoMovil" value="#{solicitanteBean.telefonoMovil}" mask="(999) 999-9999" required="true" requiredMessage="Es necesario que indique un numero de telefono movil"/>
                                     <p:message for="idContactoMovil" />
                                     <h:outputLabel value="E-mail:" for="idEmail" />
-                                    <p:inputText id="idEmail" value="#{solicitanteBean.email}"  required="true" validatorMessage="formato de correo electronico no valido" requiredMessage="Es necesario que indique un correo electronico">
+                                    <p:inputText id="idEmail" value="#{solicitanteBean.email}"  validatorMessage="formato de correo electronico no valido" requiredMessage="Es necesario que indique un correo electronico">
                                     <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
                                     </p:inputText>
                                     <p:message for="idEmail" />

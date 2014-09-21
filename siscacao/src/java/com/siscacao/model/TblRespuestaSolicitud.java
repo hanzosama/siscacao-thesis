@@ -23,7 +23,6 @@ public class TblRespuestaSolicitud  implements java.io.Serializable {
      private TblDiagnostico tblDiagnostico;
      private String descripcionRespuesta;
      private Date fechaRespuesta;
-     private Date fechaSolicitud;
 
     public TblRespuestaSolicitud() {
     }
@@ -32,13 +31,12 @@ public class TblRespuestaSolicitud  implements java.io.Serializable {
     public TblRespuestaSolicitud(Long idRespuestaSolicitud) {
         this.idRespuestaSolicitud = idRespuestaSolicitud;
     }
-    public TblRespuestaSolicitud(Long idRespuestaSolicitud, TblSolicitud tblSolicitud, TblDiagnostico tblDiagnostico, String descripcionRespuesta, Date fechaRespuesta, Date fechaSolicitud) {
+    public TblRespuestaSolicitud(Long idRespuestaSolicitud, TblSolicitud tblSolicitud, TblDiagnostico tblDiagnostico, String descripcionRespuesta, Date fechaRespuesta) {
        this.idRespuestaSolicitud = idRespuestaSolicitud;
        this.tblSolicitud = tblSolicitud;
        this.tblDiagnostico = tblDiagnostico;
        this.descripcionRespuesta = descripcionRespuesta;
        this.fechaRespuesta = fechaRespuesta;
-       this.fechaSolicitud = fechaSolicitud;
     }
    
     public Long getIdRespuestaSolicitud() {
@@ -76,17 +74,6 @@ public class TblRespuestaSolicitud  implements java.io.Serializable {
     public void setFechaRespuesta(Date fechaRespuesta) {
         this.fechaRespuesta = fechaRespuesta;
     }
-    public Date getFechaSolicitud() {
-        return this.fechaSolicitud;
-    }
-    
-    public void setFechaSolicitud(Date fechaSolicitud) {
-        this.fechaSolicitud = fechaSolicitud;
-    }
-
-
-
-
 }
 
 
