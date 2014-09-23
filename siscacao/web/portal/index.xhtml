@@ -15,7 +15,7 @@
                         <div class="mycarusel-caption">
                             <h1>Mejore sus cultivos y aprenda para el futuro</h1>
                             <p class="lead">Si tiene problemas con  su cultivo de cacao, necesita ayuda de un profesional o consejos sobre nuevas tecnologías y procesos para mejorar sus prácticas agrícolas, regístrese en nuestro sistema.</p>
-                            <p:button value="registrarme" href="#{appBean.baseURL}portal/usuarios/registro.jsf?faces-redirect=true"></p:button>
+                            <p:button value="#{msg.register_me}" href="#{appBean.baseURL}portal/usuarios/registro.jsf?faces-redirect=true"></p:button>
                         </div>                    
                     </p:graphicImage>
                     <p:graphicImage value="#{appBean.baseURL}resources/gfx/slide-02.png" style="width: 1180px; height: 350px;">
@@ -59,10 +59,10 @@
                         <h:form id="form_login">  
                             <p:panel id="ingreso">  
                                 <h:panelGrid columns="2" cellpadding="5">  
-                                    <h:outputLabel for="username" value="#{msg.user}" />
+                                    <h:outputLabel for="username" value="#{msg.user}" style="font-weight: bold"/>
                                     <p:inputText value="#{loginBean.usuario.cuenta}"   
                                                  id="username" required="true" requiredMessage="#{msg.rquser}" label="username"  /> 
-                                    <h:outputLabel for="password" value="#{msg.pass}" />  
+                                    <h:outputLabel for="password" value="#{msg.pass}" style="font-weight: bold"/>  
                                     <p:password value="#{loginBean.usuario.contrasena}"   
                                                 id="password" required="true" requiredMessage="#{msg.rqpass}" label="password" />  
                                     <f:facet name="footer">  
@@ -79,7 +79,7 @@
                         <p:messages id="local_msgs" closable="true" autoUpdate="true"/>  
                         <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">           
                             <h:outputText value="#{msg.number_document}" />  
-                            <p:inputText value="#{solicitanteBean.solicitante.numeroDocumento}" required="true" requiredMessage="Es necesario el numero de documento" validatorMessage="Ingrese un numero de documento valido" placeholder="TI,CC,Codigo estudiantil ...">
+                            <p:inputText value="#{solicitanteBean.solicitante.numeroDocumento}" required="true" requiredMessage="#{msg.wrn_document_required}" validatorMessage="#{msg.inf_document_required}" placeholder="#{msg.lbl_documents_types_holder}">
                                 <f:validateLength minimum="2" maximum="18" />  
                             </p:inputText>  
                             <f:facet name="footer">
@@ -92,7 +92,7 @@
                     </p:dialog>                     
 
                     <h:form id="form_new_register">
-                        <p:confirmDialog id="newRegisterDialog" message="Desea registrar sus datos y reportar su caso?"  severity="alert" widgetVar="dialogNewRegister" showEffect="fade" hideEffect="clip" >
+                        <p:confirmDialog id="newRegisterDialog" message="#{msg.lbl_register_request}"  severity="alert" widgetVar="dialogNewRegister" showEffect="fade" hideEffect="clip" >
                             <p:button id="comfirm" value="#{msg.yes}" href="#{appBean.baseURL}portal/usuarios/registro.jsf?faces-redirect=true"   icon="ui-icon-check" />
                             <p:commandButton id="decline" value="#{msg.no}" onclick="dialogNewRegister.hide();
                                     dialogUsuarioRegister.show();" icon="ui-icon-closethick" type="button"/>   

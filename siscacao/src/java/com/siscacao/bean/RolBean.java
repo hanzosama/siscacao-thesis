@@ -10,6 +10,7 @@ import com.siscacao.dao.FuncionesDao;
 import com.siscacao.dao.FuncionesRolDao;
 import com.siscacao.dao.RolDao;
 import com.siscacao.dao.RolDaoImpl;
+import com.siscacao.i18n.diccionario;
 import com.siscacao.model.TblFuncionRol;
 import com.siscacao.model.TblFunciones;
 import com.siscacao.model.TblRol;
@@ -45,6 +46,7 @@ public class RolBean implements Serializable {
     private FuncionesDao funcionDao;
     private FuncionesRolDao funcionesRolDao;
     private RolDao rolDao;
+    private diccionario diccionario = new diccionario();
 
     public RolBean() {
         this.roles = new ArrayList<TblRol>();
@@ -102,13 +104,13 @@ public class RolBean implements Serializable {
     public void createRol(ActionEvent actionEvent) {
         RequestContext context = RequestContext.getCurrentInstance();
         RolDao rolDao = new RolDaoImpl();
-        funcionesRolDao = new FuncionRolDaoImpl();                  
+        funcionesRolDao = new FuncionRolDaoImpl();
         List<TblRol> roles = rolDao.findAllRol();
         String msg;
         FacesMessage message;
         for (TblRol rol : roles) {
             if (rol.getNombreRol().toLowerCase().equals(this.selectedRol.getNombreRol().toLowerCase())) {
-                msg = "Nombre de perfil ya exite";
+                msg = this.diccionario.getString("wrn_name_rol_exist");
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
                 FacesContext.getCurrentInstance().addMessage(msg, message);
                 return;
@@ -118,11 +120,11 @@ public class RolBean implements Serializable {
         this.selectedRol.setFechaModificacion(currentDate);
         if (rolDao.createRol(this.selectedRol)) {
             setFuncionesRol();
-            msg = "creado ";
+            msg = this.diccionario.getString("created");
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
 
         } else {
-            msg = " error";
+            msg = this.diccionario.getString("error");
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
         }
         FacesContext.getCurrentInstance().addMessage(msg, message);
@@ -131,11 +133,11 @@ public class RolBean implements Serializable {
     public void updateSelectedRol(ActionEvent actionEvent) {
         RolDao rolDao = new RolDaoImpl();
         String msg;
-        FacesMessage message;        
+        FacesMessage message;
         List<TblRol> roles = rolDao.findAllRol();
-          for (TblRol rol : roles) {
-            if (rol.getNombreRol().toLowerCase().equals(this.selectedRol.getNombreRol().toLowerCase())&& !rol.getIdRol().equals(this.selectedRol.getIdRol())) {
-                msg = "Nombre de perfil ya exite";
+        for (TblRol rol : roles) {
+            if (rol.getNombreRol().toLowerCase().equals(this.selectedRol.getNombreRol().toLowerCase()) && !rol.getIdRol().equals(this.selectedRol.getIdRol())) {
+                msg = this.diccionario.getString("wrn_name_rol_exist");
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
                 FacesContext.getCurrentInstance().addMessage(msg, message);
                 return;
@@ -148,12 +150,12 @@ public class RolBean implements Serializable {
         List<TblFunciones> permisos = funcionDao.findAllFunciones();
         updateFunctionRolAdd(tblFuncionRols2, permisos);
         if (rolDao.updateRol(this.selectedRol)) {
-            msg = "actulizado ";
+            msg = this.diccionario.getString("updated");
             updateFuncionesRolDelete();
             setFuncionesSelected(funcionesSelected);
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
         } else {
-            msg = " error";
+            msg = this.diccionario.getString("error");
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
         }
         FacesContext.getCurrentInstance().addMessage(msg, message);
@@ -164,10 +166,10 @@ public class RolBean implements Serializable {
         String msg;
         FacesMessage message;
         if (rolDao.deleteRol(this.selectedRol.getIdRol())) {
-            msg = "eliminado ";
+            msg = this.diccionario.getString("deleted");
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
         } else {
-            msg = " error";
+            msg = this.diccionario.getString("error");
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
         }
         FacesContext.getCurrentInstance().addMessage(msg, message);

@@ -1,7 +1,7 @@
 package com.siscacao.services;
 
 import com.siscacao.bean.AppBean;
-import com.siscacao.bean.TipoContactoDaoImpl;
+import com.siscacao.dao.TipoContactoDaoImpl;
 import com.siscacao.dao.ClimaDao;
 import com.siscacao.dao.ClimaDaoImpl;
 import com.siscacao.dao.ContactoDao;

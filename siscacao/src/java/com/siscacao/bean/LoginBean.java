@@ -6,6 +6,7 @@ package com.siscacao.bean;
 
 import com.siscacao.dao.UsuarioDao;
 import com.siscacao.dao.UsuarioDaoImpl;
+import com.siscacao.i18n.diccionario;
 import com.siscacao.model.TblUsuario;
 import org.primefaces.context.RequestContext;
 import java.io.Serializable;
@@ -27,6 +28,7 @@ public class LoginBean implements Serializable {
     private TblUsuario usuario;
     private UsuarioDao usuarioDAO;
     private AppBean baseURL;
+    private diccionario diccionario = new diccionario();
 
     public LoginBean() {
         this.baseURL = new AppBean();
@@ -55,7 +57,7 @@ public class LoginBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario.getCuenta());
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("perfil", this.usuario.getRol());
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("id_usuario", this.usuario.getIdUsuario());
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenido ", this.usuario.getNombreUsuario());
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, this.diccionario.getString("lbl_welcome"), this.usuario.getNombreUsuario());
             FacesContext.getCurrentInstance().getViewRoot().setViewId("");
             if(this.usuario.getRol().equals("Administrador")){
             redirect = "view/inicio.jsf?faces-redirect=true";
@@ -66,7 +68,7 @@ public class LoginBean implements Serializable {
             }
         } else {
             loggedIn = false;
-            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Usuario y/o clave incorrectos", "");
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, this.diccionario.getString("wrn_user_pass_not_valid"), "");
             if (this.usuario == null) {
                 this.usuario = new TblUsuario();
             }

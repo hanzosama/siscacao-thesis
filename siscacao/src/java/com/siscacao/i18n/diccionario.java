@@ -22,7 +22,7 @@ import javax.faces.context.FacesContext;
  */
 
 public class diccionario extends ResourceBundle{
-  protected static final String BUNDLE_NAME = "com.example.faces.i18n.diccionario";
+  protected static final String BUNDLE_NAME = "com.siscacao.i18n.diccionario";
     protected static final String BUNDLE_EXTENSION = "properties";
     protected static final Control UTF8_CONTROL = new UTF8Control();
 

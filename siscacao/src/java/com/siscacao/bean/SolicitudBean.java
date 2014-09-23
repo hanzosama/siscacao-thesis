@@ -18,6 +18,7 @@ import com.siscacao.dao.SintomaDao;
 import com.siscacao.dao.SintomaDaoImpl;
 import com.siscacao.dao.SolicitudDao;
 import com.siscacao.dao.SolicitudDaoImpl;
+import com.siscacao.i18n.diccionario;
 import com.siscacao.model.TblContacto;
 import com.siscacao.model.TblDiagnostico;
 import com.siscacao.model.TblDiagnosticoCaracteristica;
@@ -67,7 +68,7 @@ import org.primefaces.model.chart.PieChartModel;
 @ManagedBean
 @SessionScoped
 public class SolicitudBean implements Serializable {
-
+    
     private final Logger logger = Logger.getLogger(SolicitudBean.class);
     private ImageNetIA imageNetIA;
     private SymptomIA symptomIA;
@@ -110,12 +111,14 @@ public class SolicitudBean implements Serializable {
     private SendMailSSL sendMailSSL;
     private String telefonoFijo;
     private String telefonoMovil;
-
+    private diccionario diccionario;
+    
     public SolicitudBean() {
         solicitudDao = new SolicitudDaoImpl();
         pushServiceBean = new PushServiceBean();
         estadoDao = new EstadoDaoImpl();
         pushDao = new PushDaoImpl();
+        diccionario = new diccionario();
         contactoDao = new ContactoDaoImpl();
         this.pieResultImage = new PieChartModel();
         this.pieResultSymptom = new PieChartModel();
@@ -141,7 +144,7 @@ public class SolicitudBean implements Serializable {
         symptom.set("Sanas", 0);
         cartesianChartModel.addSeries(image);
         cartesianChartModel.addSeries(symptom);
-
+        
         this.selectedSintomas = null;
         pieResultImage.set("", null);
         pieResultSymptom.set("", null);
@@ -150,7 +153,7 @@ public class SolicitudBean implements Serializable {
         this.imagenDao = new ImagenDaoImpl();
         this.diagnosticoDao = new DiagnosticoDaoImpl();
     }
-
+    
     public List<TblSolicitud> getSolicitudes() {
         FacesContext faceContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) faceContext.getExternalContext().getSession(true);
@@ -158,141 +161,144 @@ public class SolicitudBean implements Serializable {
         solicitudes = solicitudDao.retrieveListSolicitudPendingForUser((Long) id_usuario);
         return solicitudes;
     }
-
+    
     public boolean isIsSaving() {
         return isSaving;
     }
-
+    
     public List<TblSolicitud> getFilteredSolicitudes() {
         return filteredSolicitudes;
     }
-
+    
     public void setFilteredSolicitudes(List<TblSolicitud> filteredSolicitudes) {
         this.filteredSolicitudes = filteredSolicitudes;
     }
-
+    
     public TblSolicitud getSelectedSolicitud() {
         return selectedSolicitud;
     }
-
+    
     public void setSelectedSolicitud(TblSolicitud selectedSolicitud) {
         this.selectedSolicitud = selectedSolicitud;
     }
-
+    
     public List<TblSintoma> getSintomas() {
         return sintomas;
     }
-
+    
     public String[] getSelectedSintomas() {
         return selectedSintomas;
     }
-
+    
     public void setSelectedSintomas(String[] selectedSintomas) {
         this.selectedSintomas = selectedSintomas;
     }
-
+    
     public TblImagen getSelectedImagen() {
         return selectedImagen;
     }
-
+    
     public void setSelectedImagen(TblImagen selectedImagen) {
         this.selectedImagen = selectedImagen;
     }
-
+    
     public String getNewImageName() {
         return newImageName;
     }
-
+    
     public void setNewImageName(String newImageName) {
         this.newImageName = newImageName;
     }
-
+    
     public String getNewImageNameWithoutPath() {
         return newImageNameWithoutPath;
     }
-
+    
     public void setNewImageNameWithoutPath(String newImageNameWithoutPath) {
         this.newImageNameWithoutPath = newImageNameWithoutPath;
     }
-
+    
     public PieChartModel getPieResult() {
         return pieResultImage;
     }
-
+    
     public PieChartModel getPieResultSymptom() {
         return pieResultSymptom;
     }
-
+    
     public CartesianChartModel getCartesianChartModel() {
         return cartesianChartModel;
     }
-
+    
     public String getMessage() {
         return message;
     }
-
+    
     public void setMessage(String message) {
         this.message = message;
     }
-
+    
     public void setPathImage(String pathImage) {
         this.pathImage = pathImage;
     }
-
+    
     public CroppedImage getCroppedImage() {
         return croppedImage;
     }
-
+    
     public void setCroppedImage(CroppedImage croppedImage) {
         this.croppedImage = croppedImage;
     }
-
+    
     public List<TblImagen> getSelectedImagenes() {
         this.selectedImagenes = new ArrayList<TblImagen>(this.selectedSolicitud.getTblImagens());
         return selectedImagenes;
     }
-
+    
     public void setSelectedImagenes(List<TblImagen> selectedImagenes) {
         this.selectedImagenes = selectedImagenes;
     }
-
+    
     public List<TblPatologia> getPatologias() {
         return patologias;
     }
-
+    
     public void setPatologias(List<TblPatologia> patologias) {
         this.patologias = patologias;
     }
-
+    
     public Long getSelectedPatologia() {
         return selectedPatologia;
     }
-
+    
     public void setSelectedPatologia(Long selectedPatologia) {
         this.selectedPatologia = selectedPatologia;
     }
-
+    
     public boolean isIsSavingResponse() {
         return isSavingResponse;
     }
-
+    
     public String getTelefonoFijo() {
         return telefonoFijo;
     }
-
+    
     public String getTelefonoMovil() {
         return telefonoMovil;
     }
-
+    
     public void setTelefonoFijo(String telefonoFijo) {
         this.telefonoFijo = telefonoFijo;
     }
-
+    
     public void setTelefonoMovil(String telefonoMovil) {
         this.telefonoMovil = telefonoMovil;
     }
     
-
+    public TblContacto getUsuarioEmail() {
+        return usuarioEmail;
+    }
+    
     public boolean isIsSavingResponseAndHaveMedia() {
         if (!isSavingResponse) {
             List<TblContacto> usuarioContactos = this.contactoDao.findAllContactosByClientId(this.selectedSolicitud.getTblSolicitante().getIdSolicitante());
@@ -318,25 +324,25 @@ public class SolicitudBean implements Serializable {
         }
         return true;
     }
-
+    
     public String getPathImage() {
         if (selectedImagen == null) {
             pathImage = "gfx/Imagen-animada-Lupa-10.png";
         } else {
             pathImage = "user/" + selectedImagen.getPathImagen();
         }
-
+        
         if (this.newImageName == null) {
             this.newImageName = "gfx/Imagen-animada-Lupa-10.png";
         }
         return pathImage;
     }
-
+    
     public void evaluateSintomas(ActionEvent actionEvent) {
         DataSet PruebaSet = new DataSet(14, 7);
         this.symptomIA = new SymptomIA();
         double[] sintomas = new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
+        
         for (TblSintoma sintoma : this.sintomas) {
             for (int i = 0; i < this.selectedSintomas.length; i++) {
                 logger.info("Selected Sympton: " + this.selectedSintomas[i]);
@@ -345,17 +351,17 @@ public class SolicitudBean implements Serializable {
                 }
             }
         }
-
-
+        
+        
         PruebaSet.addRow(new DataSetRow(sintomas, new double[]{0, 0, 0, 0, 0, 0, 0}));
         Map<String, Double> symptom = this.symptomIA.getSymptom(PruebaSet);
         pieResultSymptom.clear();
         for (Map.Entry<String, Double> entry : symptom.entrySet()) {
             pieResultSymptom.set(entry.getKey(), entry.getValue());
         }
-
+        
     }
-
+    
     public String detalleSolicitud() {
         this.selectedSintomas = null;
         this.selectedImagen = null;
@@ -385,7 +391,7 @@ public class SolicitudBean implements Serializable {
         symptom.set("Sanas", 0);
         cartesianChartModel.addSeries(image);
         cartesianChartModel.addSeries(symptom);
-
+        
         this.pieResultSymptom.set("", null);
         this.tblDiagnosticoById = null;
         this.tblDiagnosticoImagenByGeneralDiagnotico = null;
@@ -393,7 +399,7 @@ public class SolicitudBean implements Serializable {
         this.respuestaSolicitud = null;
         this.selectedPatologia = null;
         this.cropImage = null;
-
+        
         this.newImageName = null;
         this.newImageNameForSave = null;
         this.newImageNameWithoutPath = null;
@@ -404,28 +410,28 @@ public class SolicitudBean implements Serializable {
         this.usuarioEmail = null;
         this.telefonoFijo = "";
         this.telefonoMovil = "";
-
-        this.message = "<div style=\"font-weight: normal;\"><span style=\"background-color: rgb(255, 255, 255); font-family: Arial;\"><span style=\"font-weight: bold;\">Estimado/a :&nbsp;</span><span style=\"font-weight: bold; font-size: 10pt;\">$NOMBRE_SOLICITANTE</span></span></div><div style=\"font-weight: normal;\"><span style=\"background-color: rgb(255, 255, 255); font-family: Arial;\"><span style=\"font-weight: bold; font-size: 10pt;\"><br></span></span></div><div style=\"font-weight: normal;\"><span style=\"background-color: rgb(255, 255, 255); font-family: Arial;\"><span style=\"font-weight: bold; font-size: 10pt;\">Resultados:</span></span></div><div style=\"font-weight: normal;\"><span style=\"background-color: rgb(255, 255, 255); font-family: Arial;\"><span style=\"font-weight: bold; font-size: 10pt;\"><br></span></span></div><div style=\"font-weight: normal;\"><span style=\"font-family: Arial;\"><span style=\"font-weight: bold;\">La enfermedad relacionada con su cultivo es</span>&nbsp;:&nbsp;<span style=\"font-weight: bold;\">$PATOLOGIA</span></span></div><div><span style=\"font-family: Arial;\"><span style=\"font-weight: bold;\"><br></span></span></div><div style=\"font-weight: normal;\"><span style=\"background-color: rgb(255, 255, 255); font-family: Arial;\"><span style=\"font-weight: bold; font-size: 10pt;\"><br></span></span></div><div style=\"font-weight: normal;\"><span style=\"background-color: rgb(255, 255, 255); font-family: Arial;\"><span style=\"font-weight: bold; font-size: 10pt;\">Observaciones:</span></span></div><div style=\"font-weight: normal;\"><span style=\"font-weight: bold; font-family: Arial;\"><br></span></div><div><span style=\"font-family: Arial; font-weight: bold;\"><br></span></div><div><span style=\"font-family: Arial; font-weight: bold;\">Este mensaje ha sido generado por siscacao.com , para consultar mas detalles sobre sus resultados, no olvide visitar nuestro sitio web.<br></span><span style=\"font-weight: normal; font-family: Arial;\"><span style=\"font-weight: bold;\">&nbsp; </span></span><div style=\"font-weight: normal; font-family: Arial, Verdana;\"><br></div></div>";
+        
+        this.message = this.diccionario.getString("template_send_push_and_email");
 
         //load data from data base
-        
-         List<TblContacto> usuarioContactos = this.contactoDao.findAllContactosByClientId(this.selectedSolicitud.getTblSolicitante().getIdSolicitante());
-            if (usuarioContactos != null) {
-                for (TblContacto contacto : usuarioContactos) {
-                    if (contacto.getTblTipoContacto().getNombreTipo().equals("EM")) {
-                        this.usuarioEmail = contacto;
-                    }
-                    if (contacto.getTblTipoContacto().getNombreTipo().equals("TF")) {
-                        this.telefonoFijo = contacto.getContacto();
-                    }
-                    if (contacto.getTblTipoContacto().getNombreTipo().equals("TM")) {
-                        this.telefonoMovil = contacto.getContacto();
-                    }
+
+        List<TblContacto> usuarioContactos = this.contactoDao.findAllContactosByClientId(this.selectedSolicitud.getTblSolicitante().getIdSolicitante());
+        if (usuarioContactos != null) {
+            for (TblContacto contacto : usuarioContactos) {
+                if (contacto.getTblTipoContacto().getNombreTipo().equals("EM")) {
+                    this.usuarioEmail = contacto;
+                }
+                if (contacto.getTblTipoContacto().getNombreTipo().equals("TF")) {
+                    this.telefonoFijo = contacto.getContacto();
+                }
+                if (contacto.getTblTipoContacto().getNombreTipo().equals("TM")) {
+                    this.telefonoMovil = contacto.getContacto();
                 }
             }
-            
+        }
+        
         userPushDevice = pushDao.findPushByIdentification(this.selectedSolicitud.getTblSolicitante().getNumeroDocumento());
-
+        
         tblDiagnosticoById = diagnosticoDao.getTblDiagnosticoById(this.selectedSolicitud.getIdDiagnostico());
         respuestaSolicitud = diagnosticoDao.GetRespuestaSolicitudByIdSolicitud(this.selectedSolicitud.getIdSolicitud());
         if (respuestaSolicitud != null) {
@@ -433,7 +439,7 @@ public class SolicitudBean implements Serializable {
             this.message = this.tblDiagnosticoById.getDescripcionDiagnostico();
             this.isSavingResponse = false;
         }
-
+        
         tblDiagnosticoImagenByGeneralDiagnotico = diagnosticoDao.getTblDiagnosticoImagenByGeneralDiagnotico(tblDiagnosticoById);
         if (tblDiagnosticoImagenByGeneralDiagnotico != null) {
             logger.info("Diagnostico image  saved.." + tblDiagnosticoImagenByGeneralDiagnotico.getIdImagen());
@@ -456,7 +462,7 @@ public class SolicitudBean implements Serializable {
         }
         //load data for Symp
         tblDiagnosticoCaracteristicaByGeneralDiagnotico = diagnosticoDao.getTblDiagnosticoCaracteristicaByGeneralDiagnotico(tblDiagnosticoById);
-
+        
         if (tblDiagnosticoCaracteristicaByGeneralDiagnotico != null) {
             String mapPie = tblDiagnosticoCaracteristicaByGeneralDiagnotico.getMapPie();
             Map<String, Number> map = new HashMap<String, Number>();
@@ -474,7 +480,7 @@ public class SolicitudBean implements Serializable {
             this.selectedSintomas = tblDiagnosticoCaracteristicaByGeneralDiagnotico.getMapSintoma().replace("{", "").replace("}", "").split(",");
             for (int i = 0; i < this.selectedSintomas.length; i++) {
                 this.selectedSintomas[i] = this.selectedSintomas[i].trim();
-
+                
             }
             logger.info("Saving Symptom: " + Arrays.toString(selectedSintomas));
             this.isSaving = false;
@@ -483,28 +489,28 @@ public class SolicitudBean implements Serializable {
         //end of load data
         return "solicitud_detalle/detalle_solicitud.jsf?faces-redirect=true";
     }
-
+    
     public void crop(ActionEvent actionEvent) {
         String msg;
         FacesMessage message;
-
+        
         if (croppedImage == null) {
             return;
         }
         if (this.selectedImagen == null) {
-            msg = "Seleccione una imagen";
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "Por favor seleccione una imagen para recortar");
+            msg = this.diccionario.getString("lbl_select_image");
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, diccionario.getString("lbl_select_image_detail"));
             FacesContext.getCurrentInstance().addMessage(msg, message);
             return;
         }
         Date dateCrope = new Date();
-
+        
         setNewImageName(selectedImagen.getNombreImagen() + dateCrope.getTime() + "_crop.jpg");
         newImageNameForSave = this.selectedSolicitud.getTblSolicitante().getNombreSolicitante().trim().toLowerCase().replace(" ", "") + this.selectedSolicitud.getTblSolicitante().getNumeroDocumento() + File.separator + getNewImageName();
         setNewImageNameWithoutPath(selectedImagen.getNombreImagen() + dateCrope.getTime() + "_crop.jpg");
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         String newFileName = servletContext.getRealPath("") + File.separator + "resources/user/" + this.selectedSolicitud.getTblSolicitante().getNombreSolicitante().trim().toLowerCase().replace(" ", "") + this.selectedSolicitud.getTblSolicitante().getNumeroDocumento() + File.separator + getNewImageName();
-
+        
         FileImageOutputStream imageOutput;
         try {
             imageOutput = new FileImageOutputStream(new File(newFileName));
@@ -516,15 +522,15 @@ public class SolicitudBean implements Serializable {
         } catch (IOException e) {
             logger.warn("Image File not write on system detail: " + e);
         }
-
+        
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             logger.warn("Sleep for crop image erro: " + e);
         }
-
+        
     }
-
+    
     public void guardarDiagnostico(ActionEvent actionEvent) {
         String msg;
         FacesMessage message;
@@ -537,11 +543,11 @@ public class SolicitudBean implements Serializable {
             }
         }
         if (isPieEmpty) {
-
-            msg = "No ha generado ningun tipo de diagnostico para guardar";
-            message = new FacesMessage(FacesMessage.SEVERITY_WARN, msg, "Por favor seleccione un tipo de diagnostico y genere un analisis");
+            
+            msg = this.diccionario.getString("wrn_generate_diagnostic");
+            message = new FacesMessage(FacesMessage.SEVERITY_WARN, msg, this.diccionario.getString("wrn_generate_diagnostic_detail"));
             FacesContext.getCurrentInstance().addMessage(msg, message);
-
+            return;
         }
 
         //guardar diagnostico imagen
@@ -555,15 +561,15 @@ public class SolicitudBean implements Serializable {
             saveSymptomDiag();
         }
         solicitudDao.updateSolicitud(selectedSolicitud);
-
-        msg = "Diagnosticos guardados exitosamente";
-        message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, "Se han almacenado los reportes y datos generados");
+        
+        msg = this.diccionario.getString("lbl_generate_diagnostic_successfully");
+        message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, this.diccionario.getString("lbl_generate_diagnostic_successfully_detail"));
         FacesContext.getCurrentInstance().addMessage(msg, message);
-
-
-
+        this.isSaving = false;
+        
+        
     }
-
+    
     private void saveImageDiag() {
         String json = "";
         ChartSeries image = new ChartSeries();
@@ -575,7 +581,7 @@ public class SolicitudBean implements Serializable {
         image.set("Bubas", 0);
         image.set("Carpintero", 0);
         image.set("Sanas", 0);
-
+        
         if (cropImage == null && tblDiagnosticoImagenByGeneralDiagnotico == null) {
             cropImage = new TblImagen();
             cropImage.setPathImagen(newImageNameForSave);
@@ -589,7 +595,7 @@ public class SolicitudBean implements Serializable {
             diagnosticoDao.createDiagnosticoGeneral(tblDiagnosticoById);
             this.selectedSolicitud.setIdDiagnostico(tblDiagnosticoById.getIdDiagnostico());
             solicitudDao.updateSolicitud(selectedSolicitud);
-
+            
             try {
                 json = mapper.writeValueAsString(this.pieResultImage.getData());
             } catch (IOException ex) {
@@ -597,7 +603,7 @@ public class SolicitudBean implements Serializable {
             }
             Map.Entry<String, Number> maxValuesImage = getMaxValuesImage(this.pieResultImage.getData());
             logger.info("Max value and Symptom :" + maxValuesImage.getKey() + " = " + maxValuesImage.getValue());
-
+            
             TblDiagnosticoImagen diagnosticoImagen = new TblDiagnosticoImagen();
             diagnosticoImagen.setIdImagen(cropImage.getIdImagen());
             diagnosticoImagen.setMapPie(json);
@@ -619,8 +625,8 @@ public class SolicitudBean implements Serializable {
                 logger.info("Saving image...");
                 imagenDao.updateImagen(cropImage);
             }
-
-
+            
+            
             try {
                 json = mapper.writeValueAsString(this.pieResultImage.getData());
             } catch (IOException ex) {
@@ -639,10 +645,10 @@ public class SolicitudBean implements Serializable {
             tblDiagnosticoImagenByGeneralDiagnotico.setMapPie(json);
             diagnosticoDao.updateDiagnosticoImage(tblDiagnosticoImagenByGeneralDiagnotico);
         }
-
+        
         cartesianChartModel.addSeries(image);
     }
-
+    
     private void saveSymptomDiag() {
         String json = "";
         ChartSeries symptom = new ChartSeries();
@@ -661,14 +667,14 @@ public class SolicitudBean implements Serializable {
                 this.selectedSolicitud.setIdDiagnostico(tblDiagnosticoById.getIdDiagnostico());
                 solicitudDao.updateSolicitud(selectedSolicitud);
             }
-
+            
             try {
                 json = mapper.writeValueAsString(this.pieResultSymptom.getData());
             } catch (IOException ex) {
                 logger.info(ex);
             }
             Map.Entry<String, Number> maxValuesSymptom = getMaxValuesImage(this.pieResultSymptom.getData());
-
+            
             TblDiagnosticoCaracteristica caracteristica = new TblDiagnosticoCaracteristica();
             caracteristica.setMapPie(json);
             caracteristica.setMapSintoma(Arrays.toString(selectedSintomas));
@@ -695,12 +701,12 @@ public class SolicitudBean implements Serializable {
                 logger.info("Max value and Symptom :" + maxValuesSymptom.getKey() + " = " + maxValuesSymptom.getValue());
                 this.tblDiagnosticoCaracteristicaByGeneralDiagnotico.setIdPatogologia(getIdPatologia(maxValuesSymptom.getKey()));
                 this.tblDiagnosticoCaracteristicaByGeneralDiagnotico.setMaxValue((Double) maxValuesSymptom.getValue());
-
+                
                 for (Map.Entry<String, Number> entry : this.pieResultSymptom.getData().entrySet()) {
                     Double parcentage = ((Double) entry.getValue()) * 100;
                     symptom.set(entry.getKey(), parcentage);
                 }
-
+                
             }
             this.tblDiagnosticoCaracteristicaByGeneralDiagnotico.setMapPie(json);
             this.tblDiagnosticoCaracteristicaByGeneralDiagnotico.setMapSintoma(Arrays.toString(selectedSintomas));
@@ -708,11 +714,11 @@ public class SolicitudBean implements Serializable {
         }
         this.cartesianChartModel.addSeries(symptom);
     }
-
+    
     public Map.Entry<String, Number> getMaxValuesImage(Map<String, Number> pieData) {
-
+        
         Map.Entry<String, Number> maxEntry = null;
-
+        
         for (Map.Entry<String, Number> entry : pieData.entrySet()) {
             if (maxEntry == null || ((Double) entry.getValue() > (Double) maxEntry.getValue())) {
                 maxEntry = entry;
@@ -720,9 +726,9 @@ public class SolicitudBean implements Serializable {
         }
         return maxEntry;
     }
-
+    
     public Long getIdPatologia(String name) {
-
+        
         for (TblPatologia patologia : this.patologias) {
             if (patologia.getDescripcionPatologia().trim().equals(name.trim())) {
                 return patologia.getIdPatologia();
@@ -730,19 +736,19 @@ public class SolicitudBean implements Serializable {
         }
         return null;
     }
-
+    
     public void analizeImage(ActionEvent actionEvent) {
-
+        
         String msg;
         FacesMessage message;
         logger.info("Current imgage for analize : " + this.newImageName);
         if (this.newImageName == null || this.newImageName.equals("gfx/Imagen-animada-Lupa-10.png")) {
-            msg = "Recorte la imagen seleccionada";
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "Por favor recorte la imagen para relizar el analisis");
+            msg = this.diccionario.getString("lbl_crop_image_selected");
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, this.diccionario.getString("lbl_crop_image_selected_detail"));
             FacesContext.getCurrentInstance().addMessage(msg, message);
             return;
         }
-
+        
         imageNetIA = new ImageNetIA();
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         try {
@@ -754,15 +760,15 @@ public class SolicitudBean implements Serializable {
         } catch (IOException ex) {
             logger.warn("Image File not write on system detail: " + ex);
         }
-
+        
         try {
             Thread.sleep(1500);
         } catch (InterruptedException ex) {
             logger.warn("Sleep for analize image erro: " + ex);
         }
-
+        
     }
-
+    
     public void enviarDiagnostico(ActionEvent actionEvent) {
         validateMessage();
         String msg = "";
@@ -772,23 +778,29 @@ public class SolicitudBean implements Serializable {
             pushServiceBean.doPushNotification(msgToclient, userPushDevice.getDeviceId());
         }
         if (usuarioEmail != null) {
-            this.sendMailSSL.sendEmail(this.usuarioEmail.getContacto(), "Resultados de la solicitud: " + this.selectedSolicitud.getSerial() + "", msgToclient);
+            this.sendMailSSL.sendEmail(this.usuarioEmail.getContacto(), this.diccionario.getString("lbl_result_request") + this.selectedSolicitud.getSerial() + "", msgToclient);
         }
         if (userPushDevice != null || usuarioEmail != null) {
-            msg = " Mensaje de respuesta enviado correctamente al solicitante: " + this.selectedSolicitud.getTblSolicitante().getNombreSolicitante();
+            msg = this.diccionario.getString("lbl_result_request_send_successfully") + this.selectedSolicitud.getTblSolicitante().getNombreSolicitante();
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
         } else {
-            msg = "Este usuario debe ser contactado directamente para dar respuesta al caso";
+            msg = this.diccionario.getString("lbl_result_request_contact_directly");
             facesMessage = new FacesMessage(FacesMessage.SEVERITY_WARN, msg, null);
         }
-
+        
         FacesContext.getCurrentInstance().addMessage(msg, facesMessage);
     }
-
+    
     public void guardarRespuesta(ActionEvent actionEvent) {
         String msg, detail = null;
         FacesMessage message;
         validateMessage();
+        if (tblDiagnosticoById == null) {
+            msg = this.diccionario.getString("wrn_not_save_diagnostic_yet");
+            message = new FacesMessage(FacesMessage.SEVERITY_WARN, msg, this.diccionario.getString("wrn_not_save_diagnostic_yet_detail"));
+            FacesContext.getCurrentInstance().addMessage(msg, message);
+            return;
+        }
         this.tblDiagnosticoById.setDescripcionDiagnostico(this.message);
         this.tblDiagnosticoById.setIdPatologia(selectedPatologia);
         this.diagnosticoDao.updateDiagnosticoGeneral(tblDiagnosticoById);
@@ -806,19 +818,20 @@ public class SolicitudBean implements Serializable {
             respuestaSolicitud.setFechaRespuesta(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
             this.diagnosticoDao.updateResRespuestaSolicitud(respuestaSolicitud);
         }
-
+        
         this.selectedSolicitud.setTblEstado(estadoDao.findEstadoByName("CERRADO"));
         solicitudDao.updateSolicitud(selectedSolicitud);
-
-        msg = "La respuesta de esta solicitud ha sido generada existosamente";
-
+        
+        msg = this.diccionario.getString("lbl_response_generated_successfully");
+        
         if (this.userPushDevice == null && this.usuarioEmail == null) {
-            detail = "Este usuario debe ser contactado directamente para dar respuesta al caso";
+            detail = this.diccionario.getString("lbl_response_generated_successfully_detail");
         }
         message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, detail);
         FacesContext.getCurrentInstance().addMessage(msg, message);
+        this.isSavingResponse = false;
     }
-
+    
     private String getNamePatologia(Long id) {
         for (TblPatologia patologia : this.patologias) {
             if (patologia.getIdPatologia().equals(id)) {
@@ -827,18 +840,18 @@ public class SolicitudBean implements Serializable {
         }
         return "$PATOLOGIA";
     }
-
+    
     private void validateMessage() {
         String msg;
         FacesMessage message;
         if (!this.message.contains("$PATOLOGIA")) {
-            msg = "La respuesta debe contener el parametro $PATOLOGIA, para hacer referencia al resultado final del analisis";
+            msg = this.diccionario.getString("wrn_pataology_paramter_required");
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
             FacesContext.getCurrentInstance().addMessage(msg, message);
         }
-
+        
         if (!this.message.contains("$NOMBRE_SOLICITANTE")) {
-            msg = "La respuesta debe contener el parametro $NOMBRE_SOLICITANTE, para hacer referencia al usuario que reporto el caso";
+            msg = this.diccionario.getString("wrn_user_name_paramter_required");
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
             FacesContext.getCurrentInstance().addMessage(msg, message);
         }

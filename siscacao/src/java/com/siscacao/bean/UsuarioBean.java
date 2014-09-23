@@ -10,6 +10,7 @@ import com.siscacao.dao.UsuarioDao;
 import com.siscacao.dao.UsuarioDaoImpl;
 import com.siscacao.dao.UsuarioRolDao;
 import com.siscacao.dao.UsuarioRolDaoImpl;
+import com.siscacao.i18n.diccionario;
 import com.siscacao.model.TblRol;
 import com.siscacao.model.TblUsuario;
 import com.siscacao.model.TblUsuarioRol;
@@ -49,6 +50,7 @@ public class UsuarioBean implements Serializable {
     private List<TblRol> listRoles;
     private String oldPwd = "";
     private String newPwd = "";
+    private diccionario diccionario = new diccionario();
 
     /**
      * Creates a new instance of UsuarioBean
@@ -115,7 +117,6 @@ public class UsuarioBean implements Serializable {
     public void setFilteredUsers(List<TblUsuario> filteredUsers) {
         this.filteredUsers = filteredUsers;
     }
-    
 
     public void createSelectedUser(ActionEvent actionEvent) {
         UsuarioDao usuarioDao = new UsuarioDaoImpl();
@@ -127,19 +128,19 @@ public class UsuarioBean implements Serializable {
         setRolSelectedtUser(this.rol);
         for (TblUsuario tblUsuario : tblUsuarios) {
             if (tblUsuario.getCuenta().toLowerCase().equals(this.selectedUser.getCuenta().toLowerCase())) {
-                msg = "Nombre de Cuenta ya exite en el sistema";
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "Porfavor intente con un nombre de cuenta diferente");
+                msg = this.diccionario.getString("wrn_account_name_already_exist");
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, this.diccionario.getString("wrn_account_name_already_exist_detail"));
                 FacesContext.getCurrentInstance().addMessage(msg, message);
                 return;
             }
         }
         this.getSelectedUser().setContrasena(CriptoUtils.MD5Digest(this.selectedUser.getContrasena()));
         if (usuarioDao.createUser(this.selectedUser)) {
-            msg = "creado ";
+            msg = this.diccionario.getString("created");
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
 
         } else {
-            msg = " error";
+            msg = this.diccionario.getString("error");
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
         }
         FacesContext.getCurrentInstance().addMessage(msg, message);
@@ -160,10 +161,10 @@ public class UsuarioBean implements Serializable {
             }
         }
         if (usuarioDao.updateUser(this.selectedUser)) {
-            msg = "actulizado ";
+            msg = this.diccionario.getString("updated");
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
         } else {
-            msg = " error";
+            msg = this.diccionario.getString("error");
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
         }
         FacesContext.getCurrentInstance().addMessage(msg, message);
@@ -174,10 +175,10 @@ public class UsuarioBean implements Serializable {
         String msg;
         FacesMessage message;
         if (usuarioDao.deleteUser(this.selectedUser.getIdUsuario())) {
-            msg = "eliminado ";
+            msg = this.diccionario.getString("deleted");
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
         } else {
-            msg = " error";
+            msg = this.diccionario.getString("error");
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
         }
         FacesContext.getCurrentInstance().addMessage(msg, message);
@@ -193,18 +194,18 @@ public class UsuarioBean implements Serializable {
         System.out.println("new pass" + this.newPwd);
 
         if (!this.selectedUser.getContrasena().toString().equals(this.oldPwd)) {
-            msg = " error contraseña anterir no corresponde";
+            msg = this.diccionario.getString("wrn_previous_pass_not_match");
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
         } else if (!this.newPwd.equals(this.oldPwd)) {
             if (usuarioDao.resetPwdUser(this.selectedUser.getIdUsuario(), newPwd)) {
-                msg = "Contraseña ha sido reseteada";
+                msg = this.diccionario.getString("lbl_pass_rest_success");
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
             } else {
-                msg = " error";
+                msg = this.diccionario.getString("error");
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
             }
         } else {
-            msg = "Ingrese una contraseña nueva diferente de la actual";
+            msg = this.diccionario.getString("lbl_enter_other_pass_to_current");
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
         }
         FacesContext.getCurrentInstance().addMessage(msg, message);

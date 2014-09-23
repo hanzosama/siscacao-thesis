@@ -9,35 +9,35 @@
         <body onload="calledOnLoad();" >      
             <ui:define name="content">
                 <h:form id="form_data_solicitudes"> 
-                    <p:dataTable id="users"  var="solicitud" value="#{solicitudBean.solicitudes}" paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
-                                 sortMode="multiple"  widgetVar="solicitudTable"   filteredValue="#{solicitudBean.filteredSolicitudes}" emptyMessage="No se solicitudes asignadas">  
+                    <p:dataTable id="users"  var="solicitud" value="#{solicitudBean.solicitudes}" paginator="true" rows="10" paginatorPosition="bottom" currentPageReportTemplate="{currentPage} de {totalPages}" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 sortMode="multiple"  widgetVar="solicitudTable"   filteredValue="#{solicitudBean.filteredSolicitudes}" emptyMessage="#{msg.lbl_request_no_available}" >  
                         <f:facet name="header" >  
                             Solicitudes pendientes
                             <BR/>
                             <p:outputPanel style="position: absolute; right: 20px;">  
-                                <h:outputText value="Buscar solicitud :" />  
-                                <p:inputText id="globalFilter" onblur="solicitudTable.filter()"  style="width:150px" />  
+                                <h:outputText value="${msg.lbl_search_request}" />  
+                                <p:inputText id="globalFilter" onblur="solicitudTable.filter()"  style="width:150px" placeholder="..."/>  
                             </p:outputPanel> 
                             <BR/>
                             <BR/>
                         </f:facet>
-                        <p:column headerText="Numero de solicitud" filterBy="serial" filterStyle="display:none;" style="width:24%">  
+                        <p:column headerText="#{msg.lbl_number_request}" filterBy="serial" filterStyle="display:none;" style="width:24%">  
                             <h:outputText value="#{solicitud.serial}" />  
                         </p:column> 
-                        <p:column headerText="Nombre solicitante" filterBy="tblSolicitante.nombreSolicitante" filterStyle="display:none;" style="width:24%">  
+                        <p:column headerText="#{msg.lbl_user_request}" filterBy="tblSolicitante.nombreSolicitante" filterStyle="display:none;" style="width:24%">  
                             <h:outputText value="#{solicitud.tblSolicitante.nombreSolicitante}" />  
                         </p:column>   
-                        <p:column headerText="Documento" filterBy="tblSolicitante.numeroDocumento" filterStyle="display:none;" style="width:24%">  
+                        <p:column headerText="#{msg.lbl_user_document}" filterBy="tblSolicitante.numeroDocumento" filterStyle="display:none;" style="width:24%">  
                             <h:outputText value="#{solicitud.tblSolicitante.numeroDocumento}" />  
                         </p:column>
-                        <p:column headerText="Departamento"   filterStyle="display:none;" style="width:24%">  
+                        <p:column headerText="#{msg.lbl_user_departament}"   filterStyle="display:none;" style="width:24%">  
                             <h:outputText value="#{solicitud.tblSolicitante.idDepartamento}" converter="DepartamentoConvert"  />  
                         </p:column>
-                        <p:column headerText="Estado" filterBy="tblEstado.descripcionEstado" filterStyle="display:none;" style="width:24%">  
+                        <p:column headerText="#{msg.lbl_request_status}" filterBy="tblEstado.descripcionEstado" filterStyle="display:none;" style="width:24%">  
                             <h:outputText value="#{solicitud.tblEstado.descripcionEstado}" />  
                         </p:column> 
                         <p:column style="width:15%">  
-                            <p:commandButton id="btnUsuarioUpdate" action="#{solicitudBean.detalleSolicitud()}"   icon="ui-icon-search" title="ver detalle">  
+                            <p:commandButton id="btnUsuarioUpdate" action="#{solicitudBean.detalleSolicitud()}"   icon="ui-icon-search" title="#{msg.lbl_view_datail}">  
                                 <f:setPropertyActionListener value="#{solicitud}" target="#{solicitudBean.selectedSolicitud}" />  
                             </p:commandButton>                       
                         </p:column> 

@@ -4,6 +4,7 @@
  */
 package com.siscacao.bean;
 
+import com.siscacao.dao.TipoContactoDaoImpl;
 import com.siscacao.dao.ClimaDao;
 import com.siscacao.dao.ClimaDaoImpl;
 import com.siscacao.dao.ContactoDao;
@@ -29,7 +30,7 @@ import com.siscacao.dao.TipoDocumentoDao;
 import com.siscacao.dao.TipoDocumentoDaoImpl;
 import com.siscacao.dao.VariedadDao;
 import com.siscacao.dao.VariedadDaoImpl;
-import com.siscacao.model.TblAsignacionSolicitud;
+import com.siscacao.i18n.diccionario;
 import com.siscacao.model.TblClima;
 import com.siscacao.model.TblContacto;
 import com.siscacao.model.TblCultivo;
@@ -44,19 +45,14 @@ import com.siscacao.model.TblTipoDocumento;
 import com.siscacao.model.TblVariedad;
 import com.siscacao.util.FileUploadController;
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -109,6 +105,7 @@ public class SolicitanteBean implements Serializable {
     private String serial;
     private String descripcion;
     private EstadoDao estadoDao;
+    private diccionario diccionario = new diccionario();
 
     public SolicitanteBean() {
         this.baseURL = new AppBean();
@@ -206,8 +203,6 @@ public class SolicitanteBean implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-    
-    
 
     public Long getSelectedClima() {
         return selectedClima;
@@ -280,10 +275,11 @@ public class SolicitanteBean implements Serializable {
     public void setListEstadoPro(List<TblEstadoProduccion> listEstadoPro) {
         this.listEstadoPro = listEstadoPro;
     }
+
     public String getSerial() {
         return serial;
     }
-    
+
     public void saveInfoSolicitante(ActionEvent actionEvent) {
         RequestContext context = RequestContext.getCurrentInstance();
         //Guarda Solicitante
@@ -294,7 +290,7 @@ public class SolicitanteBean implements Serializable {
         TblContacto contactoMovil = new TblContacto();
         contactoMovil.setContacto(telefonoMovil);
         contactoMovil.setTblTipoContacto(tipoContactoDao.findTipoContactoId("TM"));
-        
+
         TblContacto contactoEmail = new TblContacto();
         contactoEmail.setContacto(email);
         contactoEmail.setTblTipoContacto(tipoContactoDao.findTipoContactoId("EM"));
@@ -348,12 +344,12 @@ public class SolicitanteBean implements Serializable {
         if (this.solicitante != null) {
             loggedIn = true;
             //  FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario.getCuenta());
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenido ", this.solicitante.getNombreSolicitante());
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, this.diccionario.getString("lbl_welcome"), this.solicitante.getNombreSolicitante());
             FacesContext.getCurrentInstance().getViewRoot().setViewId("");
             redirect = "view/inicio.jsf?faces-redirect=true";
         } else {
             loggedIn = false;
-            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Usted no se encuentra registrado", "verifique su numero de identificacion e intente nuevamente");
+            msg = new FacesMessage(FacesMessage.SEVERITY_WARN, this.diccionario.getString("lbl_user_and_request_not_registered"), this.diccionario.getString("lbl_user_and_request_not_registered_detail"));
             if (this.solicitante == null) {
                 this.solicitante = new TblSolicitante();
             }
@@ -445,7 +441,4 @@ public class SolicitanteBean implements Serializable {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-    
-    
-
 }

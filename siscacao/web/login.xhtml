@@ -24,10 +24,10 @@
                 <p:growl id="growl"   life="3000"/>  
                 <p:panel id="ingreso" header="#{msg.hdlogin}" >  
                     <h:panelGrid columns="2" cellpadding="5">  
-                        <h:outputLabel for="username" value="#{msg.user}" />
+                        <h:outputLabel for="username" value="#{msg.user}" style="font-weight: bold" />
                         <p:inputText value="#{loginBean.usuario.cuenta}"   
                                      id="username" required="true" requiredMessage="#{msg.rquser}" label="username"  /> 
-                        <h:outputLabel for="password" value="#{msg.pass}" />  
+                        <h:outputLabel for="password" value="#{msg.pass}" style="font-weight: bold"/>  
                         <p:password value="#{loginBean.usuario.contrasena}"   
                                     id="password" required="true" requiredMessage="#{msg.rqpass}" label="password" />  
                         <f:facet name="footer">  

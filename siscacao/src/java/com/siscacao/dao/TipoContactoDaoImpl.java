@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.siscacao.bean;
+package com.siscacao.dao;
 
 import com.siscacao.dao.TipoContactoDao;
 import com.siscacao.model.TblTipoContacto;
