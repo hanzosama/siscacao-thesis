@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition template="./../templatePortal.xhtml">
+            <p:growl id="sessionout"   sticky="true" showDetail="true"/> 
+            <ui:define name="top">&nbsp;</ui:define>
+            <ui:define name="content">
+                <h:form>
+                    <p:menubar>  
+                        <p:menuitem value="#{msg.home}" url="#{appBean.baseURL}portal/usuarios/revision.jsf?faces-redirect=true"  styleClass="homesiscacao-icon" />  
+                        <f:facet name="options">  
+                            <p:commandButton value="Salir" icon="ui-icon-extlink" action="#{loginBean.logoutToPortal()}" update="@([id=$sessionout])" />  
+                        </f:facet>  
+                    </p:menubar>
+                </h:form>
+            </ui:define>
+            <ui:define name="middle_content">
+                #{solicitudBean.solicitudJson.numeroSolicitud}
+                #{solicitudBean.solicitudJson.nombreSolicitante}
+                #{solicitudBean.solicitudJson.estado}
+                #{solicitudBean.solicitudJson.diagnostico}
+                #{solicitudBean.solicitudJson.recomendaciones}
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

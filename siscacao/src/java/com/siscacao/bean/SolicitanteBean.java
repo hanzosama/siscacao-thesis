@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -106,6 +107,8 @@ public class SolicitanteBean implements Serializable {
     private String descripcion;
     private EstadoDao estadoDao;
     private diccionario diccionario = new diccionario();
+    private boolean isUserRegistered = false;
+    private String documentNumber = "";
 
     public SolicitanteBean() {
         this.baseURL = new AppBean();
@@ -282,6 +285,7 @@ public class SolicitanteBean implements Serializable {
 
     public void saveInfoSolicitante(ActionEvent actionEvent) {
         RequestContext context = RequestContext.getCurrentInstance();
+        if(!isUserRegistered){
         //Guarda Solicitante
         TblContacto contactoFijo = new TblContacto();
         contactoFijo.setContacto(telefonoFijo);
@@ -305,6 +309,7 @@ public class SolicitanteBean implements Serializable {
             }
         }
         solicitanteDao.CreateSolicitante(solicitante);
+        
 
         contactoFijo.setTblSolicitante(solicitante);
         contactoMovil.setTblSolicitante(solicitante);
@@ -313,6 +318,7 @@ public class SolicitanteBean implements Serializable {
         contactoDao.createContacto(contactoMovil);
         contactoDao.createContacto(contactoFijo);
         contactoDao.createContacto(contactoEmail);
+        }
 
         //Guarda Información del cultivo
 
@@ -335,7 +341,49 @@ public class SolicitanteBean implements Serializable {
         fileUploadController.uploadToTmpUserFolder(event, folderName);
     }
 
-    public void loginSolicitante(ActionEvent actionEvent) {
+    public boolean isIsUserRegistered() {
+        return isUserRegistered;
+    }
+
+    public String getDocumentNumber() {
+        return documentNumber;
+    }
+
+    public void setDocumentNumber(String documentNumber) {
+        this.documentNumber = documentNumber;
+    }
+    
+    
+    
+    public String registerSolicitante() {
+        String redirect = "/portal/usuarios/registro.jsf?faces-redirect=true";
+        this.solicitante = this.solicitanteDao.findSolicitanteByNumeroDeDocumento(this.documentNumber);
+        if (this.solicitante != null) {
+            this.isUserRegistered = true;
+            List<TblContacto> usuarioContactos = this.contactoDao.findAllContactosByClientId(this.solicitante.getIdSolicitante());
+            if (usuarioContactos != null) {
+                //this.solicitante.setTblContactos((Set) usuarioContactos);
+                for (TblContacto contacto : usuarioContactos) {
+                    if (contacto.getTblTipoContacto().getNombreTipo().equals("EM")) {
+                        this.email= contacto.getContacto();
+                    }
+                    if (contacto.getTblTipoContacto().getNombreTipo().equals("TF")) {
+                        this.telefonoFijo = contacto.getContacto();
+                    }
+                    if (contacto.getTblTipoContacto().getNombreTipo().equals("TM")) {
+                        this.telefonoMovil = contacto.getContacto();
+                    }
+                }
+            }
+        }else{
+            this.isUserRegistered = false;
+        this.solicitante = new TblSolicitante();
+        }
+
+        return redirect;
+    }
+
+    public String loginSolicitante() {
         FacesMessage msg;
         boolean loggedIn;
         String redirect = "";
@@ -346,7 +394,9 @@ public class SolicitanteBean implements Serializable {
             //  FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", this.usuario.getCuenta());
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, this.diccionario.getString("lbl_welcome"), this.solicitante.getNombreSolicitante());
             FacesContext.getCurrentInstance().getViewRoot().setViewId("");
-            redirect = "view/inicio.jsf?faces-redirect=true";
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("documento", this.solicitante.getNumeroDocumento());
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("id_solicitante", this.solicitante.getIdSolicitante());           
+            redirect = "portal/usuarios/revision.jsf?faces-redirect=true";
         } else {
             loggedIn = false;
             msg = new FacesMessage(FacesMessage.SEVERITY_WARN, this.diccionario.getString("lbl_user_and_request_not_registered"), this.diccionario.getString("lbl_user_and_request_not_registered_detail"));
@@ -356,6 +406,7 @@ public class SolicitanteBean implements Serializable {
         }
         context.addCallbackParam("loggedIn", loggedIn);
         FacesContext.getCurrentInstance().addMessage(null, msg);
+        return redirect;
     }
 
     private void saveCultivoSolicitante() {
@@ -391,10 +442,10 @@ public class SolicitanteBean implements Serializable {
         TblEstado estado = this.estadoDao.findEstadoById(Long.valueOf(1));
         this.tblSolicitud = new TblSolicitud();
         this.tblSolicitud.setFechaSolicitud(currentDate);
-        this.tblSolicitud.setTblSolicitante(solicitante);
-        this.tblSolicitud.setTblCultivo(cultivo);
+        this.tblSolicitud.setTblSolicitante(this.solicitante);
+        this.tblSolicitud.setTblCultivo(this.cultivo);
         this.tblSolicitud.setTblEstado(estado);
-        this.tblSolicitud.setDescripcion(descripcion);
+        this.tblSolicitud.setDescripcion(this.descripcion);
         serial = currentDate.toString();
         serial = serial.replace("-", "");
         serial = serial.replace(":", "");

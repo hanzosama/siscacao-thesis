@@ -12,6 +12,8 @@ import com.siscacao.model.TblSolicitante;
  */
 public interface SolicitanteDao {
  public TblSolicitante findSolicitanteByNumeroDeDocumento(TblSolicitante solicitante);
+ public TblSolicitante findSolicitanteByNumeroDeDocumento(String documentNumber);
  public boolean CreateSolicitante(TblSolicitante solicitante);
  public boolean UpdateSolicitante(TblSolicitante solicitante);
+
 }

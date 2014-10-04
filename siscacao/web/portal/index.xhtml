@@ -15,7 +15,9 @@
                         <div class="mycarusel-caption">
                             <h1>Mejore sus cultivos y aprenda para el futuro</h1>
                             <p class="lead">Si tiene problemas con  su cultivo de cacao, necesita ayuda de un profesional o consejos sobre nuevas tecnologías y procesos para mejorar sus prácticas agrícolas, regístrese en nuestro sistema.</p>
-                            <p:button value="#{msg.register_me}" href="#{appBean.baseURL}portal/usuarios/registro.jsf?faces-redirect=true"></p:button>
+                            <h:form id="form_view_user">
+                                <p:commandButton value="#{msg.register_me}" oncomplete="dialogUsuarioVerify.show()"  ></p:commandButton>
+                            </h:form>
                         </div>                    
                     </p:graphicImage>
                     <p:graphicImage value="#{appBean.baseURL}resources/gfx/slide-02.png" style="width: 1180px; height: 350px;">
@@ -84,34 +86,52 @@
                             </p:inputText>  
                             <f:facet name="footer">
                                 <p:separator/>
-                                <p:commandButton id="btnRegisterAccept" update=":msgs,local_msgs,dlgUsuarioRegister"  actionListener="#{solicitanteBean.loginSolicitante}" oncomplete="handleSubmitRequest(xhr, status, args)"  value="#{msg.login}" icon="ui-icon-person"/>  
+                                <p:commandButton id="btnRegisterAccept" update=":msgs,local_msgs,dlgUsuarioRegister"  action="#{solicitanteBean.loginSolicitante}" oncomplete="handleSubmitRequest(xhr, status, args)"  value="#{msg.login}" icon="ui-icon-person"/>  
                                 <p:commandButton id="btnRegisterCancel" oncomplete="dialogUsuarioRegister.hide();"  title="#{msg.cancel}" value="#{msg.cancel}" icon="ui-icon-closethick"/>  
                             </f:facet>
                         </h:panelGrid>
                         <p:ajax event="close" oncomplete="dialogUsuarioRegister.hide();"/> 
-                    </p:dialog>                     
+                    </p:dialog>   
 
                     <h:form id="form_new_register">
                         <p:confirmDialog id="newRegisterDialog" message="#{msg.lbl_register_request}"  severity="alert" widgetVar="dialogNewRegister" showEffect="fade" hideEffect="clip" >
                             <p:button id="comfirm" value="#{msg.yes}" href="#{appBean.baseURL}portal/usuarios/registro.jsf?faces-redirect=true"   icon="ui-icon-check" />
                             <p:commandButton id="decline" value="#{msg.no}" onclick="dialogNewRegister.hide();
-                                    dialogUsuarioRegister.show();" icon="ui-icon-closethick" type="button"/>   
+                                dialogUsuarioRegister.show();" icon="ui-icon-closethick" type="button"/>   
                         </p:confirmDialog>    
                     </h:form>
 
                 </h:form> 
+                <h:form id="form_veiry_register">
+                    <p:dialog widgetVar="dialogUsuarioVerify" resizable="false" id="dlgUsuarioVerify"  
+                              showEffect="fade" hideEffect="clip" modal="true">
+                        <p:messages id="local_msgs" closable="true" autoUpdate="true"/>  
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">           
+                            <h:outputText value="#{msg.number_document}" />  
+                            <p:inputText value="#{solicitanteBean.documentNumber}" required="true" requiredMessage="#{msg.wrn_document_required}" validatorMessage="#{msg.inf_document_required}" placeholder="#{msg.lbl_documents_types_holder}">
+                                <f:validateLength minimum="2" maximum="18" />  
+                            </p:inputText>  
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <p:commandButton id="btnRegisterAccept" update=":msgs,local_msgs,dlgUsuarioVerify"  action="#{solicitanteBean.registerSolicitante}" oncomplete="dialogUsuarioVerify.hide();"  value="#{msg.login}" icon="ui-icon-person"/>  
+                                <p:commandButton id="btnRegisterCancel" oncomplete="dialogUsuarioVerify.hide();"  title="#{msg.cancel}" value="#{msg.cancel}" icon="ui-icon-closethick"/>  
+                            </f:facet>
+                        </h:panelGrid>
+                        <p:ajax event="close" oncomplete="dialogUsuarioVerify.hide();"/> 
+                    </p:dialog> 
+                </h:form>
                 <script type="text/javascript">
-                                //pendiente implementacion de callback
-                                function handleSubmitRequest(xhr, status, args) {
-                                    if (args.validationFailed) {
-                                        dialogUsuarioRegister.show();
-                                        //dialog.effect("shake", {times: 3}, 100);
-                                    } else if (args.loggedIn == false) {
-                                        dialogUsuarioRegister.hide();
-                                        dialogNewRegister.show();
-                                        //  dialog.show();                               
-                                    }
+                            //pendiente implementacion de callback
+                            function handleSubmitRequest(xhr, status, args) {
+                                if (args.validationFailed) {
+                                    dialogUsuarioRegister.show();
+                                    //dialog.effect("shake", {times: 3}, 100);
+                                } else if (args.loggedIn == false) {
+                                    dialogUsuarioRegister.hide();
+                                    dialogNewRegister.show();
+                                    //  dialog.show();                               
                                 }
+                            }
                 </script>
             </ui:define>
 

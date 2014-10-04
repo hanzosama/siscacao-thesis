@@ -12,4 +12,6 @@ import com.siscacao.model.TblCultivo;
  */
 public interface CultivoDao {
     public boolean createCultivo(TblCultivo tblCultivo);
+    public TblCultivo getCultivoById(Long id);
+    public TblCultivo getCultivo(TblCultivo cultivo);
 }

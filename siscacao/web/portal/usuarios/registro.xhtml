@@ -25,38 +25,38 @@
                         </p:dialog> 
                     </p:ajaxStatus>
                     <p:wizard widgetVar="wiz" nextLabel="#{msg.lbl_next}" backLabel="#{msg.lbl_previous}" showStepStatus="false" >  
-                        <p:tab id="personal" title="#{msg.title_personal_data}" >
+                        <p:tab id="personal" title="#{msg.title_personal_data}"  >
                             <p:panel id="panel" header="#{msg.title_personal_data}" style="margin-bottom:10px;">  
                                 <h:panelGrid columns="3" cellpadding="2">
                                     <h:outputLabel value="#{msg.lbl_complete_name}" for="nombreSolicitante" style="font-weight: bold" />
-                                    <p:inputText id="nombreSolicitante" value="#{solicitanteBean.solicitante.nombreSolicitante}" requiredMessage="#{msg.wrn_complete_name_req}" required="true" label="nombreSolicitante"/>
+                                    <p:inputText id="nombreSolicitante" value="#{solicitanteBean.solicitante.nombreSolicitante}" requiredMessage="#{msg.wrn_complete_name_req}" required="true" label="nombreSolicitante" disabled="#{solicitanteBean.isUserRegistered}"/>
                                     <p:message for="nombreSolicitante" />
                                     <h:outputLabel value="#{msg.lbl_departament}" for="departamento" style="font-weight: bold"/>
-                                    <p:selectOneMenu id="departamento" value="#{solicitanteBean.selectedDepartamento}" required="true" requiredMessage="#{msg.wrn_departament_req}" filter="true">  
+                                    <p:selectOneMenu id="departamento" value="#{solicitanteBean.selectedDepartamento}" required="true" requiredMessage="#{msg.wrn_departament_req}" filter="true" disabled="#{solicitanteBean.isUserRegistered}">  
                                         <f:selectItem itemLabel="seleccione" itemValue="" />  
                                         <f:selectItems value="#{solicitanteBean.listDepartamentos}" var="depto" itemLabel="#{depto.nombreDepartamento}" itemValue="#{depto.idDepartamento}"/>
                                     </p:selectOneMenu>
                                     <p:message for="departamento" />
                                     <h:outputLabel value="#{msg.lbl_document_type}" for="idTipoDocumento" style="font-weight: bold" />
-                                    <p:selectOneMenu id="idTipoDocumento" value="#{solicitanteBean.selectedTipoDocumento}" >
+                                    <p:selectOneMenu id="idTipoDocumento" value="#{solicitanteBean.selectedTipoDocumento}" disabled="#{solicitanteBean.isUserRegistered}">
                                         <f:selectItems value="#{solicitanteBean.listTblTipoDocumentos}" var="tipos" itemLabel="#{tipos.nombreTipo}-#{tipos.descripcionTipo}" itemValue="#{tipos.idTipoDocumento}" />
                                     </p:selectOneMenu>
                                     <p:column/>
                                     <h:outputLabel value="#{msg.number_document}" for="numeroDocumento" style="font-weight: bold" />
-                                    <p:inputText id="numeroDocumento"  value="#{solicitanteBean.solicitante.numeroDocumento}" title="#{msg.number_document}" required="true" label="numeroDocumento" requiredMessage="#{msg.wrn_document_number_required}" converterMessage="#{msg.wrn_document_number_not_valid}" >
+                                    <p:inputText id="numeroDocumento"  value="#{solicitanteBean.solicitante.numeroDocumento}" title="#{msg.number_document}" required="true" label="numeroDocumento" requiredMessage="#{msg.wrn_document_number_required}" converterMessage="#{msg.wrn_document_number_not_valid}" disabled="#{solicitanteBean.isUserRegistered}">
                                         <f:convertNumber type="number"/>
                                         <f:validateLength minimum="2" /> 
                                     </p:inputText>
                                     <p:message for="numeroDocumento" /> 
                                     <h:outputLabel value="#{msg.lbl_phone_1}" for="idContactoFijo" style="font-weight: bold"/>
-                                    <p:inputText id="idContactoFijo"  value="#{solicitanteBean.telefonoFijo}" title="#{msg.lbl_phone_1}"  requiredMessage="#{msg.wrn_phone_1_required}" required="true" >
+                                    <p:inputText id="idContactoFijo"  value="#{solicitanteBean.telefonoFijo}" title="#{msg.lbl_phone_1}"  requiredMessage="#{msg.wrn_phone_1_required}" required="true"  disabled="#{solicitanteBean.isUserRegistered}">
                                     </p:inputText>
                                     <p:message for="idContactoFijo" />
                                     <h:outputLabel value="#{msg.lbl_phone_2}" for="idContactoMovil" style="font-weight: bold"/>
-                                    <p:inputMask id="idContactoMovil" value="#{solicitanteBean.telefonoMovil}" mask="(999) 999-9999" required="true" requiredMessage="#{msg.wrn_phone_2_required}"/>
+                                    <p:inputMask id="idContactoMovil" value="#{solicitanteBean.telefonoMovil}" mask="(999) 999-9999" required="true" requiredMessage="#{msg.wrn_phone_2_required}" disabled="#{solicitanteBean.isUserRegistered}"/>
                                     <p:message for="idContactoMovil" />
                                     <h:outputLabel value="#{msg.lbl_email}" for="idEmail" style="font-weight: bold" />
-                                    <p:inputText id="idEmail" value="#{solicitanteBean.email}"  validatorMessage="#{msg.wrn_email_not_valid}" requiredMessage="#{msg.wrn_email_required}">
+                                    <p:inputText id="idEmail" value="#{solicitanteBean.email}"  validatorMessage="#{msg.wrn_email_not_valid}" requiredMessage="#{msg.wrn_email_required}"  disabled="#{solicitanteBean.isUserRegistered}">
                                         <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
                                     </p:inputText>
                                     <p:message for="idEmail" />
@@ -108,7 +108,7 @@
                                     <p:column/>  
 
                                     <h:outputLabel value="#{msg.lbl_problem_detail}" for="descripcionProblema" style="font-weight: bold"/>
-                                    <p:inputTextarea id="descripcionProblema" rows="10" cols="120" required="true" requiredMessage="#{msg.wrn_problem_detail_required}"   autoResize="false" value="#{solicitanteBean.descripcion}" />
+                                    <p:inputTextarea id="descripcionProblema" rows="10" cols="80" required="true" requiredMessage="#{msg.wrn_problem_detail_required}"   autoResize="false" value="#{solicitanteBean.descripcion}" />
                                     <p:column/> 
                                 </h:panelGrid>
                             </p:panel>

@@ -29,9 +29,17 @@ public class LoginBean implements Serializable {
     private UsuarioDao usuarioDAO;
     private AppBean baseURL;
     private diccionario diccionario = new diccionario();
+    private DashboardBean dashboardBean;
+
+    public DashboardBean getDashboardBean() {
+        return dashboardBean;
+    }
+    
+    
 
     public LoginBean() {
         this.baseURL = new AppBean();
+        this.dashboardBean = new DashboardBean();
         this.usuarioDAO = new UsuarioDaoImpl();
         if (this.usuario == null) {
             this.usuario = new TblUsuario();
@@ -60,6 +68,7 @@ public class LoginBean implements Serializable {
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, this.diccionario.getString("lbl_welcome"), this.usuario.getNombreUsuario());
             FacesContext.getCurrentInstance().getViewRoot().setViewId("");
             if(this.usuario.getRol().equals("Administrador")){
+                this.dashboardBean.viewDashBoard();
             redirect = "view/inicio.jsf?faces-redirect=true";
             }else if(this.usuario.getRol().equals("Consultor")){
             redirect = "view/revision.jsf?faces-redirect=true";    
@@ -87,6 +96,18 @@ public class LoginBean implements Serializable {
         facesContext.getViewRoot().setViewId("");
         logoutSess();
         redirect = "login.xhtml?faces-redirect=true";
+        return redirect;
+    }
+    
+      public String logoutToPortal() {
+        String redirect = "";
+        RequestContext context = RequestContext.getCurrentInstance();
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        this.usuario = new TblUsuario();
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        facesContext.getViewRoot().setViewId("");
+        //logoutSess();
+        redirect = "portal/index.xhtml?faces-redirect=true";
         return redirect;
     }
 

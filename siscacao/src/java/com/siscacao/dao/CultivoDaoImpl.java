@@ -6,7 +6,9 @@ package com.siscacao.dao;
 
 import com.siscacao.model.TblCultivo;
 import com.siscacao.util.HibernateConnectUtil;
+import org.hibernate.FetchMode;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -30,5 +32,39 @@ public class CultivoDaoImpl implements CultivoDao{
         }
         return result;
     }
+
+    @Override
+    public TblCultivo getCultivoById(Long id) {
+         TblCultivo cultivo=null;  
+     Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        String sql = "FROM TblCultivo WHERE idCultivo='" + id + "'";
+        try {
+            session.beginTransaction();
+            cultivo = (TblCultivo) session.createQuery(sql).uniqueResult();
+            session.beginTransaction().commit();
+        } catch (Exception e) {
+            session.beginTransaction().rollback();            
+        }
+        return cultivo;   
+    }
+
+    @Override
+    public TblCultivo getCultivo(TblCultivo cultivo) {
+        
+         TblCultivo tblCultivo = null;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        try {
+            session.beginTransaction();
+            tblCultivo = (TblCultivo)session.createCriteria(TblCultivo.class).add(Restrictions.eq("idCultivo",cultivo.getIdCultivo())).setFetchMode("tblEstadoProduccion", FetchMode.EAGER).setFetchMode("tblVariedad", FetchMode.EAGER).setFetchMode("tblTecnicaCultivo", FetchMode.EAGER).list().get(0);
+            session.beginTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.beginTransaction().rollback();
+        }
+        return tblCultivo;
+    }
+    
+    
+    
     
 }

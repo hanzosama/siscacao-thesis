@@ -8,11 +8,18 @@
     <ui:composition template="solicitudesTemplate.xhtml">
         <body onload="calledOnLoad();" >      
             <ui:define name="content">
+                <h:form id="menu_dashboard">
+                    <p:menubar>  
+                        <p:submenu label="Monitor" icon="ui-icon-document">
+                            <p:menuitem  value="Dashboard" icon="ui-icon-disk" action="#{dashboardBean.viewDashBoard()}" update=""/>
+                        </p:submenu> 
+                    </p:menubar>  
+                </h:form>
                 <h:form id="form_data_solicitudes"> 
-                    <p:dataTable id="users"  var="solicitud" value="#{solicitudBean.solicitudes}" paginator="true" rows="10" paginatorPosition="bottom" currentPageReportTemplate="{currentPage} de {totalPages}" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                    <p:dataTable id="users"  var="solicitud" value="#{solicitudBean.solicitudes}" paginator="true" rows="10" paginatorPosition="bottom" currentPageReportTemplate="{currentPage} de {totalPages}  - Total: {totalRecords}" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
                                  sortMode="multiple"  widgetVar="solicitudTable"   filteredValue="#{solicitudBean.filteredSolicitudes}" emptyMessage="#{msg.lbl_request_no_available}" >  
                         <f:facet name="header" >  
-                            Solicitudes pendientes
+                            #{msg.lbl_request_pending}
                             <BR/>
                             <p:outputPanel style="position: absolute; right: 20px;">  
                                 <h:outputText value="${msg.lbl_search_request}" />  

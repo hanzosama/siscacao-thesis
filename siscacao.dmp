@@ -699,7 +699,7 @@ CREATE TABLE tbl_respuesta_solicitud (
     id_solicitud integer,
     id_diagnostico integer,
     descripcion_respuesta text,
-    fecha_respuesta time without time zone
+    fecha_respuesta timestamp with time zone
 );
 
 
@@ -874,13 +874,13 @@ CREATE TABLE tbl_solicitud (
     id_solicitante integer,
     id_vereda integer,
     id_tipo_solicitud integer,
-    fecha_solicitud time without time zone NOT NULL,
     id_etapa integer,
     id_fase integer,
     id_estado integer,
     serial character varying(100),
     descripcion character varying(600),
-    id_diagnostico integer
+    id_diagnostico integer,
+    fecha_solicitud timestamp with time zone
 );
 
 
@@ -1422,7 +1422,7 @@ COPY tbl_asignacion_solicitud (id_asignacion_solicitud, id_usuario, id_solicitud
 -- Name: tbl_asignacion_solicitud_id_asignacion_solicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_asignacion_solicitud_id_asignacion_solicitud_seq', 108, true);
+SELECT pg_catalog.setval('tbl_asignacion_solicitud_id_asignacion_solicitud_seq', 150, true);
 
 
 --
@@ -2577,7 +2577,6 @@ COPY tbl_clima (id_clima, nombre_clima) FROM stdin;
 8	Muy frío: −25 a −10 °C
 9	Severamente frío: −40 a −25 °C
 10	Excesivamente frío: −40 °C -
-112312	12312312
 \.
 
 
@@ -2600,7 +2599,7 @@ COPY tbl_contacto (id_contacto, id_solicitante, contacto, id_tipo_contacto) FROM
 -- Name: tbl_contacto_id_contacto_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_contacto_id_contacto_seq', 374, true);
+SELECT pg_catalog.setval('tbl_contacto_id_contacto_seq', 490, true);
 
 
 --
@@ -2608,92 +2607,6 @@ SELECT pg_catalog.setval('tbl_contacto_id_contacto_seq', 374, true);
 --
 
 COPY tbl_cultivo (id_cultivo, nombre_cultivo, extension_cultivo, id_variedad, id_clima, id_estado_produccion, id_tecnica, edad_cultivo) FROM stdin;
-65	ghhd	65555	1	1	1	\N	\N
-66	ghhd	65555	1	1	1	\N	\N
-67	ghhd	65555	1	1	1	\N	\N
-68	limonar	52	1	2	1	\N	\N
-69	limonar	52	1	2	1	\N	\N
-70	jakal	623	1	2	1	\N	\N
-71	hojarasca	3233	1	2	1	\N	\N
-72	sdas	12	1	1	1	1	123
-73	1212	212	1	1	1	1	1212
-74	212	1212	1	1	1	1	2323
-75	wqe	qw	1	4	1	1	qw
-76	hdhhx	5885	1	2	1	\N	\N
-77	cultivo	12 mts	1	7	1	1	12
-78	fhfgg	558868	1	2	1	\N	\N
-79	fhfgg	558868	1	2	1	\N	\N
-80	fggg	555	1	2	1	\N	\N
-81	fggg	555	1	2	1	\N	\N
-82	fggg	555	1	2	1	\N	\N
-83	vfhcghg	55665	1	3	1	\N	\N
-84	vfhcghg	55665	1	3	1	\N	\N
-85	ggghgg	65566	1	2	1	\N	\N
-86	vvvcv	9996	1	3	1	\N	\N
-87	vvvcv	9996	1	3	1	\N	\N
-88	vvvcv	9996	1	3	1	\N	\N
-89	dfgf	5555	1	2	1	\N	\N
-90	gfggg	8856	1	2	1	\N	\N
-91	gdnc	8899	1	4	1	\N	\N
-92	asas	asasas	1	1	\N	1	121
-93	fxhv	9899	1	2	1	\N	\N
-94	fhg	88689	1	3	1	\N	\N
-95	bfhhhgg	56696	1	2	1	\N	\N
-96	vcvvv	9885	1	1	1	\N	\N
-97	vfg	5588	1	2	1	\N	\N
-98	gfgg	8888	1	2	1	\N	\N
-99	ccvvv	855	1	1	1	\N	\N
-100	gffvg	8886	1	2	1	\N	\N
-101	cultivo	12121	1	3	1	1	1212
-102	la sabana	\N	1	1	1	\N	\N
-103	el rosak	450	1	2	1	\N	\N
-104	el rosal	235	1	4	1	\N	\N
-105	bdbvvd	956665	1	3	1	\N	\N
-106	hdbvvd	949885	1	4	1	\N	\N
-107	bdbvvd	98885	1	3	1	\N	\N
-108	bdvvvr	29992	1	3	1	\N	\N
-109	hxbbvd	5085	1	3	1	\N	\N
-110	xxvvg	88666	1	2	1	\N	\N
-111	fjcg	5896	1	3	1	\N	\N
-112	dhcvh	95885	1	3	1	\N	\N
-113	dhfg	855	1	2	1	\N	\N
-114	gdgf	55888	1	4	1	\N	\N
-115	csgg	588	1	2	1	\N	\N
-116	bfvg	8566	1	3	1	\N	\N
-117	cdhc	8888	1	2	1	\N	\N
-118	gfhg	9888	1	3	1	\N	\N
-119	el lago	254	1	4	1	\N	\N
-120	la promesa	45	1	3	1	\N	\N
-121	 vvccccf	988888	1	3	1	\N	\N
-122	gfff	8888	1	2	1	\N	\N
-123	el polo	2553	1	3	1	\N	\N
-124	asda	1232	1	4	1	1	12
-125	1231	12312	1	2	1	1	23123
-126	1212121	1212	1	2	1	1	1212
-127	12312	1312312	1	3	1	1	12312
-128	1212	121	1	2	1	1	12121
-129	123	1231	1	2	1	1	12312
-130	1212	1212	1	2	1	1	1212
-131	12312	12312	1	3	1	1	123123
-132	1212	121212	1	3	1	1	1212
-133	132	23	1	1	1	1	1212
-134	2312	12312	1	2	1	1	21312
-135	21313	123123	1	3	1	1	123123
-136	1231	23123	1	3	1	1	2313
-137	213123	123123	1	2	1	1	213123
-138	12312	12312	1	1	1	1	1231231
-139	la sabana	\N	1	1	1	\N	\N
-140	sdasd	asdsad	1	3	1	1	asdas
-141	Cacao1		\N	0	\N	\N	
-142	el paraiso	5000	1	4	1	\N	\N
-143	el paraiso	526	1	3	1	\N	\N
-144	asdasdsa	sadad	\N	0	\N	\N	
-145	asd	asdas	\N	0	\N	\N	
-146	wewe	wewewe	\N	0	\N	\N	
-147	asdasd		\N	0	\N	\N	
-148	hhgfgg	89886	1	2	1	\N	\N
-149	hdbbvx	899995	1	2	1	\N	\N
-150	nsnshd	7172	1	3	1	\N	\N
 \.
 
 
@@ -2701,7 +2614,7 @@ COPY tbl_cultivo (id_cultivo, nombre_cultivo, extension_cultivo, id_variedad, id
 -- Name: tbl_cultivo_id_cultivo_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_cultivo_id_cultivo_seq', 150, true);
+SELECT pg_catalog.setval('tbl_cultivo_id_cultivo_seq', 192, true);
 
 
 --
@@ -2779,7 +2692,7 @@ COPY tbl_diagnostico (id_diagnostico, nombre_diagnostico, descripcion_diagnostic
 -- Name: tbl_diagnostico_caracteristic_id_diagnostico_caracteristica_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_diagnostico_caracteristic_id_diagnostico_caracteristica_seq', 12, true);
+SELECT pg_catalog.setval('tbl_diagnostico_caracteristic_id_diagnostico_caracteristica_seq', 50, true);
 
 
 --
@@ -2794,7 +2707,7 @@ COPY tbl_diagnostico_caracteristica (id_diagnostico_caracteristica, id_diagnosti
 -- Name: tbl_diagnostico_id_diagnostico_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_diagnostico_id_diagnostico_seq', 17, true);
+SELECT pg_catalog.setval('tbl_diagnostico_id_diagnostico_seq', 56, true);
 
 
 --
@@ -2809,7 +2722,7 @@ COPY tbl_diagnostico_imagen (id_diagnostico_imagen, id_diagnostico, id_diagnosti
 -- Name: tbl_diagnostico_imagen_id_diagnostico_imagen_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_diagnostico_imagen_id_diagnostico_imagen_seq', 16, true);
+SELECT pg_catalog.setval('tbl_diagnostico_imagen_id_diagnostico_imagen_seq', 39, true);
 
 
 --
@@ -2941,7 +2854,7 @@ COPY tbl_imagen (id_imagen, id_solicitud, nombre_imagen, path_imagen) FROM stdin
 -- Name: tbl_imagen_id_imagen_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_imagen_id_imagen_seq', 297, true);
+SELECT pg_catalog.setval('tbl_imagen_id_imagen_seq', 393, true);
 
 
 --
@@ -2978,7 +2891,7 @@ COPY tbl_push_device (numero_documento, device_id, push_device_id) FROM stdin;
 -- Name: tbl_push_device_push_device_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_push_device_push_device_id_seq', 15, true);
+SELECT pg_catalog.setval('tbl_push_device_push_device_id_seq', 20, true);
 
 
 --
@@ -2993,7 +2906,7 @@ COPY tbl_respuesta_solicitud (id_respuesta_solicitud, id_solicitud, id_diagnosti
 -- Name: tbl_respuesta_solicitud_id_respuesta_solicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_respuesta_solicitud_id_respuesta_solicitud_seq', 5, true);
+SELECT pg_catalog.setval('tbl_respuesta_solicitud_id_respuesta_solicitud_seq', 35, true);
 
 
 --
@@ -3103,14 +3016,14 @@ COPY tbl_solicitante (id_solicitante, nombre_solicitante, id_departamento, id_ti
 -- Name: tbl_solicitante_id_solicitante_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_solicitante_id_solicitante_seq', 252, true);
+SELECT pg_catalog.setval('tbl_solicitante_id_solicitante_seq', 292, true);
 
 
 --
 -- Data for Name: tbl_solicitud; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY tbl_solicitud (id_solicitud, id_cultivo, id_solicitante, id_vereda, id_tipo_solicitud, fecha_solicitud, id_etapa, id_fase, id_estado, serial, descripcion, id_diagnostico) FROM stdin;
+COPY tbl_solicitud (id_solicitud, id_cultivo, id_solicitante, id_vereda, id_tipo_solicitud, id_etapa, id_fase, id_estado, serial, descripcion, id_diagnostico, fecha_solicitud) FROM stdin;
 \.
 
 
@@ -3118,7 +3031,7 @@ COPY tbl_solicitud (id_solicitud, id_cultivo, id_solicitante, id_vereda, id_tipo
 -- Name: tbl_solicitud_id_solicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_solicitud_id_solicitud_seq', 125, true);
+SELECT pg_catalog.setval('tbl_solicitud_id_solicitud_seq', 167, true);
 
 
 --
@@ -3160,10 +3073,10 @@ SELECT pg_catalog.setval('tbl_tipo_contacto_id_tipo_contacto_seq', 3, true);
 --
 
 COPY tbl_tipo_documento (id_tipo_documento, descripcion_tipo, nombre_tipo) FROM stdin;
-3	Número de Identificación Tributaria	NIT
-1	Cédula de ciudadanía	C.C
-4	Cédula de Extranjería	C.E
 2	Tarjeta de identidad	T.I
+4	Cédula de Extranjería	C.E
+1	Cédula de ciudadanía	C.C
+3	Número de Identificación Tributaria	NIT
 \.
 
 
@@ -3230,7 +3143,13 @@ SELECT pg_catalog.setval('tbl_usuario_rol_id_usuario_rol_seq', 43, true);
 --
 
 COPY tbl_variedad (id_variedad, nombre_variedad) FROM stdin;
-1	A1
+1	Cundeamor
+2	Liso
+3	Amelonado
+4	Calabacillo
+5	Ordinario
+6	Angoleta
+7	Criollo
 \.
 
 
@@ -3238,7 +3157,7 @@ COPY tbl_variedad (id_variedad, nombre_variedad) FROM stdin;
 -- Name: tbl_variedad_id_variedad_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tbl_variedad_id_variedad_seq', 1, true);
+SELECT pg_catalog.setval('tbl_variedad_id_variedad_seq', 7, true);
 
 
 --

@@ -18,6 +18,7 @@ public interface SolicitudDao {
   public boolean updateSolicitud(TblSolicitud tblSolicitud);
   public List<TblSolicitud> retrieveListSolicitudPending();
   public List<TblSolicitud> retrieveListSolicitudPendingForUser(Long id_user);
+  public List<TblSolicitud> retrieveListSolicitudForSolicitante(Long id_solicitante);
   public void signedSolicitud(TblSolicitud tblSolicitud,TblUsuario tblUsuario);
   public TblSolicitud findSolicitudByIdSolicitante(TblSolicitante solicitante);  
   public TblSolicitud findSolicitudBySerial(TblSolicitud solicitud);

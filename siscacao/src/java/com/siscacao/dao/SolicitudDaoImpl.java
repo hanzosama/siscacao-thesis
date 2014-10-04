@@ -5,6 +5,7 @@
 package com.siscacao.dao;
 
 import com.siscacao.model.TblAsignacionSolicitud;
+import com.siscacao.model.TblCultivo;
 import com.siscacao.model.TblEstado;
 import com.siscacao.model.TblImagen;
 import com.siscacao.model.TblSolicitante;
@@ -84,6 +85,7 @@ public class SolicitudDaoImpl implements SolicitudDao {
         String sql = "select * from tbl_solicitud solicitud \n"
                 + "left join tbl_asignacion_solicitud asignacion on asignacion.id_solicitud=solicitud.id_solicitud\n"
                 + "left join tbl_estado estado on estado.id_estado= solicitud.id_estado\n"
+                + "left join tbl_cultivo cultivo on cultivo.id_cultivo= solicitud.id_cultivo\n"
                 + "where (solicitud.id_estado=1 or solicitud.id_estado=2 or solicitud.id_estado=3 ) and asignacion.id_usuario=" + id_user + " ORDER BY estado.id_estado DESC";
         try {
             session.beginTransaction();
@@ -94,6 +96,35 @@ public class SolicitudDaoImpl implements SolicitudDao {
                 sol.setTblSolicitante((TblSolicitante) (session.createSQLQuery("select * from tbl_solicitante  solicitante left join tbl_solicitud solicitud on solicitud.id_solicitante=solicitante.id_solicitante\n"
                         + "where solicitud.id_solicitud=" + sol.getIdSolicitud() + "").addEntity("solicitante", TblSolicitante.class).uniqueResult()));
                 sol.setTblEstado((TblEstado)(session.createSQLQuery("select * from tbl_estado estado where id_estado=" + sol.getTblEstado().getIdEstado() + "").addEntity("estado", TblEstado.class).uniqueResult()));
+                sol.setTblCultivo((TblCultivo)(session.createSQLQuery("select * from tbl_cultivo cultivo where id_cultivo=" + sol.getTblCultivo().getIdCultivo() + "").addEntity("cultivo", TblCultivo.class).uniqueResult()));    
+            }
+            session.beginTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.beginTransaction().rollback();
+        }
+        return listUsersModel;
+    }
+
+    @Override
+    public List<TblSolicitud> retrieveListSolicitudForSolicitante(Long id_solicitante) {
+        
+        List<TblSolicitud> listUsersModel = null;
+        Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        String sql = "select * from tbl_solicitud solicitud \n"
+                + "left join tbl_asignacion_solicitud asignacion on asignacion.id_solicitud=solicitud.id_solicitud\n"
+                + "left join tbl_estado estado on estado.id_estado= solicitud.id_estado\n"
+                + "where solicitud.id_solicitante=" + id_solicitante + " ORDER BY estado.id_estado DESC";
+        try {
+            session.beginTransaction();
+            listUsersModel = (List<TblSolicitud>) session.createSQLQuery(sql).addEntity("solicitud", TblSolicitud.class).list();
+            for (TblSolicitud sol : listUsersModel) {
+                Set<TblImagen> tblImagens = new HashSet<TblImagen>(session.createQuery("from TblImagen where tblSolicitud=" + sol.getIdSolicitud() + " and not ( nombreImagen like '%crop%')").list());
+                sol.setTblImagens(tblImagens);
+                sol.setTblSolicitante((TblSolicitante) (session.createSQLQuery("select * from tbl_solicitante  solicitante left join tbl_solicitud solicitud on solicitud.id_solicitante=solicitante.id_solicitante\n"
+                        + "where solicitud.id_solicitud=" + sol.getIdSolicitud() + "").addEntity("solicitante", TblSolicitante.class).uniqueResult()));
+                sol.setTblEstado((TblEstado)(session.createSQLQuery("select * from tbl_estado estado where id_estado=" + sol.getTblEstado().getIdEstado() + "").addEntity("estado", TblEstado.class).uniqueResult()));
+                sol.setTblCultivo((TblCultivo)(session.createSQLQuery("select * from tbl_cultivo cultivo where id_cultivo=" + sol.getTblCultivo().getIdCultivo() + "").addEntity("cultivo", TblCultivo.class).uniqueResult()));    
                 }
             session.beginTransaction().commit();
         } catch (Exception e) {
@@ -102,6 +133,7 @@ public class SolicitudDaoImpl implements SolicitudDao {
         }
         return listUsersModel;
     }
+    
 
     @Override
     public void signedSolicitud(TblSolicitud tblSolicitud, TblUsuario tblUsuario) {

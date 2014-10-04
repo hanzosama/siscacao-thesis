@@ -84,15 +84,29 @@
                                 <p:row>
                                     <p:column  style="display: block;margin-left: auto;margin-right: auto;">
                                         <p:panel id="descripcionPanel" header="#{msg.lbl_symptom_description_and_detail}" style="margin-bottom:10px;">  
-                                            <p:panelGrid columns="2" >                                                                      
-                                                <h:outputLabel value="#{msg.lbl_symptom_description}" for="descripcionProblema"/>
+                                            <p:panelGrid columns="2" >    
+                                                <h:outputLabel value="#{msg.lbl_crop_name}" for="nombreCultivo" style="font-weight: bold"/>
+                                                <h:outputLabel value="#{solicitudBean.cultivo.nombreCultivo}" />
+                                                <h:outputLabel value="#{msg.lbl_crop_ext}" for="extensionCultivo" style="font-weight: bold"/>
+                                                <h:outputLabel value="#{solicitudBean.cultivo.extensionCultivo}"  />
+                                                <h:outputLabel value="#{msg.lbl_crop_age}" for="edadCultivo" style="font-weight: bold"/>
+                                                <h:outputLabel value="#{solicitudBean.cultivo.edadCultivo}"/>
+                                                <h:outputLabel value="#{msg.lbl_weather}" for="nombreClima" style="font-weight: bold"/>                   
+                                                <h:outputLabel value="#{solicitudBean.nombreClima}" />  
+                                                <h:outputLabel value="#{msg.lbl_crop_variety}" for="nombreVariedad" style="font-weight: bold"/>
+                                                <h:outputLabel value="#{solicitudBean.nombreVaridad}" /> 
+                                                <h:outputLabel value="#{msg.lbl_crop_tech}" for="nombreTecnica" style="font-weight: bold"/>
+                                                <h:outputLabel value="#{solicitudBean.tecnicaCultivo}" /> 
+                                                <h:outputLabel value="#{msg.lbl_production_status}" for="descripcionEstado" style="font-weight: bold"/>
+                                                <h:outputLabel value="#{solicitudBean.estadoProduccion}" /> 
+                                                <h:outputLabel value="#{msg.lbl_symptom_description}" for="descripcionProblema" style="font-weight: bold"/>
                                                 <p:inputTextarea id="descripcionProblema" rows="10" cols="20" disabled="true"   autoResize="false" value="#{solicitudBean.selectedSolicitud.descripcion}" />
                                             </p:panelGrid>
                                         </p:panel>
                                     </p:column>   
-                                    <p:column >
-                                        <p:panel id="sintomasPanel" header="#{msg.lbl_symptom_relation}">  
-                                            <p:panelGrid style="width:750px;" > 
+                                    <p:column  style="vertical-align: top">
+                                        <p:panel id="sintomasPanel" header="#{msg.lbl_symptom_relation}" >  
+                                            <p:panelGrid style="width:700px;" > 
                                                 <p:row>
                                                     <p:column>
                                                         <h:outputLabel for="menuSintomas" value="#{msg.lbl_symptom_common_symtom}" />

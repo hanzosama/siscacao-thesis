@@ -30,6 +30,23 @@ public class SolicitanteDaoImpl implements SolicitanteDao {
     }
 
     @Override
+    public TblSolicitante findSolicitanteByNumeroDeDocumento(String documentNumber) {
+        TblSolicitante solicitanteTmp=null;  
+     Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();
+        String sql = "FROM TblSolicitante WHERE numeroDocumento='" + documentNumber + "'";
+        try {
+            session.beginTransaction();
+            solicitanteTmp = (TblSolicitante) session.createQuery(sql).uniqueResult();
+            session.beginTransaction().commit();
+        } catch (Exception e) {
+            session.beginTransaction().rollback();            
+        }
+        return solicitanteTmp;  
+    }
+    
+    
+
+    @Override
     public boolean CreateSolicitante(TblSolicitante solicitante) {
         boolean result;
         Session session = HibernateConnectUtil.getSessionFactory().getCurrentSession();

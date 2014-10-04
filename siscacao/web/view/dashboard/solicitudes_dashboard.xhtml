@@ -6,46 +6,48 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-    <ui:composition template="template.xhtml">
-        <body >      
-            <ui:define name="content">
-                <!-- <h:form id="exporter">
-                     <p:commandButton value="Export as PDF" ajax="false" >
-                         <p:dataExporter type="pdf" target="board" fileName="repostes"  pageOnly="true"/>
-                     </p:commandButton>
-                 </h:form> -->
-                <p:dashboard id="board" model="#{loginBean.dashboardBean.model}" > 
+    <body>
+
+        <ui:composition template="./../solicitudesTemplate.xhtml">
+            <ui:define name="content" >
+                <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();" >  
+                    <p:dialog modal="true" widgetVar="statusDialog"   
+                              draggable="false" closable="false">  
+                        <p:graphicImage value="#{appBean.baseURL}resources/gfx/ajax-loader.gif" />
+                    </p:dialog> 
+                </p:ajaxStatus>
+                <p:dashboard id="board" model="#{dashboardBean.model}" > 
                     <p:panel id="Resultados" header="Asertividad de las redes neuronales" toggleable="true">
                         <h:outputText value="Resultados analizados &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                       "/>
-                        <p:pieChart id="pieResult"  value="#{loginBean.dashboardBean.pieResultNeuroph}" legendPosition="w" fill="true" showDataLabels="true" diameter="200" /> 
+                        <p:pieChart id="pieResult"  value="#{dashboardBean.pieResultNeuroph}" legendPosition="w" fill="true" showDataLabels="true" diameter="200" /> 
                     </p:panel>
                     <p:panel id="Resultados2" header="Concurrencia de las enfermedades" toggleable="true">
                         <h:outputText value="Resultados analizados &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/>
-                        <p:barChart id="barChartCartesianMadness" value="#{loginBean.dashboardBean.cartesianMadness}" legendPosition="ne" max="100" yaxisLabel="Total de casos registrados: #{loginBean.dashboardBean.totalRecords}" xaxisLabel="Enfermedades registradas"/>
+                        <p:barChart id="barChartCartesianMadness" value="#{dashboardBean.cartesianMadness}" legendPosition="ne" max="100" yaxisLabel="Total de casos registrados: #{dashboardBean.totalRecords}" xaxisLabel="Enfermedades registradas"/>
                     </p:panel>
                     <p:panel id="Resultados3" header="Enfermedades presentes por departamento" toggleable="true" >
                         <p:messages id="msRespuesta"  showDetail="false" autoUpdate="true"  closable="true"/>
                         <h:form id="form_departameto_report">
-                            <h:panelGrid columns="3" cellpadding="5">
-                                <p:selectOneMenu id="departamento" value="#{loginBean.dashboardBean.selectedDepartamento}" required="true" requiredMessage="Es necesaro seleccionar un departamento para generar el reporte" filter="true" >  
-                                    <f:selectItem itemLabel="seleccione" itemValue="" />  
-                                    <f:selectItems value="#{loginBean.dashboardBean.listDepartamentos}" var="depto" itemLabel="#{depto.nombreDepartamento}" itemValue="#{depto.idDepartamento}" rendered="true"/>
-                                </p:selectOneMenu>
-                                <p:commandButton icon="ui-icon-play" actionListener="#{loginBean.dashboardBean.generateDepartamentResport}" update="pieResult2"/>
-                            </h:panelGrid>
+                             <h:panelGrid columns="3" cellpadding="5">
+                                 <p:selectOneMenu id="departamento" value="#{dashboardBean.selectedDepartamento}" required="true" requiredMessage="Es necesaro seleccionar un departamento para generar el reporte" filter="true" >  
+                                <f:selectItem itemLabel="seleccione" itemValue="" />  
+                                <f:selectItems value="#{dashboardBean.listDepartamentos}" var="depto" itemLabel="#{depto.nombreDepartamento}" itemValue="#{depto.idDepartamento}" rendered="true"/>
+                            </p:selectOneMenu>
+                                 <p:commandButton icon="ui-icon-play" actionListener="#{dashboardBean.generateDepartamentResport}" update="pieResult2"/>
+                             </h:panelGrid>
                             <br/>
 
                             <h:outputText value="Resultados analizados &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                           "/>
-                            <p:pieChart id="pieResult2"  value="#{loginBean.dashboardBean.pieResultNeurophByDepartament}" legendPosition="w" fill="true" showDataLabels="true" diameter="200" /> 
+                            <p:pieChart id="pieResult2"  value="#{dashboardBean.pieResultNeurophByDepartament}" legendPosition="w" fill="true" showDataLabels="true" diameter="200" /> 
 
                         </h:form>
 
@@ -53,6 +55,6 @@
 
                 </p:dashboard>
             </ui:define>
-        </body>
-    </ui:composition>
+        </ui:composition>
+    </body>
 </html>

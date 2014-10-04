@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition template="./../templatePortal.xhtml">
+            <p:growl id="sessionout"   sticky="true" showDetail="true"/> 
+            <ui:define name="top">&nbsp;</ui:define>
+            <ui:define name="content">
+                <h:form>
+                    <p:menubar>  
+                        <p:menuitem value="#{msg.home}" url="#{appBean.baseURL}portal/index.jsf?faces-redirect=true"  styleClass="homesiscacao-icon" />  
+                        <f:facet name="options">  
+                            <p:commandButton value="Salir" icon="ui-icon-extlink" action="#{loginBean.logoutToPortal()}" update="@([id=$sessionout])" />  
+                        </f:facet>  
+                    </p:menubar>
+                </h:form>
+            </ui:define>
+            <ui:define name="middle_content">
+                <h:form id="form_data_solicitudes"> 
+                    <p:dataTable id="users"  var="solicitud" value="#{solicitudBean.solicitudesSolicitante}" paginator="true" rows="10" paginatorPosition="bottom" currentPageReportTemplate="{currentPage} de {totalPages}" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 sortMode="multiple"  widgetVar="solicitudTable"   filteredValue="#{solicitudBean.filteredSolicitudes}" emptyMessage="#{msg.lbl_request_no_available}" >  
+                        <f:facet name="header" >  
+                            #{msg.lbl_request_registered}
+                            <BR/>
+                            <p:outputPanel style="position: absolute; right: 20px;">  
+                                <h:outputText value="${msg.lbl_search_request}" />  
+                                <p:inputText id="globalFilter" onblur="solicitudTable.filter()"  style="width:150px" placeholder="..."/>  
+                            </p:outputPanel> 
+                            <BR/>
+                            <BR/>
+                        </f:facet>
+                        <p:column headerText="#{msg.lbl_number_request}" filterBy="serial" filterStyle="display:none;" style="width:24%">  
+                            <h:outputText value="#{solicitud.serial}" />  
+                        </p:column> 
+                        <p:column headerText="#{msg.lbl_request_description_view}"  style="width:24%">  
+                            <h:outputText value="#{solicitud.descripcion}" />  
+                        </p:column> 
+                        <p:column headerText="#{msg.lbl_request_status}" filterBy="tblEstado.descripcionEstado" filterStyle="display:none;" style="width:24%">  
+                            <h:outputText value="#{solicitud.tblEstado.descripcionEstado}" />  
+                        </p:column> 
+                        <p:column style="width:15%">  
+                            <p:commandButton id="btnUsuarioUpdate" action="#{solicitudBean.detalleSolicitudPortal()}" oncomplete="dialogRequestVerify.show();" update="@([id$=dlgRequestVerify])"   icon="ui-icon-search" title="#{msg.lbl_view_datail}">  
+                                <f:setPropertyActionListener value="#{solicitud}" target="#{solicitudBean.selectedSolicitud}" />  
+                            </p:commandButton>                       
+                        </p:column> 
+                    </p:dataTable>  
+                </h:form>
+                
+                <h:form id="veiry_register_request">
+                    <p:dialog widgetVar="dialogRequestVerify" resizable="false" id="dlgRequestVerify"  
+                              showEffect="fade" hideEffect="clip" modal="true">
+                        <p:messages id="local_msgs" closable="true" autoUpdate="true"/>  
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">           
+                            <p:outputLabel value="Estado:" style="font-weight: bold"/> 
+                            <p:outputLabel value="#{solicitudBean.solicitudJson.estado}"/>
+                            <p:outputLabel value="Diagnostico:" style="font-weight: bold"/> 
+                            <p:outputLabel value="#{solicitudBean.solicitudJson.diagnostico}"/>
+                            <p:outputLabel value="Recomendaciones:" style="font-weight: bold"/>
+                            <p:editor id="editor" widgetVar="editorWidget" value="#{solicitudBean.solicitudJson.recomendaciones}" width="700" disabled="true" controls="" />
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <p:commandButton id="btnRegisterCancel" oncomplete="dialogRequestVerify.hide();"  title="#{msg.cancel}" value="#{msg.cancel}" icon="ui-icon-closethick"/>  
+                            </f:facet>
+                        </h:panelGrid>
+                        <p:ajax event="close" oncomplete="dialogRequestVerify.hide();"/> 
+                    </p:dialog> 
+                </h:form>
+                <script type="text/javascript">
+                                    function handleSubmitRequest(xhr, status, args) {
+                                        if (args.serial != null) {
+                                            $('[id="form_result:serialResult"]').text(args.serial);
+                                            dialogResult.show();
+                                        }
+                                    }
+                </script>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
